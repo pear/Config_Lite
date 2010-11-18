@@ -1,0 +1,35 @@
+An example of Config_Lite using :
+------------------------------------
+
+>>> Basic one :
+
+<?php
+
+include 'Config/Lite.php';
+
+$config = new Config_Lite();
+
+$config->read('./test.cfg');
+
+echo $config;
+
+$config->set('mailbox1234567test', 'count', 1);
+
+// array get Section 
+print_r($config->getSection('mailbox1234567test'));
+
+// get value with default value 0
+echo $config->get('mailbox1234567test', 'count', 0);
+
+$config->save();
+
+$config->read('./test.cfg');
+
+echo $config;
+
+$config->set('mailbox1234567test', 'count', 0);
+
+$config->save();
+
+echo $config;
+
