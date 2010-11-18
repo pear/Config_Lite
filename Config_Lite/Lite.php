@@ -116,7 +116,7 @@ class Config_Lite
                 if (is_array($item)) {
                     $sections.= "\n[{$section}]\n";
                     foreach ($item as $key => $value) {
-						if (is_bool($value)) {
+                        if (is_bool($value)) {
                             $value = $this->to('bool', $value);
                         }
                         $sections.= $key .' = '. $value ."\n";
