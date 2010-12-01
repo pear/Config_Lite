@@ -30,14 +30,13 @@ if (is_file(dirname(__FILE__).'/../Lite.php') === true) {
  *
  * Usage: phpunit AllTests.php
  *
- * @category  PHP
- * @package   PHP_CodeSniffer
- * @author    Greg Sherwood <gsherwood@squiz.net>
- * @author    Marc McIntyre <mmcintyre@squiz.net>
- * @copyright 2006 Squiz Pty Ltd (ABN 77 084 670 600)
+ * @category  Config
+ * @package   Config_Lite
+ * @author    Patrick C. Engel <info@pc-e.org>
+ * @copyright 2010 Patrick C. Engel
  * @license   http://www.gnu.org/copyleft/lesser.html  LGPL License 2.1
- * @version   Release: 0.2.0
- * @link      http://pear.php.net/package/Config_Lite
+ * @version   Release: @package_version@
+ * @link      https://github.com/pce/config_lite
  */
 class Config_LiteTest extends PHPUnit_Framework_TestCase
 {
@@ -71,27 +70,18 @@ class Config_LiteTest extends PHPUnit_Framework_TestCase
 	}
 
 
-	/**
-	 * read()
-	 */
 	public function testRead()
 	{
 		$this->config->read('test.cfg');
 		$this->assertEquals('ConfigTest', $this->config->get('general', 'appname'));
 	}
 
-	/**
-	 * testSave().
-	 */
 	public function testSave()
 	{
 		$this->config->save();
 		$this->assertEquals('ConfigTest', $this->config->get('general', 'appname'));
 	}
 
-	/**
-	 * testWrite Ini File.
-	 */
 	public function testWrite()
 	{
 		$assoc_array = array(
@@ -108,9 +98,6 @@ class Config_LiteTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals(-1, $this->config->get('counter', 'count'));
 	}
 
-	/**
-	 * testGet().
-	 */
 	public function testGet()
 	{
 		// fallback to default
@@ -120,7 +107,6 @@ class Config_LiteTest extends PHPUnit_Framework_TestCase
 		$this->config->set('counter', 'count', 2);
 		$counter = $this->config->get('counter', 'count');
 		$this->assertEquals(2, $counter); 
-		
 		// exception test
 		try {
 			// expected to raise an Config_Lite_Exception
@@ -134,12 +120,8 @@ class Config_LiteTest extends PHPUnit_Framework_TestCase
 		}
 		
 		$this->fail('An expected exception has not been raised.');
-		
 	}
 
-	/**
-	 * testSet().
-	 */
 	public function testSet()
 	{			
 		// numeric	
@@ -166,19 +148,12 @@ class Config_LiteTest extends PHPUnit_Framework_TestCase
 		
 	}
 
-	/**
-	* array setSection().
-	*/
 	public function testSetSection()
 	{	
 		$this->config->setSection('users', array('email'=> 'john@doe.com','name'=> 'John Doe'));
 		$this->assertEquals(array('name'=>'John Doe','email'=>'john@doe.com'), $this->config->getSection('users'));
 	}
 
-
-	/**
-	* array getSection().
-	*/
 	public function testGetSection()
 	{
 		$this->config->set('users', 'name', 'John Doe');
@@ -186,10 +161,6 @@ class Config_LiteTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals(array('name'=>'John Doe','email'=>'john@doe.com'), $this->config->getSection('users'));
 	}
 	
-	
-	/**
-	 * getBool().
-	 */
 	public function testGetBool()
 	{
 		$this->config->set('general', 'stable', 'No');

@@ -14,19 +14,11 @@
  * @link      https://github.com/pce/config_lite
  */
 
-if (is_file(dirname(__FILE__).'/Lite/Exception.php') === true) {
-    // not installed.
-    require_once dirname(__FILE__).'/Lite/Exception.php';
-    require_once dirname(__FILE__).'/Lite/UnexpectedValueException.php';
-    require_once dirname(__FILE__).'/Lite/InvalidArgumentException.php';
-    require_once dirname(__FILE__).'/Lite/RuntimeException.php';
-} else {
-    require_once 'Config/Lite/Exception.php';
-    require_once 'Config/Lite/UnexpectedValueException.php';
-    require_once 'Config/Lite/InvalidArgumentException.php';
-    require_once 'Config/Lite/RuntimeException.php';
-}
+spl_autoload_register(array('Config_Lite', 'autoload'));
 
+if (class_exists('Config_Lite_UnexpectedValueException', true) === false) {
+    throw new Exception('Config_Lite_UnexpectedValueException not found');
+}
 
 /**
  * Config_Lite Class 
@@ -426,7 +418,7 @@ class Config_Lite
      * Text presentation of the Configuration, since empy config is valid, 
      * theres no return of "The Configuration is empty.\n";
      *
-     * @throws 
+     * @throws Config_Lite_RuntimeException
      * @return string
      */
     public function __toString()
@@ -447,6 +439,31 @@ class Config_Lite
             throw new Config_Lite_RuntimeException('Did not read a Configuration File.');
         }
         return $s;
+    }
+    /**
+     * Autoload static method for loading classes and interfaces.
+     * includes Code from the PHP_CodeSniffer package by 
+     * Greg Sherwood and Marc McIntyre
+     * 
+     * @param string $className - name of the class or interface.
+     *
+     * @return void
+     */
+    public static function autoload($className)
+    {
+    	$package = 'Config_';
+    	$packageLen = strlen($package);
+    	if (substr($className, 0, $packageLen) === $package) {
+            $newClassName = substr($className, $packageLen);
+        } else {
+            $newClassName = $className;
+        }
+        $path = str_replace('_', '/', $newClassName).'.php';
+        if (is_file(dirname(__FILE__).'/'.$path) === true) {
+            include dirname(__FILE__).'/'.$path;
+        } else {
+            file_exists($path) && (include $path);
+        }
     }
     /**
      * Constructor optional takes a filename
