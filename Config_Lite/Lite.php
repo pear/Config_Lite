@@ -109,10 +109,10 @@ class Config_Lite
      */
     public function write($filename, $sectionsarray)
     {
-    	$content = '';
+        $content = '';
         if ('.php' === substr($filename, -4)) {
-        	$content .= ';<?php exit; ?>' . "\n";
-		}
+            $content .= ';<?php exit; ?>' . "\n";
+        }
         $sections = '';
         if (!empty($sectionsarray)) {
             foreach ($sectionsarray as $section => $item) {
@@ -192,7 +192,9 @@ class Config_Lite
         if (!is_null($default)) {
             return $default;
         }
-        throw new Config_Lite_UnexpectedValueException('key not found, no default value given.');
+        throw new Config_Lite_UnexpectedValueException(
+                              'key not found, no default value given.'
+                  );
     }
 
     /**
@@ -219,7 +221,9 @@ class Config_Lite
         if (!is_null($default)) {
             return $default;
         }
-        throw new Config_Lite_UnexpectedValueException('key not found, no default value given.');
+        throw new Config_Lite_UnexpectedValueException(
+                              'key not found, no default value given.'
+                  );
     }
     /**
      * getBool - returns on,yes,1,true as TRUE 
@@ -256,7 +260,9 @@ class Config_Lite
         if (!is_null($default)) {
             return $default;
         }
-        throw new Config_Lite_UnexpectedValueException('option not found, no default value given.');
+        throw new Config_Lite_UnexpectedValueException(
+                            'option not found, no default value given.'
+                  );
     }
     /**
      * array get section
@@ -282,7 +288,9 @@ class Config_Lite
         if (!is_null($default) && is_array($default)) {
             return $default;
         }
-        throw new Config_Lite_UnexpectedValueException('section not found, no default array given.');
+        throw new Config_Lite_UnexpectedValueException(
+                           'section not found, no default array given.'
+                  );
     }
     /**
      * has option
@@ -436,7 +444,9 @@ class Config_Lite
             return $s;
         }
         if (!isset($this->filename)) {
-            throw new Config_Lite_RuntimeException('Did not read a Configuration File.');
+            throw new Config_Lite_RuntimeException(
+                                   'Did not read a Configuration File.'
+                      );
         }
         return $s;
     }
@@ -451,9 +461,9 @@ class Config_Lite
      */
     public static function autoload($className)
     {
-    	$package = 'Config_';
-    	$packageLen = strlen($package);
-    	if (substr($className, 0, $packageLen) === $package) {
+        $package = 'Config_';
+        $packageLen = strlen($package);
+        if (substr($className, 0, $packageLen) === $package) {
             $newClassName = substr($className, $packageLen);
         } else {
             $newClassName = $className;
