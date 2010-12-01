@@ -1,3 +1,3 @@
 <?php
 
-class Config_Lite_Exception extends Exception {}
+interface Config_Lite_Exception {}

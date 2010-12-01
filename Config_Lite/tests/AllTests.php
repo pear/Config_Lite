@@ -70,6 +70,7 @@ class Config_LiteTest extends PHPUnit_Framework_TestCase
 		$this->config->save();
 	}
 
+
 	/**
 	 * read()
 	 */
@@ -158,7 +159,7 @@ class Config_LiteTest extends PHPUnit_Framework_TestCase
 			// expected to raise an exception
 			$this->config->set('counter', array('count'), 1);
 		}
-		catch (Config_Lite_Exception $expected) {
+		catch (Config_Lite_InvalidArgumentException $expected) {
 			return;
 		}
 		$this->fail('An Config_Lite_Exception expected, due to an invalid Argument. Exception has not been raised.');
@@ -209,6 +210,18 @@ class Config_LiteTest extends PHPUnit_Framework_TestCase
 		$this->config->set('general', 'stable', 1);
 		$this->assertEquals(TRUE, $this->config->getBool('general', 'stable'));
 		
+	}
+
+	public function testSingleQuotedEscapedInput()
+	{
+		$this->config->setString('quoted', 'single', '/(; "-"s[^\\\'"\\\']d//\\m\\\'"\'');
+		$this->assertEquals('/(; "-"s[^\\\'"\\\']d//\\m\\\'"\'', $this->config->getString('quoted', 'single'));
+	}
+	
+	public function testDoubleQuotedEscapedInput()
+	{
+		$this->config->setString('quoted', 'double', "/(; \"-\"s[^\'\"\']d//\\m\'\"'");
+		$this->assertEquals("/(; \"-\"s[^\'\"\']d//\\m\'\"'", $this->config->getString('quoted', 'double'));
 	}
 	
 	public function testHasOption() 

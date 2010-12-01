@@ -17,8 +17,14 @@
 if (is_file(dirname(__FILE__).'/Lite/Exception.php') === true) {
     // not installed.
     require_once dirname(__FILE__).'/Lite/Exception.php';
+    require_once dirname(__FILE__).'/Lite/UnexpectedValueException.php';
+    require_once dirname(__FILE__).'/Lite/InvalidArgumentException.php';
+    require_once dirname(__FILE__).'/Lite/RuntimeException.php';
 } else {
     require_once 'Config/Lite/Exception.php';
+    require_once 'Config/Lite/UnexpectedValueException.php';
+    require_once 'Config/Lite/InvalidArgumentException.php';
+    require_once 'Config/Lite/RuntimeException.php';
 }
 
 
@@ -78,17 +84,17 @@ class Config_Lite
     public function read($filename)
     {
         if (!file_exists($filename)) {
-            throw new Config_Lite_Exception('file not found: ' . $filename);
+            throw new Config_Lite_RuntimeException('file not found: ' . $filename);
         }
         $this->filename = $filename;
         $this->sections = parse_ini_file($filename, true);
         if (false === $this->sections) {
-            throw new Config_Lite_Exception(
+            throw new Config_Lite_RuntimeException(
                 'failure, can not parse the file: ' . $filename);
         }
     }
     /**
-     * save (active record style), note: file locking is not part of this Class
+     * save (active record style)
      *
      * @return bool
      */
@@ -97,8 +103,12 @@ class Config_Lite
         return $this->write($this->filename, $this->sections);
     }
     /**
-     * write INI File
-     *
+     * write INI-Style Config File 
+     * 
+     * prepends a php exit if suffix is php,
+     * it is valid to write an empty Config file,
+     * file locking is not part of this Class
+     * 
      * @param string $filename      filename
      * @param array  $sectionsarray array with sections
      * 
@@ -107,10 +117,11 @@ class Config_Lite
      */
     public function write($filename, $sectionsarray)
     {
-        // maybe this line should be optional
-        $content = ';<?php exit; ?>' . "\n";
+    	$content = '';
+        if ('.php' === substr($filename, -4)) {
+        	$content .= ';<?php exit; ?>' . "\n";
+		}
         $sections = '';
-        // note: it is valid to write an empty Config file
         if (!empty($sectionsarray)) {
             foreach ($sectionsarray as $section => $item) {
                 if (is_array($item)) {
@@ -118,6 +129,8 @@ class Config_Lite
                     foreach ($item as $key => $value) {
                         if (is_bool($value)) {
                             $value = $this->to('bool', $value);
+                        } elseif (is_string($value)) { // && strpos '|"
+                            $value = '"'. $value .'"';
                         }
                         $sections.= $key .' = '. $value ."\n";
                     }
@@ -126,11 +139,11 @@ class Config_Lite
             $content.= $sections;
         }
         if (!$fp = fopen($filename, 'w')) {
-            throw new Config_Lite_Exception(
+            throw new Config_Lite_RuntimeException(
                     "failed to open file `{$filename}' for writing.");
         }
         if (!fwrite($fp, $content)) {
-            throw new Config_Lite_Exception(
+            throw new Config_Lite_RuntimeException(
                     "failed to write file `{$filename}'");
         }
         fclose($fp);
@@ -158,11 +171,38 @@ class Config_Lite
 
         default:
             // unknown format
-            throw new Config_Lite_Exception(
+            throw new Config_Lite_UnexpectedValueException(
                 "no conversation made, unrecognized format `{$format}'");
             break;
         }
     }
+    /**
+     * getString
+     * 
+     * @param string $sec     Section
+     * @param string $key     Key
+     * @param mixed  $default default return value
+     * 
+     * @return string
+     * @throws Config_Lite_Exception when config is empty 
+     *         and no default value is given
+     * @throws Config_Lite_Exception key not found and no default value is given
+     */
+    public function getString($sec, $key, $default = null)
+    {
+        if (is_null($this->sections) && is_null($default)) {
+            throw new Config_Lite_RuntimeException(
+                    'configuration seems to be empty, no sections.');
+        }
+        if (array_key_exists($key, $this->sections[$sec])) {
+            return stripslashes($this->sections[$sec][$key]);
+        }
+        if (!is_null($default)) {
+            return $default;
+        }
+        throw new Config_Lite_UnexpectedValueException('key not found, no default value given.');
+    }
+
     /**
      * get
      * 
@@ -178,7 +218,7 @@ class Config_Lite
     public function get($sec, $key, $default = null)
     {
         if (is_null($this->sections) && is_null($default)) {
-            throw new Config_Lite_Exception(
+            throw new Config_Lite_RuntimeException(
                     'configuration seems to be empty, no sections.');
         }
         if (array_key_exists($key, $this->sections[$sec])) {
@@ -187,7 +227,7 @@ class Config_Lite
         if (!is_null($default)) {
             return $default;
         }
-        throw new Config_Lite_Exception('key not found, no default value given.');
+        throw new Config_Lite_UnexpectedValueException('key not found, no default value given.');
     }
     /**
      * getBool - returns on,yes,1,true as TRUE 
@@ -204,7 +244,7 @@ class Config_Lite
     public function getBool($sec, $key, $default = null)
     {
         if (is_null($this->sections) && is_null($default)) {
-            throw new Config_Lite_Exception(
+            throw new Config_Lite_RuntimeException(
                 'configuration seems to be empty (no sections),' 
                 . 'and no default value given.');
         }
@@ -214,7 +254,7 @@ class Config_Lite
             }
             $value = strtolower($this->sections[$sec][$key]);
             if (!in_array($value, $this->_booleans) && is_null($default)) {
-                throw new Config_Lite_Exception(sprintf(
+                throw new Config_Lite_UnexpectedValueException(sprintf(
                     'Not a boolean: %s, and no default value given.', $value
                 ));
             } else {
@@ -224,7 +264,7 @@ class Config_Lite
         if (!is_null($default)) {
             return $default;
         }
-        throw new Config_Lite_Exception('key not found, no default value given.');
+        throw new Config_Lite_UnexpectedValueException('option not found, no default value given.');
     }
     /**
      * array get section
@@ -241,7 +281,7 @@ class Config_Lite
     public function getSection($sec, $default = null)
     {
         if (is_null($this->sections) && is_null($default)) {
-            throw new Config_Lite_Exception(
+            throw new Config_Lite_RuntimeException(
                 'configuration seems to be empty, no sections.');
         }
         if (isset($this->sections[$sec])) {
@@ -250,7 +290,7 @@ class Config_Lite
         if (!is_null($default) && is_array($default)) {
             return $default;
         }
-        throw new Config_Lite_Exception('key not found, no default array given.');
+        throw new Config_Lite_UnexpectedValueException('section not found, no default array given.');
     }
     /**
      * has option
@@ -296,7 +336,7 @@ class Config_Lite
     public function remove($sec, $key)
     {
         if (!isset($this->sections[$sec])) {
-            throw new Config_Lite_Exception('No such Section.');
+            throw new Config_Lite_UnexpectedValueException('No such Section.');
         }
         unset($this->sections[$sec][$key]);
     }
@@ -311,10 +351,34 @@ class Config_Lite
     public function removeSection($sec)
     {
         if (!isset($this->sections[$sec])) {
-            throw new Config_Lite_Exception('No such Section.');
+            throw new Config_Lite_UnexpectedValueException('No such Section.');
         }
         unset($this->sections[$sec]);
     }
+    /**
+     * Set (string) key - add key/doublequoted value pairs to a section,
+     * creates new section if necessary and overrides existing keys
+     *
+     * @param string $sec   Section
+     * @param string $key   Key
+     * @param mixed  $value Value
+     * 
+     * @return void
+     * @throws Config_Lite_UnexpectedValueException when given key is an array
+     */
+    public function setString($sec, $key, $value = null)
+    {
+        if (!is_array($this->sections)) {
+            $this->sections = array();
+        }
+        if (is_array($key)) {
+            throw new Config_Lite_UnexpectedValueException(
+            'string key expected, but array given.');
+        }
+        $this->sections[$sec][$key] = addslashes($value);
+        return $this;
+    }
+
     /**
      * Set key - add key/value pairs to a section,
      * creates new section if necessary and overrides existing keys
@@ -332,7 +396,7 @@ class Config_Lite
             $this->sections = array();
         }
         if (is_array($key)) {
-            throw new Config_Lite_Exception(
+            throw new Config_Lite_InvalidArgumentException(
             'string key expected, but array given.');
         }
         $this->sections[$sec][$key] = $value;
@@ -353,14 +417,16 @@ class Config_Lite
             $this->sections = array();
         }
         if (!is_array($pairs)) {
-            throw new Config_Lite_Exception('array expected.');
+            throw new Config_Lite_UnexpectedValueException('array expected.');
         }
         $this->sections[$sec] = $pairs;
         return $this;
     }
     /**
-     * Text presentation of the Configuration
+     * Text presentation of the Configuration, since empy config is valid, 
+     * theres no return of "The Configuration is empty.\n";
      *
+     * @throws 
      * @return string
      */
     public function __toString()
@@ -378,13 +444,12 @@ class Config_Lite
             return $s;
         }
         if (!isset($this->filename)) {
-            throw new Config_Lite_Exception('Did not read a Configuration File.');
+            throw new Config_Lite_RuntimeException('Did not read a Configuration File.');
         }
-        // empy config is valid, no return of "The Configuration is empty.\n";
         return $s;
     }
     /**
-     * Constructor
+     * Constructor optional takes a filename
      *
      * @param string $filename - INI Style Config File
      */
