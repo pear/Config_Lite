@@ -100,9 +100,9 @@ class Config_LiteTest extends PHPUnit_Framework_TestCase
 
 	public function testGet()
 	{
-		// fallback to default
-		$counter = $this->config->get('counter', 'countdown', 1);
-		$this->assertEquals(1, $counter); 
+		// fallback to default given value 3
+		$counter = $this->config->get('counter', 'nonexisting_counter_option', 3);
+		$this->assertEquals(3, $counter);
 		// without default
 		$this->config->set('counter', 'count', 2);
 		$counter = $this->config->get('counter', 'count');
@@ -123,19 +123,11 @@ class Config_LiteTest extends PHPUnit_Framework_TestCase
 	}
 
 	public function testSet()
-	{			
-		// numeric	
-		$this->config->set('counter', 'count', 1);
-		$this->assertEquals(1, $this->config->get('counter', 'count'));
-		
-		// String with blank
-		$this->config->set('counter', 'user', 'John Doe');
-		$this->assertEquals('John Doe', $this->config->get('counter', 'user'));
-		
-		// bool
-		$this->config->set('counter', 'has_counter', TRUE);
-		$this->assertEquals(TRUE, $this->config->get('counter', 'has_counter'));
-		
+	{
+		$this->config->set('users', 'name', 'John Doe')
+					 ->set('users', 'email', 'john@doe.com');
+		$this->assertEquals(array('name'=>'John Doe','email'=>'john@doe.com'), $this->config->getSection('users'));
+			
 		// Invalid Argument. Exception test
 		try {
 			// expected to raise an exception
@@ -145,7 +137,6 @@ class Config_LiteTest extends PHPUnit_Framework_TestCase
 			return;
 		}
 		$this->fail('An Config_Lite_Exception expected, due to an invalid Argument. Exception has not been raised.');
-		
 	}
 
 	public function testSetSection()
@@ -156,8 +147,8 @@ class Config_LiteTest extends PHPUnit_Framework_TestCase
 
 	public function testGetSection()
 	{
-		$this->config->set('users', 'name', 'John Doe');
-		$this->config->set('users', 'email', 'john@doe.com');
+		$this->config->set('users', 'name', 'John Doe')
+					 ->set('users', 'email', 'john@doe.com');
 		$this->assertEquals(array('name'=>'John Doe','email'=>'john@doe.com'), $this->config->getSection('users'));
 	}
 	
@@ -195,20 +186,31 @@ class Config_LiteTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals("/(; \"-\"s[^\'\"\']d//\\m\'\"'", $this->config->getString('quoted', 'double'));
 	}
 	
+	public function testSetNumericOptionWithSet()
+	{
+		$this->config->set('counter', 'count', 1);
+		$this->assertEquals(1, $this->config->get('counter', 'count'));
+	}
+
+	public function testSetStringWithBlankWithSet()
+	{
+		$this->config->set('counter', 'user', 'John Doe');
+		$this->assertEquals('John Doe', $this->config->get('counter', 'user'));
+	}
+
+	public function testSetBoolWithSet()
+	{
+		$this->config->set('counter', 'has_counter', TRUE);
+		$this->assertEquals(TRUE, $this->config->get('counter', 'has_counter'));
+	}
+	
 	public function testHasOption() 
 	{
 		$this->config->set('counter', 'count', 1);
 		$this->assertEquals(TRUE, $this->config->has('counter', 'count'));
 	}
 
-	public function testHas()
-	{
-		$this->config->set('general', 'has', 1);
-		$this->assertEquals(TRUE, $this->config->has('general', 'has'));
-		$this->config->remove('general', 'has');
-		$this->assertEquals(False, $this->config->has('general', 'has'));
-	}
-	
+
 	public function testHasSection()
 	{
 		$this->assertEquals(TRUE, $this->config->hasSection('general'));
@@ -216,8 +218,18 @@ class Config_LiteTest extends PHPUnit_Framework_TestCase
 	
 	public function testRemove()
 	{
+		$this->config->set('general', 'stable', 'Yes');
+		$this->assertEquals(TRUE, $this->config->getBool('general', 'stable'));
 		$this->config->remove('general', 'stable');
 		$this->assertEquals(FALSE, $this->config->has('general', 'stable'));
+	}
+
+	public function testHas()
+	{
+		$this->config->set('general', 'a_section', 'a_option_value');
+		$this->assertEquals(TRUE, $this->config->has('general', 'a_section'));
+		$this->config->remove('general', 'a_section');
+		$this->assertEquals(False, $this->config->has('general', 'a_section'));
 	}
 	
 	public function testRemoveSection()

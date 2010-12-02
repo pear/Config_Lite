@@ -117,10 +117,12 @@ class Config_Lite
         if (!empty($sectionsarray)) {
             foreach ($sectionsarray as $section => $item) {
                 if (is_array($item)) {
-                    $sections.= "\n[{$section}]\n";
+                    $sections.= "\n[".$section."]\n";
                     foreach ($item as $key => $value) {
                         if (is_bool($value)) {
                             $value = $this->to('bool', $value);
+                        } elseif (is_numeric($value)) {
+                            $value = $value;
                         } elseif (is_string($value)) { // && strpos '|"
                             $value = '"'. $value .'"';
                         }
@@ -132,22 +134,30 @@ class Config_Lite
         }
         if (!$fp = fopen($filename, 'w')) {
             throw new Config_Lite_RuntimeException(
-                    "failed to open file `{$filename}' for writing.");
+                    sprintf(
+                        'failed to open file `%s\' for writing.',
+                        $filename
+                    )
+            );
         }
         if (!fwrite($fp, $content)) {
             throw new Config_Lite_RuntimeException(
-                    "failed to write file `{$filename}'");
+                    sprintf(
+                        'failed to write file `%s\'',
+                        $filename
+                    )
+            );
         }
         fclose($fp);
         return true;
     }
     /**
      * convert type to string or representable Config Format
-     *
+     * 
      * @param string $format `bool', `boolean'
      * @param string $value  value
      * 
-     * @return mixed
+     * @return string
      * @throws Config_Lite_Exception when format is unknown
      */
     public function to($format, $value)
@@ -164,7 +174,11 @@ class Config_Lite
         default:
             // unknown format
             throw new Config_Lite_UnexpectedValueException(
-                "no conversation made, unrecognized format `{$format}'");
+                sprintf(
+                    'no conversation made, unrecognized format: `%s\'',
+                    $format
+                )
+            );
             break;
         }
     }
@@ -363,7 +377,7 @@ class Config_Lite
      * @param string $key   Key
      * @param mixed  $value Value
      * 
-     * @return void
+     * @return $this
      * @throws Config_Lite_UnexpectedValueException when given key is an array
      */
     public function setString($sec, $key, $value = null)
@@ -387,8 +401,8 @@ class Config_Lite
      * @param string $key   Key
      * @param mixed  $value Value
      * 
-     * @return void
      * @throws Config_Lite_Exception when given key is an array
+     * @return $this
      */
     public function set($sec, $key, $value = null)
     {
@@ -409,7 +423,8 @@ class Config_Lite
      * @param string $sec   Section
      * @param array  $pairs Keys and Values as Array ('key' => 'value')
      * 
-     * @return void|PEAR_Error
+     * @throws Config_Lite_InvalidArgumentException array $pairs expected
+     * @return $this
      */
     public function setSection($sec, $pairs)
     {
@@ -417,7 +432,7 @@ class Config_Lite
             $this->sections = array();
         }
         if (!is_array($pairs)) {
-            throw new Config_Lite_UnexpectedValueException('array expected.');
+            throw new Config_Lite_InvalidArgumentException('array expected.');
         }
         $this->sections[$sec] = $pairs;
         return $this;
