@@ -23,8 +23,10 @@ if (class_exists('Config_Lite_UnexpectedValueException', true) === false) {
 /**
  * Config_Lite Class 
  *
- * read & save "INI-Style" Configuration Files,
- * fast and with the native php function under the hood.
+ * read & save INI Text Files for Configuration/Settings,
+ * Many applications in the Unix World use INI text files.
+ * 
+ * Config_Lite is fast, with the native PHP function under the hood.
  *
  * Inspired by Python's ConfigParser.
  *
@@ -32,8 +34,9 @@ if (class_exists('Config_Lite_UnexpectedValueException', true) === false) {
  * "[section]"
  * followed by "name = value" entries
  *
- * note: Config_Lite assumes that all name/value entries are in sections.
- *
+ * note: Config_Lite assumes that all name/value entries are in sections,
+ * 
+ * 
  * @category  Configuration
  * @package   Config_Lite
  * @author    Patrick C. Engel <info@pc-e.org>
@@ -369,6 +372,16 @@ class Config_Lite
         }
         unset($this->sections[$sec]);
     }
+     /**
+     * clear removes all sections
+     * 
+     * @return void
+     */
+    public function clear()
+    {
+        $this->sections = array();
+    }
+
     /**
      * Set (string) key - add key/doublequoted value pairs to a section,
      * creates new section if necessary and overrides existing keys
@@ -438,7 +451,9 @@ class Config_Lite
         return $this;
     }
     /**
-     * Text presentation of the Configuration, since empy config is valid, 
+     * Text presentation of the Configuration
+     * 
+     * since a empty config is valid, 
      * theres no return of "The Configuration is empty.\n";
      *
      * @throws Config_Lite_RuntimeException
@@ -467,6 +482,7 @@ class Config_Lite
     }
     /**
      * Autoload static method for loading classes and interfaces.
+     * 
      * includes Code from the PHP_CodeSniffer package by 
      * Greg Sherwood and Marc McIntyre
      * 
@@ -493,7 +509,7 @@ class Config_Lite
     /**
      * Constructor optional takes a filename
      *
-     * @param string $filename - INI Style Config File
+     * @param string $filename - "INI Style" Text Config File
      */
     public function __construct($filename = null)
     {

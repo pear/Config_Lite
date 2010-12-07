@@ -203,6 +203,19 @@ class Config_LiteTest extends PHPUnit_Framework_TestCase
 		$this->config->set('counter', 'has_counter', TRUE);
 		$this->assertEquals(TRUE, $this->config->get('counter', 'has_counter'));
 	}
+
+	public function testSetArrayWithSet()
+	{
+		// exception test
+		try {
+			// expected to raise an Config_Lite_Exception
+			$this->config->set('counter', 'tries', array('12/09', '12/10', '11/07'));
+		}
+		catch (Config_Lite_InvalidArgumentException $expected) {
+			return;
+		}
+		$this->fail('An expected exception has not been raised.');
+	}
 	
 	public function testHasOption() 
 	{
@@ -229,7 +242,7 @@ class Config_LiteTest extends PHPUnit_Framework_TestCase
 		$this->config->set('general', 'a_section', 'a_option_value');
 		$this->assertEquals(TRUE, $this->config->has('general', 'a_section'));
 		$this->config->remove('general', 'a_section');
-		$this->assertEquals(False, $this->config->has('general', 'a_section'));
+		$this->assertEquals(FALSE, $this->config->has('general', 'a_section'));
 	}
 	
 	public function testRemoveSection()
