@@ -73,12 +73,12 @@ class Config_Lite
      *
      * @param string $filename Filename
      * 
-     * @return bool
+     * @return void
      * @throws Config_Lite_Exception when file not exists
      */
     public function read($filename)
     {
-        if (!file_exists($filename)) {
+        if (!file_exists($filename) || !is_readable($filename)) {
             throw new Config_Lite_RuntimeException('file not found: ' . $filename);
         }
         $this->filename = $filename;
@@ -96,6 +96,28 @@ class Config_Lite
     public function save()
     {
         return $this->write($this->filename, $this->sections);
+    }
+    /**
+     * sync the file to the Object
+     * 
+     * like `save' (QT Settings style methodname),
+     * but writes the data and reads the written data
+     *
+     * @return void
+     * @throws Config_Lite_Exception when file is not write or readable
+     */
+    public function sync()
+    {
+        if (!isset($this->filename)) {
+            throw new Config_Lite_RuntimeException(
+                    'no filename given.');
+        }
+        if (!is_array($this->sections)) {
+            $this->sections = array();
+ 	    }
+        if ($this->write($this->filename, $this->sections)) {
+        	$this->read($this->filename);
+        }
     }
     /**
      * write INI-Style Config File 
@@ -448,6 +470,18 @@ class Config_Lite
             throw new Config_Lite_InvalidArgumentException('array expected.');
         }
         $this->sections[$sec] = $pairs;
+        return $this;
+    }
+    /**
+     * Set Filename - ie. `[PATH/]<ApplicationName>.conf'
+     *
+     * @param string $filename   Filename
+     * 
+     * @return $this
+     */
+    public function setFilename($filename)
+    {
+        $this->filename = $filename;
         return $this;
     }
     /**

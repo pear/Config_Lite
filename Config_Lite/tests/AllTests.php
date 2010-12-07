@@ -69,16 +69,9 @@ class Config_LiteTest extends PHPUnit_Framework_TestCase
 		$this->config->save();
 	}
 
-
 	public function testRead()
 	{
 		$this->config->read('test.cfg');
-		$this->assertEquals('ConfigTest', $this->config->get('general', 'appname'));
-	}
-
-	public function testSave()
-	{
-		$this->config->save();
 		$this->assertEquals('ConfigTest', $this->config->get('general', 'appname'));
 	}
 
@@ -96,6 +89,12 @@ class Config_LiteTest extends PHPUnit_Framework_TestCase
 		$this->config->read($filename);
 		$this->assertEquals('ConfigTest', $this->config->get('general', 'appname'));
 		$this->assertEquals(-1, $this->config->get('counter', 'count'));
+	}
+
+	public function testSave()
+	{
+		$this->config->save();
+		$this->assertEquals('ConfigTest', $this->config->get('general', 'appname'));
 	}
 
 	public function testGet()
@@ -173,7 +172,25 @@ class Config_LiteTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals(TRUE, $this->config->getBool('general', 'stable'));
 		
 	}
+	
+	public function testSetArrayWithSet()
+	{
+		// exception test
+		try {
+			// expected to raise an Config_Lite_Exception
+			$this->config->set('arraytestsection', array('key1', 'key2'), 'a_option');
+		}
+		catch (Config_Lite_InvalidArgumentException $expected) {
+			return;
+		}
+		$this->fail('An expected exception has not been raised.');
 
+		$this->config->set('array_test', 'tries', array('12/09', '12/10', '11/07'));
+		$this->assertEquals(array('12/09', '12/10', '11/07'), $this->config->get('array_test', 'tries'));
+		$this->config->sync();
+		$this->assertEquals(array('12/09', '12/10', '11/07'), $this->config->get('array_test', 'tries'));
+	}
+	
 	public function testSingleQuotedEscapedInput()
 	{
 		$this->config->setString('quoted', 'single', '/(; "-"s[^\\\'"\\\']d//\\m\\\'"\'');
@@ -203,21 +220,8 @@ class Config_LiteTest extends PHPUnit_Framework_TestCase
 		$this->config->set('counter', 'has_counter', TRUE);
 		$this->assertEquals(TRUE, $this->config->get('counter', 'has_counter'));
 	}
-
-	public function testSetArrayWithSet()
-	{
-		// exception test
-		try {
-			// expected to raise an Config_Lite_Exception
-			$this->config->set('counter', 'tries', array('12/09', '12/10', '11/07'));
-		}
-		catch (Config_Lite_InvalidArgumentException $expected) {
-			return;
-		}
-		$this->fail('An expected exception has not been raised.');
-	}
 	
-	public function testHasOption() 
+	public function testHasOption()
 	{
 		$this->config->set('counter', 'count', 1);
 		$this->assertEquals(TRUE, $this->config->has('counter', 'count'));
