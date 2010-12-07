@@ -175,6 +175,19 @@ class Config_LiteTest extends PHPUnit_Framework_TestCase
 	
 	public function testSetArrayWithSet()
 	{
+		$this->markTestIncomplete(
+          'This test has not been implemented yet. Saving Array Values is not implemented.'
+        );
+		/*
+		$this->config->set('array_test', 'tries', array('12/09', '12/10', '11/07'));
+		$this->assertEquals(array('12/09', '12/10', '11/07'), $this->config->get('array_test', 'tries'));
+		$this->config->sync();
+		$this->assertEquals(array('12/09', '12/10', '11/07'), $this->config->get('array_test', 'tries'));
+		*/
+	}
+
+	public function testSetArrayAsKeyWithSet()
+	{
 		// exception test
 		try {
 			// expected to raise an Config_Lite_Exception
@@ -184,11 +197,6 @@ class Config_LiteTest extends PHPUnit_Framework_TestCase
 			return;
 		}
 		$this->fail('An expected exception has not been raised.');
-
-		$this->config->set('array_test', 'tries', array('12/09', '12/10', '11/07'));
-		$this->assertEquals(array('12/09', '12/10', '11/07'), $this->config->get('array_test', 'tries'));
-		$this->config->sync();
-		$this->assertEquals(array('12/09', '12/10', '11/07'), $this->config->get('array_test', 'tries'));
 	}
 	
 	public function testSingleQuotedEscapedInput()
