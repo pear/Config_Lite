@@ -66,13 +66,7 @@ class Config_LiteTest extends PHPUnit_Framework_TestCase
 	 */
 	protected function tearDown()
 	{
-		$this->config->save();
-	}
-
-	public function testRead()
-	{
-		$this->config->read('test.cfg');
-		$this->assertEquals('ConfigTest', $this->config->get('general', 'appname'));
+		// $this->config->save();
 	}
 
 	public function testWrite()
@@ -94,6 +88,12 @@ class Config_LiteTest extends PHPUnit_Framework_TestCase
 	public function testSave()
 	{
 		$this->config->save();
+		$this->assertEquals('ConfigTest', $this->config->get('general', 'appname'));
+	}
+
+	public function testRead()
+	{
+		$this->config->read('test.cfg');
 		$this->assertEquals('ConfigTest', $this->config->get('general', 'appname'));
 	}
 
@@ -128,6 +128,7 @@ class Config_LiteTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals(array('name'=>'John Doe','email'=>'john@doe.com'), $this->config->getSection('users'));
 			
 		// Invalid Argument. Exception test
+		/*
 		try {
 			// expected to raise an exception
 			$this->config->set('counter', array('count'), 1);
@@ -136,6 +137,7 @@ class Config_LiteTest extends PHPUnit_Framework_TestCase
 			return;
 		}
 		$this->fail('An Config_Lite_Exception expected, due to an invalid Argument. Exception has not been raised.');
+		*/
 	}
 
 	public function testSetSection()
@@ -172,18 +174,27 @@ class Config_LiteTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals(TRUE, $this->config->getBool('general', 'stable'));
 		
 	}
-	
-	public function testSetArrayWithSet()
+
+	public function testAddComment()
 	{
 		$this->markTestIncomplete(
-          'This test has not been implemented yet. Saving Array Values is not implemented.'
+          'This test has not been implemented yet. Saving Comments is not implemented.'
         );
-		/*
+	}
+
+	public function testGetComment()
+	{
+		$this->markTestIncomplete(
+          'This test has not been implemented yet. Get Comments is not implemented.'
+        );
+	}
+	
+	public function testSetIndexedArrayWithSet()
+	{
 		$this->config->set('array_test', 'tries', array('12/09', '12/10', '11/07'));
 		$this->assertEquals(array('12/09', '12/10', '11/07'), $this->config->get('array_test', 'tries'));
 		$this->config->sync();
 		$this->assertEquals(array('12/09', '12/10', '11/07'), $this->config->get('array_test', 'tries'));
-		*/
 	}
 
 	public function testSetArrayAsKeyWithSet()

@@ -64,9 +64,9 @@ class Config_Lite
      *
      * @var array
      */
-    private $_booleans = array('1' => true, 'on' => true, 
-                               'true' => true, 'yes' => true, 
-                               '0' => false, 'off' => false, 
+    private $_booleans = array('1' => true, 'on' => true,
+                               'true' => true, 'yes' => true,
+                               '0' => false, 'off' => false,
                                'false' => false, 'no' => false);
     /**
      * read, note: always assumes and works with sections
@@ -120,6 +120,37 @@ class Config_Lite
         }
     }
     /**
+     * detect Type "bool" by String Value to keep those "untouched"
+     * 
+     *  
+     * @param string $value      value
+     * 
+     * @return bool
+     */
+    protected function isBool($value) 
+    {
+		return in_array($value, $this->_booleans);
+	}
+    /**
+     * create a Value by determining the Type 
+     * 
+     *  
+     * @param string $value      value
+     * 
+     * @return string
+     */
+    protected function createValue($value)
+    {
+		if (is_bool($value)) {
+			$value = $this->to('bool', $value);
+		} elseif (is_numeric($value)) {
+			$value = $value;
+		} elseif (is_string($value) && !$this->isBool($value)) {
+			$value = '"'. $value .'"';
+		}
+		return $value;	
+    }
+    /**
      * write INI-Style Config File 
      * 
      * prepends a php exit if suffix is php,
@@ -136,7 +167,7 @@ class Config_Lite
     {
         $content = '';
         if ('.php' === substr($filename, -4)) {
-            $content .= ';<?php exit; ?>' . "\n";
+            $content .= ';<?php return; ?>' . "\n";
         }
         $sections = '';
         if (!empty($sectionsarray)) {
@@ -144,14 +175,16 @@ class Config_Lite
                 if (is_array($item)) {
                     $sections.= "\n[".$section."]\n";
                     foreach ($item as $key => $value) {
-                        if (is_bool($value)) {
-                            $value = $this->to('bool', $value);
-                        } elseif (is_numeric($value)) {
-                            $value = $value;
-                        } elseif (is_string($value)) { // && strpos '|"
-                            $value = '"'. $value .'"';
-                        }
-                        $sections.= $key .' = '. $value ."\n";
+					    if (is_array($value)) {
+							foreach ($value as $arrkey => $arrvalue) {
+						        $arrvalue = $this->createValue($arrvalue); 
+						        $arrkey = $key.'['.$arrkey.']';
+						        $sections.= $arrkey .' = '. $arrvalue ."\n";
+							}
+						} else {
+							$value = $this->createValue($value); 
+							$sections.= $key .' = '. $value ."\n";
+					    }
                     }
                 }
             }
