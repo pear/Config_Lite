@@ -174,20 +174,6 @@ class Config_LiteTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals(TRUE, $this->config->getBool('general', 'stable'));
 		
 	}
-
-	public function testAddComment()
-	{
-		$this->markTestIncomplete(
-          'This test has not been implemented yet. Saving Comments is not implemented.'
-        );
-	}
-
-	public function testGetComment()
-	{
-		$this->markTestIncomplete(
-          'This test has not been implemented yet. Get Comments is not implemented.'
-        );
-	}
 	
 	public function testSetIndexedArrayWithSet()
 	{

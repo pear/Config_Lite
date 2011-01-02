@@ -14,11 +14,6 @@
  * @link      https://github.com/pce/config_lite
  */
 
-spl_autoload_register(array('Config_Lite', 'autoload'));
-
-if (class_exists('Config_Lite_UnexpectedValueException', true) === false) {
-    throw new Exception('Config_Lite_UnexpectedValueException not found');
-}
 
 /**
  * Config_Lite Class 
@@ -45,7 +40,7 @@ if (class_exists('Config_Lite_UnexpectedValueException', true) === false) {
  * @version   Release: @package_version@
  * @link      https://github.com/pce/config_lite
  */
-class Config_Lite
+class Config_Lite implements ArrayAccess
 {
     /**
      * sections, holds the config sections
@@ -132,14 +127,14 @@ class Config_Lite
 		return in_array($value, $this->_booleans);
 	}
     /**
-     * create a Value by determining the Type 
+     * normalize a Value by determining the Type 
      * 
      *  
      * @param string $value      value
      * 
      * @return string
      */
-    protected function createValue($value)
+    protected function normalizeValue($value)
     {
 		if (is_bool($value)) {
 			$value = $this->to('bool', $value);
@@ -148,7 +143,7 @@ class Config_Lite
 		} elseif (is_string($value) && !$this->isBool($value)) {
 			$value = '"'. $value .'"';
 		}
-		return $value;	
+		return $value;
     }
     /**
      * write INI-Style Config File 
@@ -177,12 +172,12 @@ class Config_Lite
                     foreach ($item as $key => $value) {
 					    if (is_array($value)) {
 							foreach ($value as $arrkey => $arrvalue) {
-						        $arrvalue = $this->createValue($arrvalue); 
+						        $arrvalue = $this->normalizeValue($arrvalue); 
 						        $arrkey = $key.'['.$arrkey.']';
 						        $sections.= $arrkey .' = '. $arrvalue ."\n";
 							}
 						} else {
-							$value = $this->createValue($value); 
+							$value = $this->normalizeValue($value); 
 							$sections.= $key .' = '. $value ."\n";
 					    }
                     }
@@ -574,6 +569,46 @@ class Config_Lite
         }
     }
     /**
+     * interface ArrayAccess
+     * 
+     * @return void
+     */    
+    public function offsetSet($offset, $value) 
+    {
+        $this->sections[$offset] = $value;
+    }
+    /**
+     * interface ArrayAccess
+     * 
+     * @return bool
+     */    
+    public function offsetExists($offset) 
+    {
+        return isset($this->sections[$offset]);
+    }
+    /**
+     * interface ArrayAccess
+     * 
+     * @return void
+     */
+    public function offsetUnset($offset) 
+    {
+        unset($this->sections[$offset]);
+    }
+    /**
+     * interface ArrayAccess
+     * 
+     * @return mixed
+     */    
+    public function offsetGet($offset) 
+    {
+		if (array_key_exists($offset, $this->sections)) {
+            return $this->sections[$offset];
+        }
+        return null;
+    }
+    
+    /**
      * Constructor optional takes a filename
      *
      * @param string $filename - "INI Style" Text Config File
@@ -582,6 +617,14 @@ class Config_Lite
     {
         if (($filename != null) && (file_exists($filename))) {
             $this->read($filename);
+        } else {
+            $this->sections = array();
         }
     }
+}
+
+spl_autoload_register(array('Config_Lite', 'autoload'));
+
+if (class_exists('Config_Lite_UnexpectedValueException', true) === false) {
+    throw new Exception('Config_Lite_UnexpectedValueException not found');
 }
