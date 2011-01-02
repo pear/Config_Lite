@@ -472,7 +472,7 @@ class Config_Lite implements ArrayAccess
         if (!is_array($this->sections)) {
             $this->sections = array();
         }
-        if (is_array($key)) {
+        if (is_array($key) || is_array($sec)) {
             throw new Config_Lite_InvalidArgumentException(
             'string key expected, but array given.');
         }

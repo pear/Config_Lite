@@ -126,18 +126,23 @@ class Config_LiteTest extends PHPUnit_Framework_TestCase
 		$this->config->set('users', 'name', 'John Doe')
 					 ->set('users', 'email', 'john@doe.com');
 		$this->assertEquals(array('name'=>'John Doe','email'=>'john@doe.com'), $this->config->getSection('users'));
-			
-		// Invalid Argument. Exception test
-		/*
+		// expected to raise an Invalid Argument exception, 
+		// if Section is Array
 		try {
-			// expected to raise an exception
-			$this->config->set('counter', array('count'), 1);
+			$this->config->set(array('counter' => 'count'), 1);
 		}
 		catch (Config_Lite_InvalidArgumentException $expected) {
 			return;
 		}
 		$this->fail('An Config_Lite_Exception expected, due to an invalid Argument. Exception has not been raised.');
-		*/
+		// if Key is Array		
+		try {
+			$this->config->set('section', array('count' => 1));
+		}
+		catch (Config_Lite_InvalidArgumentException $expected) {
+			return;
+		}
+		$this->fail('An Config_Lite_Exception expected, due to an invalid Argument. Exception has not been raised.');
 	}
 
 	public function testSetSection()
@@ -262,7 +267,8 @@ class Config_LiteTest extends PHPUnit_Framework_TestCase
 	
 	public function testArrayAccess()
 	{
-		$config['global'] = array('basepath' => '/var/www');
-		$this->assertEquals('/var/www', $config['global']['basepath']);
+		$this->config['global'] = array('basepath' => '/var/www');
+		$this->assertEquals('/var/www', $this->config['global']['basepath']);
 	}
+	
 }

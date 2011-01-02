@@ -1,0 +1,68 @@
+== Config_Lite
+
+https://github.com/pce/config_lite
+http://pear.php.net/pepr/pepr-proposal-show.php?id=645
+
+=== Description
+
+a lightweight and fast config class for INI style configuration files.
+Config_Lite is inspired by Pythons ConfigParser.
+
+A "Config_Lite" file consists of sections, "[section]", followed by "name = value" (KVP) entries.
+
+
+=== Examples
+
+A Configuration File: `test.cfg'
+
+----------
+[general]
+lang = en
+appname = feedreader
+
+[db]
+user = dionysis
+password = c2oiVnY!f8sf
+
+----------
+
+
+Read Configuration file:
+----------
+<?php
+
+require_once 'Config/Lite.php';
+
+$config = new Config_Lite('test.cfg');
+
+echo $config->get('db', 'user');
+
+// read with ArrayAccess
+echo $config['db']['password'];
+
+echo $config;
+
+?>
+----------
+
+
+Save Configuration file:
+----------
+<?php
+
+require_once 'Config/Lite.php';
+
+$config = new Config_Lite();
+$config->read('test.cfg');
+$config->set('db', 'user', 'JohnDoe')
+		->set('db', 'password', 'd0g1tcVs$HgIn1');
+
+// set with ArrayAccess
+$config['general'] = array('lang' => 'fr');
+
+echo $config;
+
+$config->save();
+
+?>
+----------
