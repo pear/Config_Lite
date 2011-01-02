@@ -533,12 +533,6 @@ class Config_Lite implements ArrayAccess
                     }
                 }
             }
-            return $s;
-        }
-        if (!isset($this->filename)) {
-            throw new Config_Lite_RuntimeException(
-                                   'Did not read a Configuration File.'
-                      );
         }
         return $s;
     }

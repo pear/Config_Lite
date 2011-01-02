@@ -259,4 +259,10 @@ class Config_LiteTest extends PHPUnit_Framework_TestCase
 		$this->config->removeSection('counter');
 		$this->assertEquals(FALSE, $this->config->hasSection('counter'));
 	}
+	
+	public function testArrayAccess()
+	{
+		$config['global'] = array('basepath' => '/var/www');
+		$this->assertEquals('/var/www', $config['global']['basepath']);
+	}
 }
