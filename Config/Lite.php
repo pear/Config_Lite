@@ -138,11 +138,12 @@ class Config_Lite implements ArrayAccess
     {
 		if (is_bool($value)) {
 			$value = $this->to('bool', $value);
+			return $value;
 		} elseif (is_numeric($value)) {
-			$value = $value;
-		} elseif (is_string($value) && !$this->isBool($value)) {
-			$value = '"'. $value .'"';
+			return $value;
 		}
+		// if (is_string($value) && !$this->isBool($value))
+		$value = '"'. $value .'"';
 		return $value;
     }
     /**
@@ -492,6 +493,7 @@ class Config_Lite implements ArrayAccess
             throw new Config_Lite_InvalidArgumentException(
             'string key expected, but array given.');
         }
+        
         if (is_null($sec)) {
 			$this->sections[$key] = $value;
 		} else {

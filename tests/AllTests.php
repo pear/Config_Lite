@@ -192,17 +192,47 @@ class Config_LiteTest extends PHPUnit_Framework_TestCase
 		}
 		$this->fail('An expected exception has not been raised.');
 	}
+
+	/**
+	 * to test protected methods 
+	 */
+	protected static function getMethod($name) 
+	{
+		$class = new ReflectionClass('Config_Lite');
+		$method = $class->getMethod($name);
+		$method->setAccessible(true);
+		return $method;
+	}
+
+	public function testNormalizeValue()
+	{
+		$m = self::getMethod('normalizeValue');
+		$obj = new Config_Lite();
+		
+		$b = $m->invokeArgs($obj, array(true));
+		$this->assertEquals('yes', $b);
+
+		$d = $m->invokeArgs($obj, array(1234));
+		$this->assertEquals(1234, $d);
+
+		$s = $m->invokeArgs($obj, array('String'));
+		$this->assertEquals('"String"', $s);
+	}
 	
 	public function testSingleQuotedEscapedInput()
 	{
-		$this->config->setString('quoted', 'single', '/(; "-"s[^\\\'"\\\']d//\\m\\\'"\'');
-		$this->assertEquals('/(; "-"s[^\\\'"\\\']d//\\m\\\'"\'', $this->config->getString('quoted', 'single'));
+		$this->config->setString('quoted', 'single', '/(; "-"s[^\\\'"\\\']d//m\\\'"\'');
+		$this->config->sync();
+		$this->assertEquals('/(; "-"s[^\\\'"\\\']d//m\\\'"\'', $this->config->getString('quoted', 'single'));
 	}
 	
 	public function testDoubleQuotedEscapedInput()
 	{
-		$this->config->setString('quoted', 'double', "/(; \"-\"s[^\'\"\']d//\\m\'\"'");
-		$this->assertEquals("/(; \"-\"s[^\'\"\']d//\\m\'\"'", $this->config->getString('quoted', 'double'));
+		$this->config->setString('quoted', 'double', "/(; \"-\"s[^\'\"\']d//m\'\"'");
+		$this->config->sync();
+		$this->assertEquals("/(; \"-\"s[^\'\"\']d//m\'\"'", $this->config->getString('quoted', 'double'));
+		$this->config->removeSection('quoted');
+		$this->config->sync();
 	}
 	
 	public function testSetNumericOptionWithSet()
@@ -220,7 +250,8 @@ class Config_LiteTest extends PHPUnit_Framework_TestCase
 	public function testSetBoolWithSet()
 	{
 		$this->config->set('counter', 'has_counter', TRUE);
-		$this->assertEquals(TRUE, $this->config->get('counter', 'has_counter'));
+		$this->config->sync();
+		$this->assertEquals(1, $this->config->get('counter', 'has_counter'));
 	}
 	
 	public function testHasOption()
