@@ -74,27 +74,29 @@ class Config_LiteTest extends PHPUnit_Framework_TestCase
 		$assoc_array = array(
 			'general' => array(
 				'lang' => "de",
-				'appname' => "ConfigTest"),
+				'app.name' => "ConfigTest",
+				'app.version' => '0.1.0'),
 			'counter' => array(
 				'count' => -1)
 		);
 		$filename = 'test.cfg';
 		$this->config->write($filename, $assoc_array);
 		$this->config->read($filename);
-		$this->assertEquals('ConfigTest', $this->config->get('general', 'appname'));
+		$this->assertEquals('ConfigTest', $this->config->get('general', 'app.name'));
 		$this->assertEquals(-1, $this->config->get('counter', 'count'));
 	}
 
 	public function testSave()
 	{
+		$this->config->set('counter', 'count', 2);
 		$this->config->save();
-		$this->assertEquals('ConfigTest', $this->config->get('general', 'appname'));
+		$this->assertEquals(2, $this->config->get('counter', 'count'));
 	}
 
 	public function testRead()
 	{
 		$this->config->read('test.cfg');
-		$this->assertEquals('ConfigTest', $this->config->get('general', 'appname'));
+		$this->assertEquals('ConfigTest', $this->config->get('general', 'app.name'));
 	}
 
 	public function testGet()
@@ -174,10 +176,10 @@ class Config_LiteTest extends PHPUnit_Framework_TestCase
 	
 	public function testSetIndexedArrayWithSet()
 	{
-		$this->config->set('array_test', 'tries', array('12/09', '12/10', '11/07'));
-		$this->assertEquals(array('12/09', '12/10', '11/07'), $this->config->get('array_test', 'tries'));
+		$this->config->set('test array', 'tries', array('12/09', '12/10', '11/07'));
+		$this->assertEquals(array('12/09', '12/10', '11/07'), $this->config->get('test array', 'tries'));
 		$this->config->sync();
-		$this->assertEquals(array('12/09', '12/10', '11/07'), $this->config->get('array_test', 'tries'));
+		$this->assertEquals(array('12/09', '12/10', '11/07'), $this->config->get('test array', 'tries'));
 	}
 
 	public function testSetArrayAsKeyWithSet()
