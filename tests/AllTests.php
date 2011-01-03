@@ -266,7 +266,7 @@ class Config_LiteTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals('test.cfg', $this->config['filename']);
 		$this->config->sync();
 		// global values with null
-		// $this->assertEquals('test.cfg', $this->config['filename']);
+		$this->assertEquals('test.cfg', $this->config['filename']);
 	}
 	
 }

@@ -54,3 +54,21 @@ echo $config;
 $config->save();
 
 ----------
+
+
+global Configuration options (without sections) :
+
+----------
+<?php
+
+$config->set(null, 'private_key_file', '~/.ssh/id_rsa');
+// set with arrayaccess
+$config['public_key_file'] = '~/.ssh/id_rsa.pub';
+
+$config->sync();
+
+echo $config->get(null, 'public_key_file');
+// get with arrayaccess
+echo $config['private_key_file'];
+
+----------
