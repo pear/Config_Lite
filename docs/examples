@@ -1,35 +1,56 @@
-An example of Config_Lite using :
-------------------------------------
+An example of Config_Lite usage :
+---------------------------------
 
 >>> Basic one :
 
+A Configuration File: `test.cfg'
+
+----------
+[general]
+lang = en
+appname = feedreader
+
+[db]
+user = dionysis
+password = c2oiVnY!f8sf
+
+----------
+
+
+Read Configuration file:
+----------
 <?php
 
-include 'Config/Lite.php';
+require_once 'Config/Lite.php';
+
+$config = new Config_Lite('test.cfg');
+
+echo $config->get('db', 'user');
+
+// read with ArrayAccess
+echo $config['db']['password'];
+
+echo $config;
+
+----------
+
+
+Save Configuration file:
+----------
+<?php
+
+require_once 'Config/Lite.php';
 
 $config = new Config_Lite();
+$config->read('test.cfg');
+$config->set('db', 'user', 'JohnDoe')
+	->set('db', 'password', 'd0g1tcVs$HgIn1');
 
-$config->read('./test.cfg');
+// set with ArrayAccess
+$config['general'] = array('lang' => 'fr');
 
 echo $config;
-
-$config->set('mailbox1234567test', 'count', 1);
-
-// array get Section 
-print_r($config->getSection('mailbox1234567test'));
-
-// get value with default value 0
-echo $config->get('mailbox1234567test', 'count', 0);
 
 $config->save();
 
-$config->read('./test.cfg');
-
-echo $config;
-
-$config->set('mailbox1234567test', 'count', 0);
-
-$config->save();
-
-echo $config;
-
+----------

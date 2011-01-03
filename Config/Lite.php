@@ -165,7 +165,16 @@ class Config_Lite implements ArrayAccess
             $content .= ';<?php return; ?>' . "\n";
         }
         $sections = '';
+        $globals = '';
         if (!empty($sectionsarray)) {
+			// 2 loops to write `globals' on top, alternative: buffer
+		    foreach ($sectionsarray as $section => $item) {
+                if (!is_array($item)) {
+						$value = $this->normalizeValue($item);
+						$globals.= $section .' = '. $value ."\n";
+				}
+            }
+            $content.= $globals;
             foreach ($sectionsarray as $section => $item) {
                 if (is_array($item)) {
                     $sections.= "\n[".$section."]\n";
@@ -278,13 +287,20 @@ class Config_Lite implements ArrayAccess
      */
     public function get($sec, $key, $default = null)
     {
+		/*
         if (is_null($this->sections) && is_null($default)) {
             throw new Config_Lite_RuntimeException(
                     'configuration seems to be empty, no sections.');
         }
-        if (array_key_exists($key, $this->sections[$sec])) {
+        */
+        if (!is_null($sec) && array_key_exists($key, $this->sections[$sec])) {
             return $this->sections[$sec][$key];
         }
+        // global value
+        if (array_key_exists($key, $this->sections)) {
+            return $this->sections[$key];
+        }
+
         if (!is_null($default)) {
             return $default;
         }
@@ -476,7 +492,11 @@ class Config_Lite implements ArrayAccess
             throw new Config_Lite_InvalidArgumentException(
             'string key expected, but array given.');
         }
-        $this->sections[$sec][$key] = $value;
+        if (is_null($sec)) {
+			$this->sections[$key] = $value;
+		} else {
+			$this->sections[$sec][$key] = $value;
+		}
         return $this;
     }
     /**

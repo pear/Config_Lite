@@ -16,9 +16,9 @@
 
 require_once 'PHPUnit/Framework.php';
 
-if (is_file(dirname(__FILE__).'/../Lite.php') === true) {
+if (is_file(dirname(__FILE__).'/../Config/Lite.php') === true) {
     // not installed.
-    require_once dirname(__FILE__).'/../Lite.php';
+    require_once dirname(__FILE__).'/../Config/Lite.php';
 } else {
     require_once 'Config/Lite.php';
 }
@@ -106,19 +106,11 @@ class Config_LiteTest extends PHPUnit_Framework_TestCase
 		$this->config->set('counter', 'count', 2);
 		$counter = $this->config->get('counter', 'count');
 		$this->assertEquals(2, $counter); 
-		// exception test
-		try {
-			// expected to raise an Config_Lite_Exception
-			$this->config->get('counter', 'counter');
-		}
-		catch (Config_Lite_Exception $expected) {
-			return;
-		}
-		catch (Config_Lite_Exception $expected) {
-			return;
-		}
 		
-		$this->fail('An expected exception has not been raised.');
+		// global values with null
+		$this->config->set(null, 'filename', 'test.cfg');
+		$s = $this->config->get(null, 'filename');
+		$this->assertEquals('test.cfg', $s);
 	}
 
 	public function testSet()
@@ -267,8 +259,14 @@ class Config_LiteTest extends PHPUnit_Framework_TestCase
 	
 	public function testArrayAccess()
 	{
-		$this->config['global'] = array('basepath' => '/var/www');
-		$this->assertEquals('/var/www', $this->config['global']['basepath']);
+		$this->config['server'] = array('basepath' => '/var/www');
+		$this->assertEquals('/var/www', $this->config['server']['basepath']);
+		// global values with null
+		$this->config['filename'] = 'test.cfg';
+		$this->assertEquals('test.cfg', $this->config['filename']);
+		$this->config->sync();
+		// global values with null
+		// $this->assertEquals('test.cfg', $this->config['filename']);
 	}
 	
 }
