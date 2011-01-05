@@ -282,11 +282,11 @@ class Config_Lite implements ArrayAccess
     }
 
     /**
-     * get
+     * get an option by section or null to get global option  
      * 
-     * @param string $sec     Section
+     * @param string $sec     Section|null - null to get global option
      * @param string $key     Key
-     * @param mixed  $default default return value
+     * @param mixed  $default return default value if is $key is not set
      * 
      * @return string
      * @throws Config_Lite_Exception when config is empty 
@@ -295,12 +295,6 @@ class Config_Lite implements ArrayAccess
      */
     public function get($sec, $key, $default = null)
     {
-		/*
-        if (is_null($this->sections) && is_null($default)) {
-            throw new Config_Lite_RuntimeException(
-                    'configuration seems to be empty, no sections.');
-        }
-        */
         if (!is_null($sec) && array_key_exists($key, $this->sections[$sec])) {
             return $this->sections[$sec][$key];
         }
@@ -317,12 +311,12 @@ class Config_Lite implements ArrayAccess
                   );
     }
     /**
-     * getBool - returns on,yes,1,true as TRUE 
+     * getBool returns on,yes,1,true as TRUE 
      * and no given value or off,no,0,false as FALSE
      *
      * @param string $sec     Section
      * @param string $key     Key
-     * @param bool   $default default Value
+     * @param bool   $default return default value if is $key is not set
      * 
      * @return bool
      * @throws Config_Lite_Exception when the configuration is empty 
@@ -359,7 +353,7 @@ class Config_Lite implements ArrayAccess
      * array get section
      *
      * @param string $sec     Section
-     * @param array  $default default value
+     * @param array  $default return default array if $sec is not set
      * 
      * @return array
      * @throws Config_Lite_Exception when config is empty 

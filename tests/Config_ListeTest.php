@@ -14,8 +14,6 @@
  * @link      https://github.com/pce/config_lite
  */
 
-require_once 'PHPUnit/Framework.php';
-
 if (is_file(dirname(__FILE__).'/../Config/Lite.php') === true) {
     // not installed.
     require_once dirname(__FILE__).'/../Config/Lite.php';
