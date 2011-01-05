@@ -10,14 +10,15 @@ http://pear.php.net/dtd/package-2.0
 http://pear.php.net/dtd/package-2.0.xsd">
   <name>Config_Lite</name>
   <channel>pear.php.net</channel>
-  <summary>Common classes for Config packages</summary>
+  <summary>a lightweight and fast Config class for ini style text configuration files.</summary>
   <description>
   </description>
-  <description>This package defines a lightweight and fast class for config/settings text files in ini style. 
+  <description>This package defines a class for config/settings text files in ini style. 
 A "Config_Lite" file consists of global "name = value" entries and sections, 
 "[section]", followed by "name = value" entries.
 Currently classes available are:
  * Config_Lite: a lightweight class with arrayaccess to handle ini style files
+ * Config_Lite_Exception: Interface implemented by Exceptions
  </description>
   <lead>
     <name>Patrick C. Engel</name>
@@ -60,10 +61,8 @@ Currently classes available are:
         </dir>
       </dir>
       <dir name="tests">
-   			<file  
-				name="tests/Config_LiteTest.php" role="test" />
-			<file  
-				name="tests/test.cfg" role="test" />
+   			<file name="tests/Config_LiteTest.php" role="test" />
+			<file name="tests/test.cfg" role="test" />
       </dir>
     </dir>
   </contents>
