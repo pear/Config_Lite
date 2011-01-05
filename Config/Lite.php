@@ -309,7 +309,7 @@ class Config_Lite implements ArrayAccess
             }
             $value = strtolower($this->sections[$sec][$key]);
             if (!in_array($value, $this->_booleans) && is_null($default)) {
-                throw new Config_Lite_Exception_UnexpectedValue(sprintf('Not a boolean: %s, and no default value given.', $value));
+                throw new Config_Lite_Exception_InvalidArgument(sprintf('Not a boolean: %s, and no default value given.', $value));
             } else {
                 return $this->_booleans[$value];
             }
@@ -440,7 +440,7 @@ class Config_Lite implements ArrayAccess
             $this->sections = array();
         }
         if (is_array($key)) {
-            throw new Config_Lite_Exception_UnexpectedValue('string key expected, but array given.');
+            throw new Config_Lite_Exception_InvalidArgument('string key expected, but array given.');
         }
         $this->sections[$sec][$key] = addslashes($value);
         return $this;
