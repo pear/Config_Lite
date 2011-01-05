@@ -71,12 +71,19 @@ class Config_Lite implements ArrayAccess
      * @return void
      * @throws Config_Lite_Exception when file not exists
      */
-    public function read($filename)
+    public function read($filename=null)
     {
-        if (!file_exists($filename) || !is_readable($filename)) {
+    	if (is_null($filename)) {
+	        $filename = $this->filename;
+    	} else {
+   	        $this->filename = $filename;
+    	}
+        if (!file_exists($filename)) {
             throw new Config_Lite_RuntimeException('file not found: ' . $filename);
         }
-        $this->filename = $filename;
+        if (!is_readable($filename)) {
+            throw new Config_Lite_RuntimeException('file not readable: ' . $filename);
+        }
         $this->sections = parse_ini_file($filename, true);
         if (false === $this->sections) {
             throw new Config_Lite_RuntimeException(
@@ -105,7 +112,7 @@ class Config_Lite implements ArrayAccess
     {
         if (!isset($this->filename)) {
             throw new Config_Lite_RuntimeException(
-                    'no filename given.');
+                    'no filename set.');
         }
         if (!is_array($this->sections)) {
             $this->sections = array();
@@ -640,7 +647,3 @@ class Config_Lite implements ArrayAccess
 }
 
 spl_autoload_register(array('Config_Lite', 'autoload'));
-
-if (class_exists('Config_Lite_UnexpectedValueException', true) === false) {
-    throw new Exception('Config_Lite_UnexpectedValueException not found');
-}
