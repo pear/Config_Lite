@@ -13,6 +13,12 @@
  * @version   Release: @package_version@
  * @link      https://github.com/pce/config_lite
  */
+
+require_once 'Config/Lite/Exception.php';
+require_once 'Config/Lite/Exception/InvalidArgument.php';
+require_once 'Config/Lite/Exception/Runtime.php';
+require_once 'Config/Lite/Exception/UnexpectedValue.php';
+
 /**
  * Config_Lite Class
  *
@@ -535,33 +541,6 @@ class Config_Lite implements ArrayAccess
     }
     
     /**
-     * Autoload static method for loading classes and interfaces.
-     *
-     * includes Code from the PHP_CodeSniffer package by
-     * Greg Sherwood and Marc McIntyre
-     *
-     * @param string $className - name of the class or interface.
-     *
-     * @return void
-     */
-    public static function autoload($className) 
-    {
-        $package = 'Config_';
-        $packageLen = strlen($package);
-        if (substr($className, 0, $packageLen) === $package) {
-            $newClassName = substr($className, $packageLen);
-        } else {
-            $newClassName = $className;
-        }
-        $path = str_replace('_', '/', $newClassName) . '.php';
-        if (is_file(dirname(__FILE__) . '/' . $path) === true) {
-            include dirname(__FILE__) . '/' . $path;
-        } else {
-            file_exists($path) && (include $path);
-        }
-    }
-    
-    /**
      * interface ArrayAccess
      *
      * @param string $offset section, implemented by ArrayAccess
@@ -627,5 +606,3 @@ class Config_Lite implements ArrayAccess
         }
     }
 }
-
-spl_autoload_register(array('Config_Lite', 'autoload'));
