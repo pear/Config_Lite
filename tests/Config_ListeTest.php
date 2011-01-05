@@ -169,7 +169,7 @@ class Config_LiteTest extends PHPUnit_Framework_TestCase
 		try {
 			$this->config->set(array('counter' => 'count'), 1);
 		}
-		catch (Config_Lite_InvalidArgumentException $expected) {
+		catch (Config_Lite_Exception_InvalidArgument $expected) {
 			return;
 		}
 		$this->fail('An Config_Lite_Exception expected, due to an invalid Argument. Exception has not been raised.');
@@ -177,7 +177,7 @@ class Config_LiteTest extends PHPUnit_Framework_TestCase
 		try {
 			$this->config->set('section', array('count' => 1));
 		}
-		catch (Config_Lite_InvalidArgumentException $expected) {
+		catch (Config_Lite_Exception_InvalidArgument $expected) {
 			return;
 		}
 		$this->fail('An Config_Lite_Exception expected, due to an invalid Argument. Exception has not been raised.');
@@ -227,7 +227,7 @@ class Config_LiteTest extends PHPUnit_Framework_TestCase
 			// expected to raise an Config_Lite_Exception
 			$this->config->set('arraytestsection', array('key1', 'key2'), 'a_option');
 		}
-		catch (Config_Lite_InvalidArgumentException $expected) {
+		catch (Config_Lite_Exception_InvalidArgument $expected) {
 			return;
 		}
 		$this->fail('An expected exception has not been raised.');

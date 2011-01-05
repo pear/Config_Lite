@@ -1,10 +1,10 @@
 <?php
 /**
- * Config_Lite_UnexpectedValueException (Config/Lite/UnexpectedValueException.php)
+ * Config_Lite_Exception_UnexpectedValue (Config/Lite/Exception/UnexpectedValue.php)
  *
  * PHP version 5
  *
- * @file      Config/Lite/UnexpectedValueException.php
+ * @file      Config/Lite/Exception/UnexpectedValue.php
  * @category  Configuration
  * @package   Config_Lite
  * @author    Patrick C. Engel <info@pc-e.org>
@@ -16,7 +16,7 @@
 
 
 /**
- * Config_Lite_UnexpectedValueException
+ * Config_Lite_Exception_UnexpectedValue
  *
  * implements Config_Lite_Exception
  *
@@ -29,7 +29,7 @@
  * @link      https://github.com/pce/config_lite
  */
 
-class Config_Lite_UnexpectedValueException 
+class Config_Lite_Exception_UnexpectedValue 
               extends UnexpectedValueException 
               implements Config_Lite_Exception
 {

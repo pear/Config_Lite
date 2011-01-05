@@ -1,10 +1,10 @@
 <?php
 /**
- * Config_Lite_InvalidArgumentException (Config/Lite/InvalidArgumentException.php)
+ * Config_Lite_Exception_Runtime (Config/Lite/Exception/Runtime.php)
  *
  * PHP version 5
  *
- * @file      Config/Lite/InvalidArgumentException.php
+ * @file      Config/Lite/Exception/Runtime.php
  * @category  Configuration
  * @package   Config_Lite
  * @author    Patrick C. Engel <info@pc-e.org>
@@ -16,7 +16,7 @@
 
 
 /**
- * Config_Lite_InvalidArgumentException
+ * Config_Lite_Exception_Runtime
  *
  * implements Config_Lite_Exception
  *
@@ -28,7 +28,8 @@
  * @version   Release: @package_version@
  * @link      https://github.com/pce/config_lite
  */
-class Config_Lite_InvalidArgumentException
+
+class Config_Lite_Exception_Runtime
               extends RuntimeException
               implements Config_Lite_Exception
 {
