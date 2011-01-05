@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package packagerversion="1.4.2"
+     version="2.0"
+     xmlns="http://pear.php.net/dtd/package-2.0"
+     xmlns:tasks="http://pear.php.net/dtd/tasks-1.0"
+     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+     xsi:schemaLocation="http://pear.php.net/dtd/tasks-1.0
+http://pear.php.net/dtd/tasks-1.0.xsd
+http://pear.php.net/dtd/package-2.0
+http://pear.php.net/dtd/package-2.0.xsd">
+  <name>Config_Lite</name>
+  <channel>pear.php.net</channel>
+  <summary>Common classes for Config packages</summary>
+  <description>
+  </description>
+  <description>This package defines a lightweight and fast class for config/settings text files in ini style. 
+A "Config_Lite" file consists of global "name = value" entries and sections, 
+"[section]", followed by "name = value" entries.
+Currently classes available are:
+ * Config_Lite: a lightweight class with arrayaccess to handle ini style files
+ </description>
+  <lead>
+    <name>Patrick C. Engel</name>
+    <user>pce</user>
+    <email>info@pc-e.org</email>
+    <active>yes</active>
+  </lead>
+  <date>2011-01-05</date>
+  <version>
+    <release>0.1.0</release>
+    <api>0.1.0</api>
+  </version>
+  <stability>
+    <release>beta</release>
+    <api>beta</api>
+  </stability>
+ <license uri="http://www.gnu.org/copyleft/lesser.html">lgpl</license>
+ <notes>Initial release.</notes>
+  <contents>
+    <dir name="/">
+      <dir name="Config">
+        <dir name="Lite">
+          <file name="Lite.php" role="php">
+            <tasks:replace from="@package_version@" to="version" type="package-info"/>
+          </file>
+          <file name="Exception.php" role="php">
+            <tasks:replace from="@package_version@" to="version" type="package-info"/>
+          </file>
+          <dir name="Exception">
+          <file name="Runtime.php" role="php">
+            <tasks:replace from="@package_version@" to="version" type="package-info"/>
+          </file>
+          <file name="InvalidArgument.php" role="php">
+            <tasks:replace from="@package_version@" to="version" type="package-info"/>
+          </file>
+          <file name="UnexpectedValue.php" role="php">
+            <tasks:replace from="@package_version@" to="version" type="package-info"/>
+          </file>
+          </dir>
+        </dir>
+      </dir>
+      <dir name="tests">
+   			<file  
+				name="tests/Config_LiteTest.php" role="test" />
+			<file  
+				name="tests/test.cfg" role="test" />
+      </dir>
+    </dir>
+  </contents>
+  <dependencies>
+    <required>
+      <php>
+        <min>5.2.0</min>
+      </php>
+      <pearinstaller>
+        <min>1.4.0b1</min>
+      </pearinstaller>
+    </required>
+  </dependencies>
+  <phprelease/>
+  <changelog/>
+</package>
