@@ -11,8 +11,6 @@ http://pear.php.net/dtd/package-2.0.xsd">
   <name>Config_Lite</name>
   <channel>pear.php.net</channel>
   <summary>a lightweight and fast Config class for ini style text configuration files.</summary>
-  <description>
-  </description>
   <description>This package defines a class for config/settings text files in ini style. 
 A "Config_Lite" file consists of global "name = value" entries and sections, 
 "[section]", followed by "name = value" entries.
@@ -26,7 +24,7 @@ Currently classes available are:
     <email>info@pc-e.org</email>
     <active>yes</active>
   </lead>
-  <date>2011-01-05</date>
+  <date>2011-01-06</date>
   <version>
     <release>0.1.0</release>
     <api>0.1.0</api>

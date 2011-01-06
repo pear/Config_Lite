@@ -1,0 +1,91 @@
+#!/usr/bin/env php
+<?php
+
+
+$targets[] = 'target_phpcs';
+function target_phpcs() 
+{
+	$cs = 'phpcs'; 
+	$target = 'Config/Lite.php';
+	// execute phpcs
+	$cs = exec($cs .' '.$target);
+	if (empty($cs)) {
+		printf("== %s\n", 'Coding Standard');
+		printf("%s\n", 'OK');
+	}
+	printf("\n");
+}
+
+$targets[] = 'target_test';
+function target_test()
+{
+	$phpunit = 'phpunit';
+	$test_target = 'tests/Config_LiteTest.php';
+	printf("== %s\n", 'Unit Tests');
+	// execute phpunit
+	echo exec($phpunit . ' ' . $test_target); 
+	printf("\n");
+}
+
+$targets[] = 'target_beautify';
+function target_beautify() 
+{
+	echo exec('php_beautifier -f Lite.php -o Lite_.php');
+	printf("\n");
+}
+
+$targets[] = 'target_package';
+function target_package()
+{
+	// Used to create the Package
+	echo exec('pear package ./package2.xml');
+	printf("\n");
+}
+
+$targets[] = 'target_validate';
+function target_validate() 
+{
+	// Validating
+	echo exec('pear package-validate Config_Lite-0.1.0.tgz');
+	printf("\n");
+}
+
+$targets[] = 'target_default';
+function target_default()
+{
+	target_phpcs();
+	target_test();
+}
+
+// ---------------------------------------------------------------------
+
+function print_usage($prg, $err=false)
+{
+	fprintf($err?STDERR:STDOUT, "Usage: %s [target]\n", $prg);
+	$err && fprintf(STDERR, "       run with -h too see all targets\n\n");
+	$err && exit(1);
+}
+
+
+if ($argc == 1 ) {
+	target_default();
+}
+
+if ($argc > 1) {
+	$target = 'target_'.$argv[1];
+	if (in_array($target, $targets)) {
+		$target();
+	} elseif ($argv[1] == '-h') {
+		print_usage($argv[0]);
+		$avail_targets = str_replace('target_', '', $targets);
+		printf("\n== %s\n",'available targets:');
+		foreach ($avail_targets as $option) {
+			printf("\t%s\n", $option);
+		}
+		printf("\n");
+	} else {
+		print_usage($argv[0], true);	
+	}
+}
+
+
