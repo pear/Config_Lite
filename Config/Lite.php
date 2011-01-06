@@ -23,11 +23,9 @@ require_once 'Config/Lite/Exception/UnexpectedValue.php';
  * Config_Lite Class
  *
  * read & save INI text files for Configuration/Settings.
- * Many applications in the Unix World use INI text files.
- *
- * Config_Lite is fast, with the native PHP function under the hood.
- * Inspired by Python's ConfigParser.
- *
+ * Config_Lite is fast, with the native PHP function 
+ * `parse_ini_file`' under the hood.
+ * The API is inspired by Python's ConfigParser.
  * A "Config_Lite" file consists of sections,
  * "[section]"
  * followed by "name = value" entries
@@ -39,7 +37,6 @@ require_once 'Config/Lite/Exception/UnexpectedValue.php';
  * @author    Patrick C. Engel <info@pc-e.org>
  * @copyright 2010 info@pc-e.org
  * @license   http://www.gnu.org/copyleft/lesser.html  LGPL License 2.1
- * @version   Release: @package_version@
  * @link      https://github.com/pce/config_lite
  */
 class Config_Lite implements ArrayAccess

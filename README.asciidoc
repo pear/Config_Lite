@@ -1,76 +1,90 @@
 == Config_Lite
 
-https://github.com/pce/config_lite
+https://github.com/pce/config_lite +
 http://pear.php.net/pepr/pepr-proposal-show.php?id=645
 
 === Description
 
-a lightweight and fast config class for INI style configuration files.
-Config_Lite is inspired by Pythons ConfigParser.
+a simple, lightweight and fast config class for INI style configuration files, 
+with the native PHP function `parse_ini_file' under the hood.
+ +
+Config_Lite is inspired by Pythons ConfigParser. +
+ +
+A "Config_Lite" file consists of sections, "[section]", 
+followed by "name = value" (KVP) entries.
 
-A "Config_Lite" file consists of sections, "[section]", followed by "name = value" (KVP) entries.
+=== Notes & Limitations
+
+Config_Lite is an OO Frontend to `parse_ini_file' and writing ini files. +
+Use getString and setString to save Strings with double and single-quotes.
+
+IMPORTANT: Config_Lite does not support Comments ans Multiline Strings, because reading with `parse_ini_file' does not support it.
 
 
 === Examples
 
-A Configuration File: `test.cfg'
-
+.A simple configuration file: `test.ini'
 ----------
+
+public_key_file =  "~/.ssh/id_rsa.pub"
+
 [general]
-lang = en
-appname = feedreader
+lang = "en"
+appname = "feedreader"
 
 [db]
-user = dionysis
-password = c2oiVnY!f8sf
+user = "dionysis"
+password = "c2oiVnY!f8sf"
 
 ----------
 
-
-Read Configuration file:
-----------
+.Read Configuration file:
+[source,php]
+----
 <?php
 
 require_once 'Config/Lite.php';
 
-$config = new Config_Lite('test.cfg');
+$config = new Config_Lite('test.ini');
 
-echo $config->get('db', 'user');
+echo $config->get('db', 'user'); // dionysis
+echo $config->get(null, 'public_key_file'); // ~/.ssh/id_rsa.pub
 
 // read with ArrayAccess
-echo $config['db']['password'];
+echo $config['db']['password']; // c2oiVnY!f8sf
 
 echo $config;
+----
 
-----------
 
 
-Save Configuration file:
-----------
+.Save Configuration file:
+[source,php]
+----
 <?php
 
 require_once 'Config/Lite.php';
 
 $config = new Config_Lite();
-$config->read('test.cfg');
+$config->read('test.ini');
 $config->set('db', 'user', 'JohnDoe')
 	->set('db', 'password', 'd0g1tcVs$HgIn1');
 
 // set with ArrayAccess
-$config['general'] = array('lang' => 'fr');
+$config['public_key_file'] = '~/.ssh/id_rsa.pub';
+$config['general'] = array('lang' => 'de');
 
+// print config object
 echo $config;
 
+// save object to file
 $config->save();
+----
 
-----------
 
-
-global Configuration options (without sections) :
-
-----------
-<?php
-
+.global Configuration options (without sections) :
+[source,php]
+----
 $config->set(null, 'private_key_file', '~/.ssh/id_rsa');
 // set with arrayaccess
 $config['public_key_file'] = '~/.ssh/id_rsa.pub';
@@ -80,5 +94,8 @@ $config->sync();
 echo $config->get(null, 'public_key_file');
 // get with arrayaccess
 echo $config['private_key_file'];
+----
 
-----------
+
+
+
