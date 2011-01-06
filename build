@@ -1,8 +1,19 @@
 #!/usr/bin/env php
 <?php
 
+/**
+ * simple buildscript
+ *
+ * PHP version 5.3
+ *
+ * @file      build
+ * @author    Patrick C. Engel <info@pc-e.org>
+ * @copyright 2011 info@pc-e.org
+ * @license   http://www.gnu.org/copyleft/lesser.html  LGPL License 2.1
+ * @link      https://github.com/pce/config_lite
+ */
 
-$targets[] = 'target_phpcs';
+
 function target_phpcs() 
 {
 	$cs = 'phpcs'; 
@@ -15,8 +26,8 @@ function target_phpcs()
 	}
 	printf("\n");
 }
+$targets[] = 'target_phpcs';
 
-$targets[] = 'target_test';
 function target_test()
 {
 	$phpunit = 'phpunit';
@@ -26,43 +37,46 @@ function target_test()
 	echo exec($phpunit . ' ' . $test_target); 
 	printf("\n");
 }
+$targets[] = 'target_test';
 
-$targets[] = 'target_beautify';
 function target_beautify() 
 {
 	echo exec('php_beautifier -f Lite.php -o Lite_.php');
 	printf("\n");
 }
+$targets[] = 'target_beautify';
 
-$targets[] = 'target_package';
 function target_package()
 {
 	// Used to create the Package
-	echo exec('pear package ./package2.xml');
+	echo exec('pear package ./package.xml');
 	printf("\n");
 }
+$targets[] = 'target_package';
 
-$targets[] = 'target_validate';
 function target_validate() 
 {
 	// Validating
 	echo exec('pear package-validate Config_Lite-0.1.0.tgz');
 	printf("\n");
 }
+$targets[] = 'target_validate';
 
-$targets[] = 'target_default';
 function target_default()
 {
 	target_phpcs();
 	target_test();
 }
+$targets[] = 'target_default';
 
 // ---------------------------------------------------------------------
 
 function print_usage($prg, $err=false)
 {
-	fprintf($err?STDERR:STDOUT, "Usage: %s [target]\n", $prg);
-	$err && fprintf(STDERR, "       run with -h too see all targets\n\n");
+	fprintf($err?STDERR:STDOUT, "Usage: %s [<target>]\n\n", $prg);
+	$err && fprintf(STDERR, "    run with -h too see all targets\n\n");
+	fprintf($err?STDERR:STDOUT, "    without any target, %s invokes the `task_default'.\n", $prg);
+	fprintf($err?STDERR:STDOUT, "    Example: %s default\n\n", $prg);
 	$err && exit(1);
 }
 
@@ -75,17 +89,16 @@ if ($argc > 1) {
 	$target = 'target_'.$argv[1];
 	if (in_array($target, $targets)) {
 		$target();
-	} elseif ($argv[1] == '-h') {
+	} elseif ($argv[1] == '-h' || $argv[1] == '--help') {
 		print_usage($argv[0]);
 		$avail_targets = str_replace('target_', '', $targets);
-		printf("\n== %s\n",'available targets:');
+		printf("\n  %s\n\n", 'available targets:');
 		foreach ($avail_targets as $option) {
-			printf("\t%s\n", $option);
+			printf("    %s\n", $option);
 		}
 		printf("\n");
 	} else {
 		print_usage($argv[0], true);	
 	}
 }
-
 
