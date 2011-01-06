@@ -88,7 +88,7 @@ echo $config['private_key_file'];
 Config_Lite is an OO Frontend to `parse_ini_file' and writing ini files. +
 Use getString and setString to save Strings with double and single-quotes. +
 
-Config_Lite does not support Comments ans Multiline Strings, because reading with `parse_ini_file' does not support it.
+Config_Lite does not support Comments and Multiline Strings, because reading with `parse_ini_file' does not support it.
 
 
 === Contributing
@@ -98,6 +98,6 @@ Create an Issue with a Link to your forked branch.
 
 === Metainfo
 
-Author: pce <info@pc-e.org> +
+Author: pce < (at) pc-e.org> +
 https://github.com/pce/config_lite +
 http://pear.php.net/pepr/pepr-proposal-show.php?id=645
