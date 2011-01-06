@@ -10,7 +10,7 @@
  * @author    Patrick C. Engel <info@pc-e.org>
  * @copyright 2010 info@pc-e.org
  * @license   http://www.gnu.org/copyleft/lesser.html  LGPL License 2.1
- * @version   Release: @package_version@
+ * @version   SVN: $Id$
  * @link      https://github.com/pce/config_lite
  */
 
@@ -84,11 +84,15 @@ class Config_Lite implements ArrayAccess
             throw new Config_Lite_Exception_Runtime('file not found: ' . $filename);
         }
         if (!is_readable($filename)) {
-            throw new Config_Lite_Exception_Runtime('file not readable: ' . $filename);
+            throw new Config_Lite_Exception_Runtime('file not readable: '
+                . $filename
+            );
         }
         $this->sections = parse_ini_file($filename, true);
         if (false === $this->sections) {
-            throw new Config_Lite_Exception_Runtime('failure, can not parse the file: ' . $filename);
+            throw new Config_Lite_Exception_Runtime(
+                'failure, can not parse the file: ' . $filename
+            );
         }
     }
     /**
@@ -204,10 +208,16 @@ class Config_Lite implements ArrayAccess
             $content.= $sections;
         }
         if (!$fp = fopen($filename, 'w')) {
-            throw new Config_Lite_Exception_Runtime(sprintf('failed to open file `%s\' for writing.', $filename));
+            throw new Config_Lite_Exception_Runtime(
+                sprintf(
+                    'failed to open file `%s\' for writing.', $filename
+                )
+            );
         }
         if (!fwrite($fp, $content)) {
-            throw new Config_Lite_Exception_Runtime(sprintf('failed to write file `%s\'', $filename));
+            throw new Config_Lite_Exception_Runtime(
+                sprintf('failed to write file `%s\'', $filename)
+            );
         }
         fclose($fp);
         return true;
@@ -234,7 +244,9 @@ class Config_Lite implements ArrayAccess
             break;
         default:
             // unknown format
-            throw new Config_Lite_Exception_UnexpectedValue(sprintf('no conversation made, unrecognized format: `%s\'', $format));
+            throw new Config_Lite_Exception_UnexpectedValue(
+                sprintf('no conversation made, unrecognized format: `%s\'', $format)
+            );
             break;
         }
     }
@@ -254,7 +266,9 @@ class Config_Lite implements ArrayAccess
     public function getString($sec, $key, $default = null) 
     {
         if (is_null($this->sections) && is_null($default)) {
-            throw new Config_Lite_Exception_Runtime('configuration seems to be empty, no sections.');
+            throw new Config_Lite_Exception_Runtime(
+                'configuration seems to be empty, no sections.'
+            );
         }
         if (array_key_exists($key, $this->sections[$sec])) {
             return stripslashes($this->sections[$sec][$key]);
@@ -262,7 +276,9 @@ class Config_Lite implements ArrayAccess
         if (!is_null($default)) {
             return $default;
         }
-        throw new Config_Lite_Exception_UnexpectedValue('key not found, no default value given.');
+        throw new Config_Lite_Exception_UnexpectedValue(
+            'key not found, no default value given.'
+        );
     }
     
     /**
@@ -289,7 +305,9 @@ class Config_Lite implements ArrayAccess
         if (!is_null($default)) {
             return $default;
         }
-        throw new Config_Lite_Exception_UnexpectedValue('key not found, no default value given.');
+        throw new Config_Lite_Exception_UnexpectedValue(
+            'key not found, no default value given.'
+        );
     }
     
     /**
@@ -307,7 +325,10 @@ class Config_Lite implements ArrayAccess
     public function getBool($sec, $key, $default = null) 
     {
         if (is_null($this->sections) && is_null($default)) {
-            throw new Config_Lite_Exception_Runtime('configuration seems to be empty (no sections),' . 'and no default value given.');
+            throw new Config_Lite_Exception_Runtime(
+                'configuration seems to be empty (no sections),' 
+                . 'and no default value given.'
+            );
         }
         if (array_key_exists($key, $this->sections[$sec])) {
             if (empty($this->sections[$sec][$key])) {
@@ -315,7 +336,12 @@ class Config_Lite implements ArrayAccess
             }
             $value = strtolower($this->sections[$sec][$key]);
             if (!in_array($value, $this->_booleans) && is_null($default)) {
-                throw new Config_Lite_Exception_InvalidArgument(sprintf('Not a boolean: %s, and no default value given.', $value));
+                throw new Config_Lite_Exception_InvalidArgument(
+                    sprintf(
+                        'Not a boolean: %s, and no default value given.', 
+                        $value
+                    )
+                );
             } else {
                 return $this->_booleans[$value];
             }
@@ -323,7 +349,9 @@ class Config_Lite implements ArrayAccess
         if (!is_null($default)) {
             return $default;
         }
-        throw new Config_Lite_Exception_UnexpectedValue('option not found, no default value given.');
+        throw new Config_Lite_Exception_UnexpectedValue(
+            'option not found, no default value given.'
+        );
     }
     
     /**
@@ -341,7 +369,9 @@ class Config_Lite implements ArrayAccess
     public function getSection($sec, $default = null) 
     {
         if (is_null($this->sections) && is_null($default)) {
-            throw new Config_Lite_Exception_Runtime('configuration seems to be empty, no sections.');
+            throw new Config_Lite_Exception_Runtime(
+                'configuration seems to be empty, no sections.'
+            );
         }
         if (isset($this->sections[$sec])) {
             return $this->sections[$sec];
@@ -349,7 +379,9 @@ class Config_Lite implements ArrayAccess
         if (!is_null($default) && is_array($default)) {
             return $default;
         }
-        throw new Config_Lite_Exception_UnexpectedValue('section not found, no default array given.');
+        throw new Config_Lite_Exception_UnexpectedValue(
+            'section not found, no default array given.'
+        );
     }
 
     /**
@@ -446,7 +478,9 @@ class Config_Lite implements ArrayAccess
             $this->sections = array();
         }
         if (is_array($key)) {
-            throw new Config_Lite_Exception_InvalidArgument('string key expected, but array given.');
+            throw new Config_Lite_Exception_InvalidArgument(
+                'string key expected, but array given.'
+            );
         }
         $this->sections[$sec][$key] = addslashes($value);
         return $this;
@@ -469,7 +503,9 @@ class Config_Lite implements ArrayAccess
             $this->sections = array();
         }
         if (is_array($key) || is_array($sec)) {
-            throw new Config_Lite_Exception_InvalidArgument('string key expected, but array given.');
+            throw new Config_Lite_Exception_InvalidArgument(
+                'string key expected, but array given.'
+            );
         }
         if (is_null($sec)) {
             $this->sections[$key] = $value;

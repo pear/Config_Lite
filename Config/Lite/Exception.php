@@ -10,7 +10,7 @@
  * @author    Patrick C. Engel <info@pc-e.org>
  * @copyright 2010 info@pc-e.org
  * @license   http://www.gnu.org/copyleft/lesser.html  LGPL License 2.1
- * @version   Release: @package_version@
+ * @version   SVN: $Id$
  * @link      https://github.com/pce/config_lite
  */
 
