@@ -19,11 +19,18 @@ function target_phpcs()
 	$cs = 'phpcs'; 
 	$target = 'Config/Lite.php';
 	// execute phpcs
-	$cs = exec($cs .' '.$target);
-	if (empty($cs)) {
+	printf("== %s\n", 'Coding Standard');
+	system($cs .' -v '.$target);
+	/*
+	$csout = exec($cs .' '.$target);
+	if (empty($csout)) {
 		printf("== %s\n", 'Coding Standard');
 		printf("%s\n", 'OK');
+	} else {
+		printf("== %s\n", 'Coding Standard Errors');
+		printf("%s\n", $csout);
 	}
+	*/
 	printf("\n");
 }
 $targets[] = 'target_phpcs';
@@ -34,7 +41,7 @@ function target_test()
 	$test_target = 'tests/Config_LiteTest.php';
 	printf("== %s\n", 'Unit Tests');
 	// execute phpunit
-	echo exec($phpunit . ' ' . $test_target); 
+	system($phpunit . ' ' . $test_target); 
 	printf("\n");
 }
 $targets[] = 'target_test';

@@ -71,7 +71,9 @@ class Config_Lite implements ArrayAccess
      * @param string $filename Filename
      *
      * @return void
-     * @throws Config_Lite_Exception when file not exists
+     * @throws Config_Lite_Exception_Runtime when file not found
+     * @throws Config_Lite_Exception_Runtime when file is not readable
+     * @throws Config_Lite_Exception_Runtime when parse ini file failed
      */
     public function read($filename = null) 
     {
@@ -111,7 +113,8 @@ class Config_Lite implements ArrayAccess
      * but writes the data and reads the written data
      *
      * @return void
-     * @throws Config_Lite_Exception when file is not write or readable
+     * @throws Config_Lite_Exception_Runtime when file is not set, 
+     *         write or readable
      */
     public function sync() 
     {
@@ -169,7 +172,8 @@ class Config_Lite implements ArrayAccess
      * @param array  $sectionsarray array with sections
      *
      * @return bool
-     * @throws Config_Lite_Exception when file is not writeable
+     * @throws Config_Lite_Exception_Runtime when file is not writeable
+     * @throws Config_Lite_Exception_Runtime when write failed
      */
     public function write($filename, $sectionsarray) 
     {
@@ -230,7 +234,7 @@ class Config_Lite implements ArrayAccess
      * @param string $value  value
      *
      * @return string
-     * @throws Config_Lite_Exception when format is unknown
+     * @throws Config_Lite_Exception_UnexpectedValue when format is unknown
      */
     public function to($format, $value) 
     {
@@ -259,9 +263,10 @@ class Config_Lite implements ArrayAccess
      * @param mixed  $default default return value
      *
      * @return string
-     * @throws Config_Lite_Exception when config is empty
+     * @throws Config_Lite_Exception_Runtime when config is empty
      *         and no default value is given
-     * @throws Config_Lite_Exception key not found and no default value is given
+     * @throws Config_Lite_Exception_UnexpectedValue key not found 
+     *         and no default value is given
      */
     public function getString($sec, $key, $default = null) 
     {
@@ -291,7 +296,8 @@ class Config_Lite implements ArrayAccess
      * @return string
      * @throws Config_Lite_Exception when config is empty
      *         and no default value is given
-     * @throws Config_Lite_Exception key not found and no default value is given
+     * @throws Config_Lite_Exception_UnexpectedValue key not found 
+     *         and no default value is given
      */
     public function get($sec, $key, $default = null) 
     {
@@ -301,6 +307,10 @@ class Config_Lite implements ArrayAccess
         // global value
         if (array_key_exists($key, $this->sections)) {
             return $this->sections[$key];
+        }
+        // section
+        if (is_null($key) && array_key_exists($sec, $this->sections)) {
+            return $this->sections[$sec];
         }
         if (!is_null($default)) {
             return $default;
@@ -319,8 +329,12 @@ class Config_Lite implements ArrayAccess
      * @param bool   $default return default value if is $key is not set
      *
      * @return bool
-     * @throws Config_Lite_Exception when the configuration is empty
+     * @throws Config_Lite_Exception_Runtime when the configuration is empty
      *         and no default value is given
+     * @throws Config_Lite_Exception_InvalidArgument when is not a boolean
+     *         and no default array is given
+     * @throws Config_Lite_Exception_UnexpectedValue when key not found
+     *         and no default array is given
      */
     public function getBool($sec, $key, $default = null) 
     {
@@ -361,9 +375,9 @@ class Config_Lite implements ArrayAccess
      * @param array  $default return default array if $sec is not set
      *
      * @return array
-     * @throws Config_Lite_Exception when config is empty
+     * @throws Config_Lite_Exception_Runtime when config is empty
      *         and no default array is given
-     * @throws Config_Lite_Exception when key not found
+     * @throws Config_Lite_Exception_UnexpectedValue when key not found
      *         and no default array is given
      */
     public function getSection($sec, $default = null) 
@@ -425,7 +439,7 @@ class Config_Lite implements ArrayAccess
      * @param string $key Key
      *
      * @return void
-     * @throws Config_Lite_Exception when given Section not exists
+     * @throws Config_Lite_Exception_UnexpectedValue when given Section not exists
      */
     public function remove($sec, $key) 
     {
@@ -441,7 +455,7 @@ class Config_Lite implements ArrayAccess
      * @param string $sec Section
      *
      * @return void
-     * @throws Config_Lite_Exception when given Section not exists
+     * @throws Config_Lite_Exception_UnexpectedValue when given Section not exists
      */
     public function removeSection($sec) 
     {
@@ -470,7 +484,7 @@ class Config_Lite implements ArrayAccess
      * @param mixed  $value Value
      *
      * @return $this
-     * @throws Config_Lite_Exception_UnexpectedValue when given key is an array
+     * @throws Config_Lite_Exception_InvalidArgument when given key is an array
      */
     public function setString($sec, $key, $value = null) 
     {
