@@ -4,7 +4,7 @@
 /**
  * simple buildscript
  *
- * PHP version 5.3
+ * PHP version 5.2.6+
  *
  * @file      build
  * @author    Patrick C. Engel <info@pc-e.org>
@@ -53,7 +53,7 @@ $targets[] = 'target_clean';
 
 function target_beautify() 
 {
-	echo exec('php_beautifier -f Lite.php -o Lite_.php');
+	system('php_beautifier -f Lite.php -o Lite_.php');
 	printf("\n");
 }
 $targets[] = 'target_beautify';
@@ -61,7 +61,12 @@ $targets[] = 'target_beautify';
 function target_package()
 {
 	// Used to create the Package
-	echo exec('pear package ./package.xml');
+	/* 
+	# vim /usr/bin/pear
+	# since i compiled env.php without zlib:
+	PHP_PEAR_PHP_BIN="/usr/bin/php"
+	*/
+ 	system('/usr/bin/pear package ./package.xml');
 	printf("\n");
 }
 $targets[] = 'target_package';
@@ -70,6 +75,8 @@ function target_validate()
 {
 	printf("== %s\n", 'validate pear package');
 	system('find ./ -name \'*.tgz\' -exec pear package-validate "{}" \;');
+        system('find ./ -name \'*.tgz\' -exec '
+		.'/usr/bin/pear package-validate "{}" \;');
 	printf("\n");
 }
 $targets[] = 'target_validate';
