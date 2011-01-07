@@ -282,6 +282,9 @@ class Config_Lite implements ArrayAccess
                 'configuration seems to be empty, no sections.'
             );
         }
+        if (is_null($sec) && array_key_exists($key, $this->sections)) {
+            return stripslashes($this->sections[$key]);
+        }
         if (array_key_exists($key, $this->sections[$sec])) {
             return stripslashes($this->sections[$sec][$key]);
         }
@@ -319,7 +322,7 @@ class Config_Lite implements ArrayAccess
             return $this->sections[$sec][$key];
         }
         // global value
-        if (array_key_exists($key, $this->sections)) {
+        if (is_null($sec) && array_key_exists($key, $this->sections)) {
             return $this->sections[$key];
         }
         // section
@@ -339,7 +342,7 @@ class Config_Lite implements ArrayAccess
     }
     
     /**
-     * getBool returns a boolean by human readable option.
+     * getBool returns a boolean by human readable option value
      * 
      * returns on,yes,1,true as TRUE
      * and no given value or off,no,0,false as FALSE
@@ -529,15 +532,10 @@ class Config_Lite implements ArrayAccess
      */
     public function setString($sec, $key, $value = null) 
     {
-        if (!is_array($this->sections)) {
-            $this->sections = array();
+        if (!is_null($value)) {
+            $value = addslashes($value);
         }
-        if (is_array($key)) {
-            throw new Config_Lite_Exception_InvalidArgument(
-                'string key expected, but array given.'
-            );
-        }
-        $this->sections[$sec][$key] = addslashes($value);
+        $this->set($sec, $key, $value); 
         return $this;
     }
 
