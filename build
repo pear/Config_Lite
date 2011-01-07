@@ -38,6 +38,7 @@ $targets[] = 'target_test';
 
 function target_doc() 
 {
+	printf("== %s\n", __FUNCTION__);
 	$target = 'Config/Lite.php';
 	system('phpdoc -o HTML:frames:earthli -f '.$target.' -t phpdocs');
 	printf("\n");
@@ -46,20 +47,25 @@ $targets[] = 'target_doc';
 
 function target_clean() 
 {
-	system('rm -r ./phpdocs 2> /dev/null');
+	printf("== %s\n", __FUNCTION__);
+	$quiet = ' 2> /dev/null';
+	system('rm -r ./phpdocs'.$quiet);
+    system('rm *.tgz '.$quiet);
 	printf("\n");
 }
 $targets[] = 'target_clean';
 
 function target_beautify() 
 {
-	system('php_beautifier -f Lite.php -o Lite_.php');
+	printf("== %s\n", __FUNCTION__);
+	// system('php_beautifier -f Lite.php -o Lite_.php');
 	printf("\n");
 }
 $targets[] = 'target_beautify';
 
 function target_package()
 {
+	printf("== %s\n", __FUNCTION__);
 	// Used to create the Package
 	/* 
 	# vim /usr/bin/pear
