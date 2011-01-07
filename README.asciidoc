@@ -2,7 +2,7 @@
 
 === Description
 
-a simple, lightweight and fast class for INI style configuration files, 
+a simple, lightweight and fast class for ini style configuration files, 
 with the native PHP function `parse_ini_file' under the hood.
  +
 Config_Lite is inspired by Pythons ConfigParser. +
@@ -52,8 +52,6 @@ echo $config['db']['password']; // c2oiVnY!f8sf
 
 .Save Configuration file:
 ----------
-<?php
-
 $config->set('db', 'user', 'JohnDoe')
 	->set('db', 'password', 'd0g1tcVs$HgIn1');
 
@@ -123,7 +121,7 @@ echo $config['private_key_file'];
 Config_Lite is an OO frontend to `parse_ini_file' and writing ini files, +
 but you can also use the public method `write' if you only want to write an array as ini file. +
 Use getString and setString to save and read Strings with double _and_ single-quotes. +
-Use getBool if you need a real bool type, eg. for stricter equality comparision. +
+Use getBool if you need a real bool type, eg. for strict equality comparision. +
 No support of comments and multiline strings, because reading with `parse_ini_file' does not support it.
 File locking is not part of this Class +
 
