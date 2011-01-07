@@ -70,12 +70,12 @@ $config->save();
 
 require_once 'Config/Lite.php';
 
-$config = new Config_Lite();
+$config = new Config_Lite('test.ini');
 $config->set('db', 'user', 'JohnDoe')
 	->set('db', 'password', 'd0g1tcVs$HgIn1');
 
-// set global value 'debug' as bool
-$config->setBool(null, 'debug', false);
+// set global bool 'debug' 
+$config->set(null, 'debug', false);
 
 // save object to file
 $config->save();
@@ -122,8 +122,33 @@ Config_Lite is an OO frontend to `parse_ini_file' and writing ini files, +
 but you can also use the public method `write' if you only want to write an array as ini file. +
 Use getString and setString to save and read Strings with double _and_ single-quotes. +
 Use getBool if you need a real bool type, eg. for strict equality comparision. +
-No support of comments and multiline strings, because reading with `parse_ini_file' does not support it.
+The methods `set' and `get' keep values untouched, but the write method 
+normalize "bool" values to a human readable representation, 
+doublequotes strings and numeric values without any quotes. +
 File locking is not part of this Class +
+No support of comments and multiline strings, because reading with `parse_ini_file' does not support it. +
+If you want to save a regex, ie. $regex - i'd recommend to use `get' with base64_decode and `set' with base64_encode. +
+.Save regex (as global option) base64 encoded :
+----------
+<?php
+
+require_once 'Config/Lite.php';
+
+$config = new Config_Lite('regex-test.ini');
+
+$regex = '/Hello \"(.*?)\"/';
+$config->set(null, 'regex', base64_encode($regex));
+// save object, here sync to read it back, just to test
+$config->sync();
+// in 'regex-test.ini': regex = "L0hlbGxvIFwiKC4qPylcIi8="
+$regex = base64_decode($config->get(null, 'regex'));
+if (preg_match($regex, 'Hello "World"!')) {
+    printf("matched. regex:%s", $regex);
+} else {
+    printf("no match found. regex:%s", $regex);
+}
+----------
+
 
 
 === Contributing

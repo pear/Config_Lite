@@ -167,7 +167,9 @@ class Config_Lite implements ArrayAccess
     /**
      * generic write ini style config file, to save use `save'.
      *
-     * writes the global options and sections with normalized Values. 
+     * writes the global options and sections with normalized Values, 
+     * that means "bool" values to human readable representation, 
+     * doublequotes strings and numeric values without any quotes.
      * prepends a php exit if suffix is php,
      * it is valid to write an empty Config file,
      * this method is used by save and is public for explicit usage,
