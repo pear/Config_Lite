@@ -85,10 +85,11 @@ echo $config['private_key_file'];
 
 === Notes & Limitations
 
-Config_Lite is an OO Frontend to `parse_ini_file' and writing ini files. +
+Config_Lite is an OO frontend to `parse_ini_file' and writing ini files. +
+You can also use `write' if you only want to write an array as ini file. +
 Use getString and setString to save Strings with double and single-quotes. +
-
-Config_Lite does not support Comments and Multiline Strings, because reading with `parse_ini_file' does not support it.
+File locking is not part of this Class +
+No support of comments and multiline strings, because reading with `parse_ini_file' does not support it.
 
 
 === Contributing

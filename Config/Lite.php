@@ -167,11 +167,11 @@ class Config_Lite implements ArrayAccess
     /**
      * generic write ini style config file, to save use `save'.
      *
-     * this method is used by save and is public for explicit usage.
      * writes the global options and sections with normalized Values. 
      * prepends a php exit if suffix is php,
      * it is valid to write an empty Config file,
-     * file locking is not part of this Class
+     * this method is used by save and is public for explicit usage,
+     * eg. if you do not want to hold the whole configuration in the object.
      *
      * @param string $filename      filename
      * @param array  $sectionsarray array with sections

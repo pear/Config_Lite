@@ -16,7 +16,7 @@
 
 function target_phpcs() 
 {
-	$cs = 'phpcs'; 
+	$cs = 'phpcs';
 	$target = 'Config/Lite.php';
 	// execute phpcs
 	printf("== %s\n", 'Coding Standard');
