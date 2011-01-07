@@ -8,7 +8,6 @@ A Configuration File: `test.cfg'
 ----------
 [general]
 lang = en
-appname = feedreader
 
 [db]
 user = dionysis
@@ -71,4 +70,25 @@ echo $config->get(null, 'public_key_file');
 // get with arrayaccess
 echo $config['private_key_file'];
 
+----------
+
+Save regex (as global option) base64 encoded :
+----------
+<?php
+
+require_once 'Config/Lite.php';
+
+$config = new Config_Lite('regex-test.ini');
+
+$regex = '/Hello \"(.*?)\"/';
+$config->set(null, 'regex', base64_encode($regex));
+// save object, here sync to read it back, just to test
+$config->sync();
+// in 'regex-test.ini': regex = "L0hlbGxvIFwiKC4qPylcIi8="
+$regex = base64_decode($config->get(null, 'regex'));
+if (preg_match($regex, 'Hello "World"!')) {
+    printf("matched. regex:%s", $regex);
+} else {
+    printf("no match found. regex:%s", $regex);
+}
 ----------
