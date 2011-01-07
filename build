@@ -46,6 +46,21 @@ function target_test()
 }
 $targets[] = 'target_test';
 
+function target_doc() 
+{
+	$target = 'Config/Lite.php';
+	system('phpdoc -o HTML:frames:earthli -f '.$target.' -t phpdocs');
+	printf("\n");
+}
+$targets[] = 'target_doc';
+
+function target_clean() 
+{
+	system('rm -r ./phpdocs 2> /dev/null');
+	printf("\n");
+}
+$targets[] = 'target_clean';
+
 function target_beautify() 
 {
 	echo exec('php_beautifier -f Lite.php -o Lite_.php');

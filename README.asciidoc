@@ -2,7 +2,7 @@
 
 === Description
 
-a simple, lightweight and fast config class for INI style configuration files, 
+a simple, lightweight and fast class for INI style configuration files, 
 with the native PHP function `parse_ini_file' under the hood.
  +
 Config_Lite is inspired by Pythons ConfigParser. +

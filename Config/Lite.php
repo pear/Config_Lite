@@ -22,15 +22,14 @@ require_once 'Config/Lite/Exception/UnexpectedValue.php';
 /**
  * Config_Lite Class
  *
- * read & save INI text files for Configuration/Settings.
- * Config_Lite is fast, with the native PHP function 
- * `parse_ini_file`' under the hood.
+ * read and save ini text files.
+ * Config_Lite has the native PHP function 
+ * `parse_ini_file' under the hood.
  * The API is inspired by Python's ConfigParser.
- * A "Config_Lite" file consists of sections,
+ * A "Config_Lite" file consists of 
+ * "name = value" entries and sections,
  * "[section]"
  * followed by "name = value" entries
- *
- * note: Config_Lite assumes that all name/value entries are in sections,
  *
  * @category  Configuration
  * @package   Config_Lite
@@ -63,7 +62,11 @@ class Config_Lite implements ArrayAccess
                                '0' => false, 'off' => false, 
                                'false' => false, 'no' => false);
     /**
-     * read, note: always assumes and works with sections
+     * the read method parses the optional given filename 
+     * or already setted filename.
+     * 
+     * this method uses the native PHP function 
+     * parse_ini_file behind the scenes. 
      *
      * @param string $filename Filename
      *
@@ -95,7 +98,8 @@ class Config_Lite implements ArrayAccess
         }
     }
     /**
-     * save (active record style)
+     * save the object to the already setted or injected filename 
+     * (active record style)
      *
      * @return bool
      */
@@ -104,10 +108,12 @@ class Config_Lite implements ArrayAccess
         return $this->write($this->filename, $this->sections);
     }
     /**
-     * sync the file to the Object
+     * sync the file to the object
      *
-     * like `save' (QT Settings style methodname),
-     * but writes the data and reads the written data
+     * like `save',
+     * but after written the data, reads the data back into the object.
+     * The method is inspired by QTSettings.
+     * Ideal for testing.
      *
      * @return void
      * @throws Config_Lite_Exception_Runtime when file is not set, 
@@ -159,8 +165,10 @@ class Config_Lite implements ArrayAccess
     }
     
     /**
-     * write INI-Style Config File
+     * generic write ini style config file, to save use `save'.
      *
+     * this method is used by save and is public for explicit usage.
+     * writes the global options and sections with normalized Values. 
      * prepends a php exit if suffix is php,
      * it is valid to write an empty Config file,
      * file locking is not part of this Class
@@ -284,19 +292,26 @@ class Config_Lite implements ArrayAccess
     }
     
     /**
-     * get an option by section or null to get global option
+     * get an option by section, a global option or all sections and options
+     * 
+     * to get an option by section, call get with a section and the option.
+     * To get a global option call `get' with null as section.
+     * Just call `get' without any parameters to get all sections and options. 
+     * The third parameter is an optional default value to return, 
+     * if the option is not set, this is practical when dealing with 
+     * editable files, to keep an application stable with default settings.
      *
      * @param string $sec     Section|null - null to get global option
      * @param string $key     Key
      * @param mixed  $default return default value if is $key is not set
      *
-     * @return string
+     * @return mixed
      * @throws Config_Lite_Exception when config is empty
      *         and no default value is given
      * @throws Config_Lite_Exception_UnexpectedValue key not found 
      *         and no default value is given
      */
-    public function get($sec, $key, $default = null) 
+    public function get($sec = null, $key = null, $default = null)
     {
         if (!is_null($sec) && array_key_exists($key, $this->sections[$sec])) {
             return $this->sections[$sec][$key];
@@ -309,6 +324,10 @@ class Config_Lite implements ArrayAccess
         if (is_null($key) && array_key_exists($sec, $this->sections)) {
             return $this->sections[$sec];
         }
+        // all sections
+        if (is_null($sec) && array_key_exists($sec, $this->sections)) {
+            return $this->sections;
+        }
         if (!is_null($default)) {
             return $default;
         }
@@ -318,7 +337,9 @@ class Config_Lite implements ArrayAccess
     }
     
     /**
-     * getBool returns on,yes,1,true as TRUE
+     * getBool returns a boolean by human readable representation.
+     * 
+     * returns on,yes,1,true as TRUE
      * and no given value or off,no,0,false as FALSE
      *
      * @param string $sec     Section
@@ -366,8 +387,8 @@ class Config_Lite implements ArrayAccess
     }
     
     /**
-     * array get section
-     *
+     * getSection returns an array of options of the given section
+     * 
      * @param string $sec     Section
      * @param array  $default return default array if $sec is not set
      *
@@ -396,7 +417,7 @@ class Config_Lite implements ArrayAccess
     }
 
     /**
-     * has section
+     * returns true if the given section-name exists, otherwise false
      *
      * @param string $sec Section
      *
@@ -411,26 +432,26 @@ class Config_Lite implements ArrayAccess
     }
     
     /**
-     * has option
+     * tests if a section or an option of a section exists
      *
      * @param string $sec Section
      * @param string $key Key
      *
      * @return bool
      */
-    public function has($sec, $key) 
+    public function has($sec, $key=null)
     {
         if (!$this->hasSection($sec)) {
             return false;
         }
-        if (isset($this->sections[$sec][$key])) {
+        if (!is_null($key) && isset($this->sections[$sec][$key])) {
             return true;
         }
         return false;
     }
     
     /**
-     * Remove option
+     * remove a section or an option of a section
      *
      * @param string $sec Section
      * @param string $key Key
@@ -438,8 +459,11 @@ class Config_Lite implements ArrayAccess
      * @return void
      * @throws Config_Lite_Exception_UnexpectedValue when given Section not exists
      */
-    public function remove($sec, $key) 
+    public function remove($sec, $key=null) 
     {
+        if (is_null($key)) {
+            $this->removeSection($sec);
+        }
         if (!isset($this->sections[$sec])) {
             throw new Config_Lite_Exception_UnexpectedValue('No such Section.');
         }
@@ -447,7 +471,7 @@ class Config_Lite implements ArrayAccess
     }
     
     /**
-     * Remove section
+     * remove section by section name
      *
      * @param string $sec Section
      *
@@ -463,7 +487,7 @@ class Config_Lite implements ArrayAccess
     }
     
     /**
-     * clear removes all sections
+     * clear removes all sections and global options
      *
      * @return void
      */
@@ -474,7 +498,7 @@ class Config_Lite implements ArrayAccess
     
     /**
      * Set (string) key - add key/doublequoted value pairs to a section,
-     * creates new section if necessary and overrides existing keys
+     * creates new section if necessary and overrides existing keys.
      *
      * @param string $sec   Section
      * @param string $key   Key
@@ -498,8 +522,10 @@ class Config_Lite implements ArrayAccess
     }
 
     /**
-     * Set key - add key/value pairs to a section,
-     * creates new section if necessary and overrides existing keys
+     * Set key adds key/value pairs to a section
+     * 
+     * creates new section if necessary and overrides existing keys.
+     * To set a global, "sectionless" value, call set with null as section.
      *
      * @param string $sec   Section
      * @param string $key   Key
@@ -527,8 +553,8 @@ class Config_Lite implements ArrayAccess
     }
     
     /**
-     * Set section - add key/value pairs to a section,
-     * creates new section if necessary.
+     * set a given array with key/value pairs to a section,
+     * creates a new section if necessary.
      *
      * @param string $sec   Section
      * @param array  $pairs Keys and Values as Array ('key' => 'value')
@@ -547,9 +573,13 @@ class Config_Lite implements ArrayAccess
         $this->sections[$sec] = $pairs;
         return $this;
     }
+    
     /**
-     * Set Filename - ie. `[PATH/]<ApplicationName>.conf'
+     * set the filename to read or save
      *
+     * the full filename with suffix, ie. `[PATH/]<ApplicationName>.ini'.
+     * you can also set the filename as parameter to the constructor.
+     * 
      * @param string $filename Filename
      *
      * @return $this
@@ -640,16 +670,21 @@ class Config_Lite implements ArrayAccess
     }
     
     /**
-     * the Constructor takes an optional filename to read
+     * takes an optional filename, if the file exists, also reads it.
      *
+     * the `save' and `read' methods relies on a setted filename, 
+     * but you can also use `setFilename' to set the filename.
+     * 
      * @param string $filename - "INI Style" Text Config File
      */
     public function __construct($filename = null) 
     {
-        if (($filename != null) && (file_exists($filename))) {
-            $this->read($filename);
-        } else {
-            $this->sections = array();
+        $this->sections = array();
+        if (!is_null($filename)) {
+            $this->setFilename($filename);
+            if (file_exists($filename)) {
+                $this->read($filename);
+            }
         }
     }
 }
