@@ -21,16 +21,6 @@ function target_phpcs()
 	// execute phpcs
 	printf("== %s\n", 'Coding Standard');
 	system($cs .' -v '.$target);
-	/*
-	$csout = exec($cs .' '.$target);
-	if (empty($csout)) {
-		printf("== %s\n", 'Coding Standard');
-		printf("%s\n", 'OK');
-	} else {
-		printf("== %s\n", 'Coding Standard Errors');
-		printf("%s\n", $csout);
-	}
-	*/
 	printf("\n");
 }
 $targets[] = 'target_phpcs';
@@ -78,8 +68,8 @@ $targets[] = 'target_package';
 
 function target_validate() 
 {
-	// Validating
-	echo exec('pear package-validate Config_Lite-0.1.0.tgz');
+	printf("== %s\n", 'validate pear package');
+	system('find ./ -name \'*.tgz\' -exec pear package-validate "{}" \;');
 	printf("\n");
 }
 $targets[] = 'target_validate';
