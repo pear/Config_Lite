@@ -337,7 +337,7 @@ class Config_Lite implements ArrayAccess
     }
     
     /**
-     * getBool returns a boolean by human readable representation.
+     * getBool returns a boolean by human readable option.
      * 
      * returns on,yes,1,true as TRUE
      * and no given value or off,no,0,false as FALSE
@@ -361,6 +361,24 @@ class Config_Lite implements ArrayAccess
                 'configuration seems to be empty (no sections),' 
                 . 'and no default value given.'
             );
+        }
+        if (is_null($sec)) {
+            if (array_key_exists($key, $this->sections)) {
+                if (empty($this->sections[$key])) {
+                    return false;
+                }
+                $value = strtolower($this->sections[$key]);
+                if (!in_array($value, $this->_booleans) && is_null($default)) {
+                    throw new Config_Lite_Exception_InvalidArgument(
+                        sprintf(
+                            'Not a boolean: %s, and no default value given.', 
+                            $value
+                        )
+                    );
+                } else {
+                    return $this->_booleans[$value];
+                }
+            }
         }
         if (array_key_exists($key, $this->sections[$sec])) {
             if (empty($this->sections[$sec][$key])) {

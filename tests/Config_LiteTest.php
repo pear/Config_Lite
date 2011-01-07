@@ -106,8 +106,13 @@ class Config_LiteTest extends PHPUnit_Framework_TestCase
 		// global values with null
 		$this->assertEquals('test.cfg', $this->config->get(null, 'filename'));
 	}
-
-
+	
+	public function testGetBoolGlobalOption()
+	{
+		$this->config->read(dirname(__FILE__).'/test.cfg');
+		$this->assertEquals(TRUE, $this->config->getBool(null, 'debug', false));
+	}
+	
 	public function testWrite()
 	{
 		$assoc_array = array(
@@ -198,6 +203,7 @@ class Config_LiteTest extends PHPUnit_Framework_TestCase
 	
 	public function testGetBool()
 	{
+		// test human readable representation
 		$this->config->set('general', 'stable', 'No');
 		$this->assertEquals(FALSE, $this->config->getBool('general', 'stable'));
 		$this->config->set('general', 'stable', 'Off');
@@ -215,10 +221,7 @@ class Config_LiteTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals(TRUE, $this->config->getBool('general', 'stable'));
 		$this->config->set('general', 'stable', 1);
 		$this->assertEquals(TRUE, $this->config->getBool('general', 'stable'));
-		
 	}
-	
-
 
 	public function testSetArrayAsKeyWithSet()
 	{

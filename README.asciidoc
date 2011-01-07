@@ -17,6 +17,7 @@ followed by "name = value" (KVP) entries.
 ----------
 
 public_key_file =  "~/.ssh/id_rsa.pub"
+debug = yes
 
 [general]
 lang = "en"
@@ -37,6 +38,10 @@ $config = new Config_Lite('test.ini');
 
 echo $config->get('db', 'user'); // dionysis
 echo $config->get(null, 'public_key_file'); // ~/.ssh/id_rsa.pub
+
+if (true === $config->getBool(null, 'debug', true)) {
+	echo $config;
+}
 
 // read with ArrayAccess
 echo $config['db']['password']; // c2oiVnY!f8sf
@@ -71,8 +76,8 @@ $config = new Config_Lite();
 $config->set('db', 'user', 'JohnDoe')
 	->set('db', 'password', 'd0g1tcVs$HgIn1');
 
-// print config object
-echo $config;
+// set global value 'debug' as bool
+$config->setBool(null, 'debug', false);
 
 // save object to file
 $config->save();
@@ -87,15 +92,15 @@ require_once 'Config/Lite.php';
 
 $config = new Config_Lite();
 $config->write('test.ini', array(
-					'public_key_file' =>  "~/.ssh/id_rsa.pub",
-					'general' => array(
-						'lang' => 'fr'
-					),
-					'db' => array(
-						'user' => 'dionysis',
-						'password' => 'd0g1tcVs$HgIn1'
-					)
-				);
+			'public_key_file' =>  "~/.ssh/id_rsa.pub",
+			'general' => array(
+				'lang' => 'fr'
+			),
+			'db' => array(
+				'user' => 'dionysis',
+				'password' => 'd0g1tcVs$HgIn1'
+			)
+		);
 
 ----------
 
@@ -118,7 +123,7 @@ echo $config['private_key_file'];
 Config_Lite is an OO frontend to `parse_ini_file' and writing ini files, +
 but you can also use the public method `write' if you only want to write an array as ini file. +
 Use getString and setString to save and read Strings with double _and_ single-quotes. +
-Use getBool if you need a real bool type, eg. for stricter equlity comparision. +
+Use getBool if you need a real bool type, eg. for stricter equality comparision. +
 No support of comments and multiline strings, because reading with `parse_ini_file' does not support it.
 File locking is not part of this Class +
 
