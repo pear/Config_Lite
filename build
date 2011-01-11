@@ -2,7 +2,7 @@
 <?php
 
 /**
- * simple buildscript
+ * simple buildscript, see ./build -h
  *
  * PHP version 5.2.6+
  *
@@ -40,7 +40,7 @@ function target_doc()
 {
 	printf("== %s\n", __FUNCTION__);
 	$target = 'Config/Lite.php';
-	system('phpdoc -o HTML:frames:earthli -f '.$target.' -t phpdocs');
+	system('phpdoc -o HTML:Smarty:PHP -f '.$target.' -t phpdocs');
 	printf("\n");
 }
 $targets[] = 'target_doc';

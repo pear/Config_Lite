@@ -218,19 +218,14 @@ class Config_Lite implements ArrayAccess
             }
             $content.= $sections;
         }
-        if (!$fp = fopen($filename, 'w')) {
+        
+        if (false === file_put_contents($filename, $content, LOCK_EX)) {
             throw new Config_Lite_Exception_Runtime(
                 sprintf(
-                    'failed to open file `%s\' for writing.', $filename
+                    'failed to write file `%s\' for writing.', $filename
                 )
             );
         }
-        if (!fwrite($fp, $content)) {
-            throw new Config_Lite_Exception_Runtime(
-                sprintf('failed to write file `%s\'', $filename)
-            );
-        }
-        fclose($fp);
         return true;
     }
     
