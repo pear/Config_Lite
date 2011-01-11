@@ -604,10 +604,10 @@ class Config_Lite implements ArrayAccess
     }
     
     /**
-     * Text presentation of the Configuration
+     * text presentation of the config object
      *
      * since a empty config is valid,
-     * theres no return of "The Configuration is empty.\n";
+     * it would return a empty string in that case. 
      *
      * @throws Config_Lite_Exception_Runtime
      * @return string
@@ -631,7 +631,7 @@ class Config_Lite implements ArrayAccess
     }
     
     /**
-     * interface ArrayAccess
+     * implemented for interface ArrayAccess
      *
      * @param string $offset section, implemented by ArrayAccess
      * @param mixed  $value  KVP, implemented by ArrayAccess
@@ -644,7 +644,7 @@ class Config_Lite implements ArrayAccess
     }
     
     /**
-     * interface ArrayAccess
+     * implemented for interface ArrayAccess
      * 
      * @param string $offset - section, implemented by ArrayAccess
      *
@@ -656,7 +656,7 @@ class Config_Lite implements ArrayAccess
     }
     
     /**
-     * interface ArrayAccess
+     * implemented for interface ArrayAccess
      * 
      * @param string $offset - section, implemented by ArrayAccess
      *
@@ -668,7 +668,7 @@ class Config_Lite implements ArrayAccess
     }
     
     /**
-     * interface ArrayAccess
+     * implemented for interface ArrayAccess
      *
      * @param string $offset - section, implemented by ArrayAccess
      * 
