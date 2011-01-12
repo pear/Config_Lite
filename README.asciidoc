@@ -78,7 +78,11 @@ $config->set('db', 'user', 'JohnDoe')
 $config->set(null, 'debug', false);
 
 // save object to file
-$config->save();
+try {
+	$config->save();
+} catch (Config_Lite_Exception $e) {
+    echo "\n", 'Exception Message: ', $e->getMessage();
+}
 ----------
 
 
@@ -88,8 +92,12 @@ $config->save();
 
 require_once 'Config/Lite.php';
 
+$filename = 'test.ini';
+
 $config = new Config_Lite();
-$config->write('test.ini', array(
+
+try {
+	$config->write($filename, array(
 			'public_key_file' =>  "~/.ssh/id_rsa.pub",
 			'general' => array(
 				'lang' => 'fr'
@@ -98,7 +106,13 @@ $config->write('test.ini', array(
 				'user' => 'dionysis',
 				'password' => 'd0g1tcVs$HgIn1'
 			)
-		);
+		)
+	);
+} catch (Config_Lite_Exception $exception) {
+    printf("Failed to write file: %s.\n", $filename);
+    printf("Exception Message: %s\n", $exception->getMessage());
+    printf("Exception Stracktrace: %s\n", $exception->getTraceAsString());
+}
 
 ----------
 
@@ -155,7 +169,7 @@ if (preg_match($regex, 'Hello "World"!')) {
 === IDEAS
 
 * signal/slot or hook to set and read comments or multiline strings 
-  with injected parser and writefunctions
+  with injected parser and writefunctions, both supported by Pear::Config
 
 
 === Contributing
