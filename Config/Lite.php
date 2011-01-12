@@ -61,6 +61,14 @@ class Config_Lite implements ArrayAccess
                                'true' => true, 'yes' => true, 
                                '0' => false, 'off' => false, 
                                'false' => false, 'no' => false);
+                               
+    /**
+     * line-break chars, default *x: "\n", windows: "\r\n"
+     *
+     * @var string
+     */
+    protected $linebreak = "\n";
+    
     /**
      * the read method parses the optional given filename 
      * or already setted filename.
@@ -186,7 +194,7 @@ class Config_Lite implements ArrayAccess
     {
         $content = '';
         if ('.php' === substr($filename, -4)) {
-            $content.= ';<?php return; ?>' . "\n";
+            $content.= ';<?php return; ?>' . $this->linebreak;
         }
         $sections = '';
         $globals = '';
@@ -195,7 +203,7 @@ class Config_Lite implements ArrayAccess
             foreach ($sectionsarray as $section => $item) {
                 if (!is_array($item)) {
                     $value = $this->normalizeValue($item);
-                    $globals.= $section . ' = ' . $value . "\n";
+                    $globals.= $section . ' = ' . $value . $this->linebreak;
                 }
             }
             $content.= $globals;
@@ -207,11 +215,12 @@ class Config_Lite implements ArrayAccess
                             foreach ($value as $arrkey => $arrvalue) {
                                 $arrvalue = $this->normalizeValue($arrvalue);
                                 $arrkey = $key . '[' . $arrkey . ']';
-                                $sections.= $arrkey . ' = ' . $arrvalue . "\n";
+                                $sections.= $arrkey . ' = ' . $arrvalue 
+                                            . $this->linebreak;
                             }
                         } else {
                             $value = $this->normalizeValue($value);
-                            $sections.= $key . ' = ' . $value . "\n";
+                            $sections.= $key . ' = ' . $value . $this->linebreak;
                         }
                     }
                 }
@@ -600,6 +609,22 @@ class Config_Lite implements ArrayAccess
     public function setFilename($filename) 
     {
         $this->filename = $filename;
+        return $this;
+    }
+    
+    /**
+     * set the line break (newline) chars 
+     *
+     * line-break chars defaults to Unix Newline "\n", 
+     * while windows user textfiles have "\r\n" as newline
+     * 
+     * @param string $linebreakchars chars
+     *
+     * @return $this
+     */
+    public function setLinebreak($linebreakchars)
+    {
+        $this->linebreak = $linebreakchars;
         return $this;
     }
     

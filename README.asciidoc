@@ -125,9 +125,10 @@ Use getBool if you need a real bool type, eg. for strict equality comparision. +
 The methods `set' and `get' keep values untouched, but the write method 
 normalize "bool" values to a human readable representation, 
 doublequotes strings and numeric values without any quotes. +
-File locking is not part of this Class. +
-No support of comments and multiline strings, because reading with `parse_ini_file' does not support it. +
-If you want to save a regex, i'd recommend to use `get' with base64_decode and `set' with base64_encode. +
+newline chars defaults to "\n", editable with `setLinebreak'. +
+comments get dropped when writing after reading + 
+no support of and multiline strings, because reading with `parse_ini_file' does not support it. +
+If you want to save userinput like images or a regex, i'd recommend to use `get' with base64_decode and `set' with base64_encode. +
 
 .Save regex (as global option) base64 encoded :
 ----------
@@ -150,6 +151,10 @@ if (preg_match($regex, 'Hello "World"!')) {
 }
 ----------
 
+=== IDEAS
+
+* signal/slot or hook to set and read comments or multiline strings 
+  with injected parser and writefunctions
 
 
 === Contributing
