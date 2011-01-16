@@ -78,6 +78,30 @@ function target_package()
 }
 $targets[] = 'target_package';
 
+function target_pirum()
+{
+	printf("== %s\n", __FUNCTION__);
+    $pear = "/usr/bin/pear";
+	system($pear.' package ./pirum-package.xml');
+	printf("\n");
+}
+$targets[] = 'target_pirum';
+
+function target_pirum_add()
+{
+	printf("== %s\n", __FUNCTION__);
+	/* 
+		pirum add pear 
+	*/
+	$package = isset($argv[2]) ? basename($argv[2]) : 'Config_Lite-0.1.0.tgz'; 
+    // $pear = "/usr/bin/pear";
+	system('pirum add pear '.$package);
+	printf("\n");
+}
+$targets[] = 'target_pirum_add';
+
+
+
 function target_validate() 
 {
     $pear = "/usr/bin/pear";

@@ -615,8 +615,9 @@ class Config_Lite implements ArrayAccess
     /**
      * set the line break (newline) chars 
      *
-     * line-break chars defaults to Unix Newline "\n", 
-     * while windows user textfiles have "\r\n" as newline
+     * line-break defaults to Unix Newline "\n", 
+     * set to support other linebreaks, eg. windows user 
+     * textfiles "\r\n"
      * 
      * @param string $linebreakchars chars
      *
