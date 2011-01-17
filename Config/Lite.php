@@ -715,7 +715,7 @@ class Config_Lite implements ArrayAccess, IteratorAggregate
      */
     public function getIterator() 
     {
-		return new ArrayIterator($this->sections);
+        return new ArrayIterator($this->sections);
     }
     
     /**
