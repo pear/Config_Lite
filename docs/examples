@@ -92,3 +92,20 @@ if (preg_match($regex, 'Hello "World"!')) {
     printf("no match found. regex:%s", $regex);
 }
 ----------
+
+
+.iterate (SPL Iterator) :
+----------
+$config = new Config_Lite($filename);
+
+foreach ($config as $section => $name) {
+	if (is_array($name)) {
+		$s.= sprintf("[%s]\n", $section);
+		foreach ($name as $key => $val) {
+			$s.= sprintf("\t%s = %s\n", $key, $val);
+		}
+	} else {
+		$s.= sprintf("%s=%s\n", $section, $name);
+	}
+}
+----------
