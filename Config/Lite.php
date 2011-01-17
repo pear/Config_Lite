@@ -38,7 +38,7 @@ require_once 'Config/Lite/Exception/UnexpectedValue.php';
  * @license   http://www.gnu.org/copyleft/lesser.html  LGPL License 2.1
  * @link      https://github.com/pce/config_lite
  */
-class Config_Lite implements ArrayAccess
+class Config_Lite implements ArrayAccess, IteratorAggregate
 {
     /**
      * sections, holds the config sections
@@ -706,6 +706,16 @@ class Config_Lite implements ArrayAccess
             return $this->sections[$offset];
         }
         return null;
+    }
+    /**
+     * implemented for interface IteratorAggregate
+     * http://www.php.net/~helly/php/ext/spl/interfaceIterator.html
+     * 
+     * @return Iterator 
+     */
+    public function getIterator() 
+    {
+		return new ArrayIterator($this->sections);
     }
     
     /**
