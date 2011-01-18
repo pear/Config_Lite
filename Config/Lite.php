@@ -8,7 +8,7 @@
  * @category  Configuration
  * @package   Config_Lite
  * @author    Patrick C. Engel <info@pc-e.org>
- * @copyright 2010 info@pc-e.org
+ * @copyright 2010-2011 info@pc-e.org
  * @license   http://www.gnu.org/copyleft/lesser.html  LGPL License 2.1
  * @version   SVN: $Id$
  * @link      https://github.com/pce/config_lite
@@ -106,7 +106,7 @@ class Config_Lite implements ArrayAccess, IteratorAggregate
         }
     }
     /**
-     * save the object to the already setted or injected filename 
+     * save the object to the already setted filename 
      * (active record style)
      *
      * @return bool
@@ -173,7 +173,7 @@ class Config_Lite implements ArrayAccess, IteratorAggregate
     }
     
     /**
-     * generic write ini style config file, to save use `save'.
+     * generic write ini config file, to save use `save'.
      *
      * writes the global options and sections with normalized Values, 
      * that means "bool" values to human readable representation, 
@@ -239,9 +239,9 @@ class Config_Lite implements ArrayAccess, IteratorAggregate
     }
     
     /**
-     * converts type to string or representable Config Format
+     * converts type (format) to string or representable Config Format
      *
-     * @param string $format `bool', `boolean'
+     * @param string $format "bool", "boolean"
      * @param string $value  value
      *
      * @return string
@@ -346,11 +346,10 @@ class Config_Lite implements ArrayAccess, IteratorAggregate
     }
     
     /**
-     * for strict equality comparison returns a boolean 
-     * by human readable option value
+     * returns a boolean for strict equality comparison 
      * 
-     * returns on,yes,1,true as TRUE
-     * and no given value or off,no,0,false as FALSE
+     * returns "on", "yes", 1, "true" as TRUE
+     * and no given value or "off", "no", 0, "false" as FALSE
      *
      * @param string $sec     Section
      * @param string $key     Key
@@ -445,7 +444,7 @@ class Config_Lite implements ArrayAccess, IteratorAggregate
     }
 
     /**
-     * returns true if the given section-name exists, otherwise false
+     * returns true if the given section exists, otherwise false
      *
      * @param string $sec Section
      *
@@ -499,7 +498,7 @@ class Config_Lite implements ArrayAccess, IteratorAggregate
     }
     
     /**
-     * remove section by section name
+     * remove section by name
      *
      * @param string $sec Section
      *
@@ -515,7 +514,7 @@ class Config_Lite implements ArrayAccess, IteratorAggregate
     }
     
     /**
-     * clear removes all sections and global options
+     * removes all sections and global options
      *
      * @return void
      */
