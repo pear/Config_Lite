@@ -85,7 +85,7 @@ class Config_Lite implements ArrayAccess, IteratorAggregate
      */
     public function read($filename = null) 
     {
-        if (is_null($filename)) {
+        if (null === $filename) {
             $filename = $this->filename;
         } else {
             $this->filename = $filename;
@@ -194,38 +194,38 @@ class Config_Lite implements ArrayAccess, IteratorAggregate
     {
         $content = '';
         if ('.php' === substr($filename, -4)) {
-            $content.= ';<?php return; ?>' . $this->linebreak;
+            $content .= ';<?php return; ?>' . $this->linebreak;
         }
         $sections = '';
-        $globals = '';
+        $globals  = '';
         if (!empty($sectionsarray)) {
             // 2 loops to write `globals' on top, alternative: buffer
             foreach ($sectionsarray as $section => $item) {
                 if (!is_array($item)) {
-                    $value = $this->normalizeValue($item);
-                    $globals.= $section . ' = ' . $value . $this->linebreak;
+                    $value    = $this->normalizeValue($item);
+                    $globals .= $section . ' = ' . $value . $this->linebreak;
                 }
             }
-            $content.= $globals;
+            $content .= $globals;
             foreach ($sectionsarray as $section => $item) {
                 if (is_array($item)) {
-                    $sections.= "\n[" . $section . "]\n";
+                    $sections .= "\n[" . $section . "]\n";
                     foreach ($item as $key => $value) {
                         if (is_array($value)) {
                             foreach ($value as $arrkey => $arrvalue) {
-                                $arrvalue = $this->normalizeValue($arrvalue);
-                                $arrkey = $key . '[' . $arrkey . ']';
-                                $sections.= $arrkey . ' = ' . $arrvalue 
+                                $arrvalue  = $this->normalizeValue($arrvalue);
+                                $arrkey    = $key . '[' . $arrkey . ']';
+                                $sections .= $arrkey . ' = ' . $arrvalue 
                                             . $this->linebreak;
                             }
                         } else {
-                            $value = $this->normalizeValue($value);
-                            $sections.= $key . ' = ' . $value . $this->linebreak;
+                            $value     = $this->normalizeValue($value);
+                            $sections .= $key . ' = ' . $value . $this->linebreak;
                         }
                     }
                 }
             }
-            $content.= $sections;
+            $content .= $sections;
         }
         
         if (false === file_put_contents($filename, $content, LOCK_EX)) {
@@ -239,7 +239,7 @@ class Config_Lite implements ArrayAccess, IteratorAggregate
     }
     
     /**
-     * convert type to string or representable Config Format
+     * converts type to string or representable Config Format
      *
      * @param string $format `bool', `boolean'
      * @param string $value  value
@@ -267,7 +267,7 @@ class Config_Lite implements ArrayAccess, IteratorAggregate
     }
     
     /**
-     * getString
+     * returns a stripslashed string
      *
      * @param string $sec     Section
      * @param string $key     Key
@@ -281,18 +281,18 @@ class Config_Lite implements ArrayAccess, IteratorAggregate
      */
     public function getString($sec, $key, $default = null) 
     {
-        if (is_null($this->sections) && is_null($default)) {
+        if ((null === $this->sections) && (null === $default)) {
             throw new Config_Lite_Exception_Runtime(
                 'configuration seems to be empty, no sections.'
             );
         }
-        if (is_null($sec) && array_key_exists($key, $this->sections)) {
+        if ((null === $sec) && array_key_exists($key, $this->sections)) {
             return stripslashes($this->sections[$key]);
         }
         if (array_key_exists($key, $this->sections[$sec])) {
             return stripslashes($this->sections[$sec][$key]);
         }
-        if (!is_null($default)) {
+        if (!(null === $default)) {
             return $default;
         }
         throw new Config_Lite_Exception_UnexpectedValue(
@@ -322,22 +322,22 @@ class Config_Lite implements ArrayAccess, IteratorAggregate
      */
     public function get($sec = null, $key = null, $default = null)
     {
-        if (!is_null($sec) && array_key_exists($key, $this->sections[$sec])) {
+        if (!(null === $sec) && array_key_exists($key, $this->sections[$sec])) {
             return $this->sections[$sec][$key];
         }
         // global value
-        if (is_null($sec) && array_key_exists($key, $this->sections)) {
+        if ((null === $sec) && array_key_exists($key, $this->sections)) {
             return $this->sections[$key];
         }
         // section
-        if (is_null($key) && array_key_exists($sec, $this->sections)) {
+        if ((null === $key) && array_key_exists($sec, $this->sections)) {
             return $this->sections[$sec];
         }
         // all sections
-        if (is_null($sec) && array_key_exists($sec, $this->sections)) {
+        if ((null === $sec) && array_key_exists($sec, $this->sections)) {
             return $this->sections;
         }
-        if (!is_null($default)) {
+        if (!(null === $default)) {
             return $default;
         }
         throw new Config_Lite_Exception_UnexpectedValue(
@@ -346,7 +346,8 @@ class Config_Lite implements ArrayAccess, IteratorAggregate
     }
     
     /**
-     * getBool returns a boolean by human readable option value
+     * for strict equality comparison returns a boolean 
+     * by human readable option value
      * 
      * returns on,yes,1,true as TRUE
      * and no given value or off,no,0,false as FALSE
@@ -365,19 +366,19 @@ class Config_Lite implements ArrayAccess, IteratorAggregate
      */
     public function getBool($sec, $key, $default = null) 
     {
-        if (is_null($this->sections) && is_null($default)) {
+        if ((null === $this->sections) && (null === $default)) {
             throw new Config_Lite_Exception_Runtime(
                 'configuration seems to be empty (no sections),' 
                 . 'and no default value given.'
             );
         }
-        if (is_null($sec)) {
+        if ((null === $sec)) {
             if (array_key_exists($key, $this->sections)) {
                 if (empty($this->sections[$key])) {
                     return false;
                 }
                 $value = strtolower($this->sections[$key]);
-                if (!in_array($value, $this->_booleans) && is_null($default)) {
+                if (!in_array($value, $this->_booleans) && (null === $default)) {
                     throw new Config_Lite_Exception_InvalidArgument(
                         sprintf(
                             'Not a boolean: %s, and no default value given.', 
@@ -394,7 +395,7 @@ class Config_Lite implements ArrayAccess, IteratorAggregate
                 return false;
             }
             $value = strtolower($this->sections[$sec][$key]);
-            if (!in_array($value, $this->_booleans) && is_null($default)) {
+            if (!in_array($value, $this->_booleans) && (null === $default)) {
                 throw new Config_Lite_Exception_InvalidArgument(
                     sprintf(
                         'Not a boolean: %s, and no default value given.', 
@@ -405,7 +406,7 @@ class Config_Lite implements ArrayAccess, IteratorAggregate
                 return $this->_booleans[$value];
             }
         }
-        if (!is_null($default)) {
+        if (!(null === $default)) {
             return $default;
         }
         throw new Config_Lite_Exception_UnexpectedValue(
@@ -414,7 +415,7 @@ class Config_Lite implements ArrayAccess, IteratorAggregate
     }
     
     /**
-     * getSection returns an array of options of the given section
+     * returns an array of options of the given section
      * 
      * @param string $sec     Section
      * @param array  $default return default array if $sec is not set
@@ -427,7 +428,7 @@ class Config_Lite implements ArrayAccess, IteratorAggregate
      */
     public function getSection($sec, $default = null) 
     {
-        if (is_null($this->sections) && is_null($default)) {
+        if ((null === $this->sections) && (null === $default)) {
             throw new Config_Lite_Exception_Runtime(
                 'configuration seems to be empty, no sections.'
             );
@@ -435,7 +436,7 @@ class Config_Lite implements ArrayAccess, IteratorAggregate
         if (isset($this->sections[$sec])) {
             return $this->sections[$sec];
         }
-        if (!is_null($default) && is_array($default)) {
+        if (!(null === $default) && is_array($default)) {
             return $default;
         }
         throw new Config_Lite_Exception_UnexpectedValue(
@@ -471,7 +472,7 @@ class Config_Lite implements ArrayAccess, IteratorAggregate
         if (!$this->hasSection($sec)) {
             return false;
         }
-        if (!is_null($key) && isset($this->sections[$sec][$key])) {
+        if (!(null === $key) && isset($this->sections[$sec][$key])) {
             return true;
         }
         return false;
@@ -488,7 +489,7 @@ class Config_Lite implements ArrayAccess, IteratorAggregate
      */
     public function remove($sec, $key=null) 
     {
-        if (is_null($key)) {
+        if ((null === $key)) {
             $this->removeSection($sec);
         }
         if (!isset($this->sections[$sec])) {
@@ -524,7 +525,8 @@ class Config_Lite implements ArrayAccess, IteratorAggregate
     }
     
     /**
-     * Set (string) key - add key/doublequoted value pairs to a section,
+     * like set, but adds slashes to the value
+     * 
      * creates new section if necessary and overrides existing keys.
      *
      * @param string $sec   Section
@@ -536,7 +538,7 @@ class Config_Lite implements ArrayAccess, IteratorAggregate
      */
     public function setString($sec, $key, $value = null) 
     {
-        if (!is_null($value)) {
+        if (!(null === $value)) {
             $value = addslashes($value);
         }
         $this->set($sec, $key, $value); 
@@ -544,7 +546,7 @@ class Config_Lite implements ArrayAccess, IteratorAggregate
     }
 
     /**
-     * Set key adds key/value pairs to a section
+     *  to add key/value pairs 
      * 
      * creates new section if necessary and overrides existing keys.
      * To set a global, "sectionless" value, call set with null as section.
@@ -566,7 +568,7 @@ class Config_Lite implements ArrayAccess, IteratorAggregate
                 'string key expected, but array given.'
             );
         }
-        if (is_null($sec)) {
+        if (null === $sec) {
             $this->sections[$key] = $value;
         } else {
             $this->sections[$sec][$key] = $value;
@@ -597,7 +599,7 @@ class Config_Lite implements ArrayAccess, IteratorAggregate
     }
     
     /**
-     * set the filename to read or save
+     * filename to read or save
      *
      * the full filename with suffix, ie. `[PATH/]<ApplicationName>.ini'.
      * you can also set the filename as parameter to the constructor.
@@ -644,12 +646,12 @@ class Config_Lite implements ArrayAccess, IteratorAggregate
         if ($this->sections != null) {
             foreach ($this->sections as $section => $name) {
                 if (is_array($name)) {
-                    $s.= sprintf("[%s]\n", $section);
+                    $s .= sprintf("[%s]\n", $section);
                     foreach ($name as $key => $val) {
-                        $s.= sprintf("\t%s = %s\n", $key, $val);
+                        $s .= sprintf("\t%s = %s\n", $key, $val);
                     }
                 } else {
-                    $s.= sprintf("%s=%s\n", $section, $name);
+                    $s .= sprintf("%s=%s\n", $section, $name);
                 }
             }
         }
@@ -729,7 +731,7 @@ class Config_Lite implements ArrayAccess, IteratorAggregate
     public function __construct($filename = null) 
     {
         $this->sections = array();
-        if (!is_null($filename)) {
+        if (!(null === $filename)) {
             $this->setFilename($filename);
             if (file_exists($filename)) {
                 $this->read($filename);
