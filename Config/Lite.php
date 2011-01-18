@@ -292,7 +292,7 @@ class Config_Lite implements ArrayAccess, IteratorAggregate
         if (array_key_exists($key, $this->sections[$sec])) {
             return stripslashes($this->sections[$sec][$key]);
         }
-        if (!(null === $default)) {
+        if (null !== $default) {
             return $default;
         }
         throw new Config_Lite_Exception_UnexpectedValue(
@@ -322,7 +322,7 @@ class Config_Lite implements ArrayAccess, IteratorAggregate
      */
     public function get($sec = null, $key = null, $default = null)
     {
-        if (!(null === $sec) && array_key_exists($key, $this->sections[$sec])) {
+        if ((null !== $sec) && array_key_exists($key, $this->sections[$sec])) {
             return $this->sections[$sec][$key];
         }
         // global value
@@ -337,7 +337,7 @@ class Config_Lite implements ArrayAccess, IteratorAggregate
         if ((null === $sec) && array_key_exists($sec, $this->sections)) {
             return $this->sections;
         }
-        if (!(null === $default)) {
+        if (null !== $default) {
             return $default;
         }
         throw new Config_Lite_Exception_UnexpectedValue(
@@ -405,7 +405,7 @@ class Config_Lite implements ArrayAccess, IteratorAggregate
                 return $this->_booleans[$value];
             }
         }
-        if (!(null === $default)) {
+        if (null !== $default) {
             return $default;
         }
         throw new Config_Lite_Exception_UnexpectedValue(
@@ -435,7 +435,7 @@ class Config_Lite implements ArrayAccess, IteratorAggregate
         if (isset($this->sections[$sec])) {
             return $this->sections[$sec];
         }
-        if (!(null === $default) && is_array($default)) {
+        if ((null !== $default) && is_array($default)) {
             return $default;
         }
         throw new Config_Lite_Exception_UnexpectedValue(
@@ -471,7 +471,7 @@ class Config_Lite implements ArrayAccess, IteratorAggregate
         if (!$this->hasSection($sec)) {
             return false;
         }
-        if (!(null === $key) && isset($this->sections[$sec][$key])) {
+        if ((null !== $key) && isset($this->sections[$sec][$key])) {
             return true;
         }
         return false;
@@ -537,7 +537,7 @@ class Config_Lite implements ArrayAccess, IteratorAggregate
      */
     public function setString($sec, $key, $value = null) 
     {
-        if (!(null === $value)) {
+        if (null !== $value) {
             $value = addslashes($value);
         }
         $this->set($sec, $key, $value); 
@@ -710,8 +710,8 @@ class Config_Lite implements ArrayAccess, IteratorAggregate
     }
     /**
      * implemented for interface IteratorAggregate
-     * http://www.php.net/~helly/php/ext/spl/interfaceIterator.html
      * 
+     * @see http://www.php.net/~helly/php/ext/spl/interfaceIterator.html
      * @return Iterator 
      */
     public function getIterator() 
@@ -730,7 +730,7 @@ class Config_Lite implements ArrayAccess, IteratorAggregate
     public function __construct($filename = null) 
     {
         $this->sections = array();
-        if (!(null === $filename)) {
+        if (null !== $filename) {
             $this->setFilename($filename);
             if (file_exists($filename)) {
                 $this->read($filename);
