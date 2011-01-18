@@ -96,9 +96,9 @@ $targets[] = 'target_pirum_add';
 
 function target_validate() 
 {
-    $pear = "/usr/bin/pear";
+	$pear = "/usr/bin/pear";
 	printf("== %s\n", 'validate pear package');
-    system('find ./ -name \'*.tgz\' -exec '
+	system('find ./ -name \'*.tgz\' -exec '
 		. $pear .' package-validate "{}" \;');
 	printf("\n");
 }
