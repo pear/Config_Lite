@@ -79,7 +79,7 @@ $targets[] = 'target_package';
 function target_pirum()
 {
 	printf("== %s\n", __FUNCTION__);
-    $pear = '/usr/bin/pear';
+	$pear = '/usr/bin/pear';
 	system($pear.' package ./pirum-package.xml');
 	printf("\n");
 }
