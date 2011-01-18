@@ -9,7 +9,7 @@
  * @file      build
  * @author    Patrick C. Engel <info@pc-e.org>
  * @copyright 2011 info@pc-e.org
- * @license   http://www.gnu.org/copyleft/lesser.html  LGPL License 2.1
+ * @license   MIT http://www.opensource.org/licenses/mit-license.html
  * @link      https://github.com/pce/config_lite
  */
 
@@ -17,8 +17,8 @@
 function target_phpcs() 
 {
 	$cs = 'phpcs';
+	// pear install phpDocumentor
 	$target = 'Config/Lite.php';
-	// execute phpcs
 	printf("== %s\n", 'Coding Standard');
 	system($cs .' -v '.$target);
 	printf("\n");
@@ -30,7 +30,6 @@ function target_test()
 	$phpunit = 'phpunit';
 	$test_target = 'tests/Config_LiteTest.php';
 	printf("== %s\n", 'Unit Tests');
-	// execute phpunit
 	system($phpunit . ' ' . $test_target); 
 	printf("\n");
 }
@@ -50,7 +49,7 @@ function target_clean()
 	printf("== %s\n", __FUNCTION__);
 	$quiet = ' 2> /dev/null';
 	system('rm -r ./phpdocs'.$quiet);
-    system('rm *.tgz '.$quiet);
+	system('rm *.tgz'.$quiet);
 	printf("\n");
 }
 $targets[] = 'target_clean';
@@ -58,7 +57,7 @@ $targets[] = 'target_clean';
 function target_beautify() 
 {
 	printf("== %s\n", __FUNCTION__);
-	// system('php_beautifier -f Lite.php -o Lite_.php');
+	// system('php_beautifier -f Config/Lite.php -o Config/Lite_.php');
 	printf("\n");
 }
 $targets[] = 'target_beautify';
@@ -66,13 +65,12 @@ $targets[] = 'target_beautify';
 function target_package()
 {
 	printf("== %s\n", __FUNCTION__);
-	// Used to create the Package
 	/* 
-	# vim /usr/bin/pear
+	# edited /usr/bin/pear
 	# since i compiled env php without zlib:
 	PHP_PEAR_PHP_BIN="/usr/bin/php"
 	*/
-    $pear = "/usr/bin/pear";
+	$pear = "/usr/bin/pear";
 	system($pear.' package ./package.xml');
 	printf("\n");
 }
@@ -81,7 +79,7 @@ $targets[] = 'target_package';
 function target_pirum()
 {
 	printf("== %s\n", __FUNCTION__);
-    $pear = "/usr/bin/pear";
+    $pear = '/usr/bin/pear';
 	system($pear.' package ./pirum-package.xml');
 	printf("\n");
 }
@@ -90,17 +88,11 @@ $targets[] = 'target_pirum';
 function target_pirum_add()
 {
 	printf("== %s\n", __FUNCTION__);
-	/* 
-		pirum add pear 
-	*/
 	$package = isset($argv[2]) ? basename($argv[2]) : 'Config_Lite-0.1.0.tgz'; 
-    // $pear = "/usr/bin/pear";
 	system('pirum add pear '.$package);
 	printf("\n");
 }
 $targets[] = 'target_pirum_add';
-
-
 
 function target_validate() 
 {
@@ -151,4 +143,3 @@ if ($argc > 1) {
 		print_usage($argv[0], true);	
 	}
 }
-
