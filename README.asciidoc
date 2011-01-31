@@ -186,8 +186,8 @@ if (preg_match($regex, 'Hello "World"!')) {
 
 === IDEAS
 
-* signal/slot or hook to set and read comments or multiline strings 
-  with injected parser and writefunctions, both supported by Pear::Config
+* Config_Lite_Parser with extended read and writefunctions (parse with Linereader), 
+  to support comments and multiline strings (both supported by Pear::Config)
 
 
 === Contributing
