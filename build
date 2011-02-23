@@ -4,6 +4,8 @@
 /**
  * simple buildscript, see ./build -h
  *
+ * declare a target is easy as prefixing a function with "target_"  
+ * 
  * PHP version 5.2.6+
  *
  * @file      build
@@ -23,7 +25,6 @@ function target_phpcs()
 	system($cs .' -v '.$target);
 	printf("\n");
 }
-$targets[] = 'target_phpcs';
 
 function target_test()
 {
@@ -33,7 +34,6 @@ function target_test()
 	system($phpunit . ' ' . $test_target); 
 	printf("\n");
 }
-$targets[] = 'target_test';
 
 function target_doc() 
 {
@@ -42,7 +42,6 @@ function target_doc()
 	system('phpdoc -o HTML:Smarty:PHP -f '.$target.' -t phpdocs');
 	printf("\n");
 }
-$targets[] = 'target_doc';
 
 function target_clean() 
 {
@@ -52,7 +51,6 @@ function target_clean()
 	system('rm *.tgz'.$quiet);
 	printf("\n");
 }
-$targets[] = 'target_clean';
 
 function target_beautify() 
 {
@@ -60,7 +58,6 @@ function target_beautify()
 	// system('php_beautifier -f Config/Lite.php -o Config/Lite_.php');
 	printf("\n");
 }
-$targets[] = 'target_beautify';
 
 function target_package()
 {
@@ -74,7 +71,6 @@ function target_package()
 	system($pear.' package ./package.xml');
 	printf("\n");
 }
-$targets[] = 'target_package';
 
 function target_pirum()
 {
@@ -83,7 +79,6 @@ function target_pirum()
 	system($pear.' package ./pirum-package.xml');
 	printf("\n");
 }
-$targets[] = 'target_pirum';
 
 function target_pirum_add()
 {
@@ -92,7 +87,6 @@ function target_pirum_add()
 	system('pirum add pear '.$package);
 	printf("\n");
 }
-$targets[] = 'target_pirum_add';
 
 function target_validate() 
 {
@@ -102,14 +96,12 @@ function target_validate()
 		. $pear .' package-validate "{}" \;');
 	printf("\n");
 }
-$targets[] = 'target_validate';
 
 function target_default()
 {
 	target_phpcs();
 	target_test();
 }
-$targets[] = 'target_default';
 
 // ---------------------------------------------------------------------
 
@@ -122,24 +114,40 @@ function print_usage($prg, $err=false)
 	$err && exit(1);
 }
 
+function main($argc, $argv) {
 
-if ($argc == 1 ) {
-	target_default();
-}
-
-if ($argc > 1) {
-	$target = 'target_'.$argv[1];
-	if (in_array($target, $targets)) {
-		$target();
-	} elseif ($argv[1] == '-h' || $argv[1] == '--help') {
-		print_usage($argv[0]);
-		$avail_targets = str_replace('target_', '', $targets);
-		printf("\n  %s\n\n", 'available targets:');
-		foreach ($avail_targets as $option) {
-			printf("    %s\n", $option);
+	if ($argc == 1 ) {
+		if (function_exists('target_default')) {
+			target_default();
+		} else {
+			print_usage($argv[0], true);	
 		}
-		printf("\n");
-	} else {
-		print_usage($argv[0], true);	
+	}
+
+	if ($argc > 1) {
+		$target = 'target_'.$argv[1];
+		if (function_exists($target)) {
+			$target();
+		} elseif ($argv[1] == '-h' || $argv[1] == '--help') {
+			print_usage($argv[0]);
+			$avail_targets = array();
+			$funcs = get_defined_functions();
+			foreach ($funcs['user'] as $func) {
+				if ('target_' === substr($func, 0, 7)) {
+					$avail_targets[] = str_replace('target_', '', $func);
+				}
+			}
+			printf("\n  %s\n\n", 'available targets:');
+			foreach ($avail_targets as $option) {
+				printf("    %s\n", $option);
+			}
+			printf("\n");
+		} else {
+			print_usage($argv[0], true);	
+		}
 	}
 }
+
+main($argc, $argv);
+
+
