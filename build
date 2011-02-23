@@ -104,6 +104,8 @@ function target_default()
 }
 
 // ---------------------------------------------------------------------
+// build script
+// ---------------------------------------------------------------------
 
 function print_usage($prg, $err=false)
 {
@@ -114,7 +116,8 @@ function print_usage($prg, $err=false)
 	$err && exit(1);
 }
 
-function main($argc, $argv) {
+function main($argc, $argv) 
+{
 
 	if ($argc == 1 ) {
 		if (function_exists('target_default')) {
@@ -149,5 +152,3 @@ function main($argc, $argv) {
 }
 
 main($argc, $argv);
-
-
