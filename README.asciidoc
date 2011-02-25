@@ -7,8 +7,10 @@ with the native PHP function `parse_ini_file' under the hood.
  +
 Config_Lite is inspired by Pythons ConfigParser. +
  +
-A "Config_Lite" file consists of sections, "[section]", 
-followed by "name = value" (KVP) entries.
+
+A "Config_Lite" file consists of global key/value pair (KVP) entries and optional sections, 
+"[section]", followed by "name = value" (KVP) entries.
+
 
 
 === Examples
