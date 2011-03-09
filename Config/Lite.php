@@ -199,6 +199,26 @@ class Config_Lite implements ArrayAccess, IteratorAggregate, Countable
      */
     public function write($filename, $sectionsarray) 
     {
+        $content = $this->buildOutputString($sectionsarray);
+        if (false === file_put_contents($filename, $content, LOCK_EX)) {
+            throw new Config_Lite_Exception_Runtime(
+                sprintf(
+                    'failed to write file `%s\' for writing.', $filename
+                )
+            );
+        }
+        return true;
+    }
+
+    /**
+     * Generated the output of the ini file, suitable for echo'ing or
+     * writing back to the ini file.
+     * 
+     * @param string $sectionsarray array of ini data
+     * @return string
+     */
+    protected function buildOutputString($sectionsarray)
+    {
         $content = '';
         $sections = '';
         $globals  = '';
@@ -231,17 +251,9 @@ class Config_Lite implements ArrayAccess, IteratorAggregate, Countable
             }
             $content .= $sections;
         }
-        
-        if (false === file_put_contents($filename, $content, LOCK_EX)) {
-            throw new Config_Lite_Exception_Runtime(
-                sprintf(
-                    'failed to write file `%s\' for writing.', $filename
-                )
-            );
-        }
-        return true;
+        return $content;
     }
-    
+
     /**
      * converts type (format) to string or representable Config Format
      *
@@ -671,20 +683,7 @@ class Config_Lite implements ArrayAccess, IteratorAggregate, Countable
      */
     public function __toString() 
     {
-        $s = "";
-        if ($this->sections != null) {
-            foreach ($this->sections as $section => $name) {
-                if (is_array($name)) {
-                    $s .= sprintf("[%s]\n", $section);
-                    foreach ($name as $key => $val) {
-                        $s .= sprintf("\t%s = %s\n", $key, $val);
-                    }
-                } else {
-                    $s .= sprintf("%s=%s\n", $section, $name);
-                }
-            }
-        }
-        return $s;
+        return $this->buildOutputString($this->sections);
     }
     
     /**

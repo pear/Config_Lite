@@ -366,4 +366,11 @@ class Config_LiteTest extends PHPUnit_Framework_TestCase
         $this->config->setFilename($filename);
         $this->assertEquals($filename, $this->config->getFilename());
     }
+
+    public function testToStringMatchesWrite()
+    {
+        $this->config->setFilename($this->filename);
+        $this->config->save();
+        $this->assertEquals($this->config->__toString(), file_get_contents($this->filename));
+    }
 }
