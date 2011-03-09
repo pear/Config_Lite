@@ -335,5 +335,28 @@ class Config_LiteTest extends PHPUnit_Framework_TestCase
 
 		$s = $m->invokeArgs($obj, array('String'));
 		$this->assertEquals('"String"', $s);
-	}	
+	}
+
+    public function testCountSections()
+    {
+        $count = count($this->config);
+        $this->assertEquals($count, 6);
+    }
+
+    public function testCountGlobal()
+    {
+        $this->config->setProcessSections(false)->read(dirname(__FILE__).'/test.cfg');
+        $count = count($this->config);
+        $this->assertEquals($count, 9);
+    }
+
+    public function testDoNotProcessSectionsGet()
+    {
+        $this->config->setProcessSections(false)->read(dirname(__FILE__).'/test.cfg');
+        $counter = $this->config->get(null, 'count');
+        $this->assertEquals(2, $counter);
+        // fallback to default given value 3
+        $counter = $this->config->get(null, 'nonexisting_counter_option', 3);
+        $this->assertEquals(3, $counter);
+    }
 }

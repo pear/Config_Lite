@@ -38,7 +38,7 @@ require_once 'Config/Lite/Exception/UnexpectedValue.php';
  * @license   http://www.gnu.org/copyleft/lesser.html  LGPL License 2.1
  * @link      https://github.com/pce/config_lite
  */
-class Config_Lite implements ArrayAccess, IteratorAggregate
+class Config_Lite implements ArrayAccess, IteratorAggregate, Countable
 {
     /**
      * sections, holds the config sections
@@ -68,6 +68,13 @@ class Config_Lite implements ArrayAccess, IteratorAggregate
      * @var string
      */
     protected $linebreak = "\n";
+
+    /**
+     * parseSections - if true, sections will be processed
+     * 
+     * @var bool
+     */
+    protected $processSections = true;
     
     /**
      * the read method parses the optional given filename 
@@ -98,7 +105,7 @@ class Config_Lite implements ArrayAccess, IteratorAggregate
                 . $filename
             );
         }
-        $this->sections = parse_ini_file($filename, true);
+        $this->sections = parse_ini_file($filename, $this->processSections);
         if (false === $this->sections) {
             throw new Config_Lite_Exception_Runtime(
                 'failure, can not parse the file: ' . $filename
@@ -193,9 +200,6 @@ class Config_Lite implements ArrayAccess, IteratorAggregate
     public function write($filename, $sectionsarray) 
     {
         $content = '';
-        if ('.php' === substr($filename, -4)) {
-            $content .= ';<?php return; ?>' . $this->linebreak;
-        }
         $sections = '';
         $globals  = '';
         if (!empty($sectionsarray)) {
@@ -452,7 +456,7 @@ class Config_Lite implements ArrayAccess, IteratorAggregate
      */
     public function hasSection($sec) 
     {
-        if (isset($this->sections[$sec])) {
+        if (isset($this->sections[$sec]) && is_array($this->sections[$sec])) {
             return true;
         }
         return false;
@@ -629,6 +633,22 @@ class Config_Lite implements ArrayAccess, IteratorAggregate
         $this->linebreak = $linebreakchars;
         return $this;
     }
+
+    /**
+     * Sets whether or not sections should be processed
+     * 
+     * If true, values for each section will be placed into
+     * a sub-array for the section. If false, all values will
+     * be placed in the global scope.
+     * 
+     * @param bool $processSections
+     * @return $this
+     */
+    public function setProcessSections($processSections)
+    {
+        $this->processSections = $processSections;
+        return $this;
+    }
     
     /**
      * text presentation of the config object
@@ -717,6 +737,17 @@ class Config_Lite implements ArrayAccess, IteratorAggregate
     public function getIterator() 
     {
         return new ArrayIterator($this->sections);
+    }
+
+    /**
+     * implemented for interface Countable
+     * 
+     * @see http://php.net.countable
+     * @return int
+     */
+    public function count()
+    {
+        return count($this->sections);
     }
     
     /**
