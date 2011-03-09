@@ -616,7 +616,17 @@ class Config_Lite implements ArrayAccess, IteratorAggregate, Countable
         $this->filename = $filename;
         return $this;
     }
-    
+
+    /**
+     * returns the current filename
+     * 
+     * @return string
+     */
+    public function getFilename()
+    {
+        return $this->filename;
+    }
+
     /**
      * set the line break (newline) chars 
      *

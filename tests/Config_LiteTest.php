@@ -359,4 +359,11 @@ class Config_LiteTest extends PHPUnit_Framework_TestCase
         $counter = $this->config->get(null, 'nonexisting_counter_option', 3);
         $this->assertEquals(3, $counter);
     }
+
+    public function testGetFilename()
+    {
+        $filename = dirname(__FILE__).'/test.cfg';
+        $this->config->setFilename($filename);
+        $this->assertEquals($filename, $this->config->getFilename());
+    }
 }
