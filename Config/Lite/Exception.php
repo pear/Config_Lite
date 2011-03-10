@@ -7,8 +7,8 @@
  * @file      Config/Lite/Exception.php
  * @category  Configuration
  * @package   Config_Lite
- * @author    Patrick C. Engel <info@pc-e.org>
- * @copyright 2010 info@pc-e.org
+ * @author    Patrick C. Engel <pce@php.net>
+ * @copyright 2010-2011 <pce@php.net>
  * @license   http://www.gnu.org/copyleft/lesser.html  LGPL License 2.1
  * @version   SVN: $Id$
  * @link      https://github.com/pce/config_lite
@@ -22,8 +22,8 @@
  *
  * @category  Configuration
  * @package   Config_Lite
- * @author    Patrick C. Engel <info@pc-e.org>
- * @copyright 2010 info@pc-e.org
+ * @author    Patrick C. Engel <pce@php.net>
+ * @copyright 2010-2011 <pce@php.net>
  * @license   http://www.gnu.org/copyleft/lesser.html  LGPL License 2.1
  * @version   Release: @package_version@
  * @link      https://github.com/pce/config_lite
