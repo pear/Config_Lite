@@ -17,20 +17,20 @@ Currently classes available are:
 	<lead>
 		<name>Patrick C. Engel</name>
 		<user>pce</user>
-		<email>info@pc-e.org</email>
+		<email>pce@php.net</email>
 		<active>yes</active>
 	</lead>
-	<date>2011-01-16</date>
+	<date>2011-03-10</date>
 	<version>
-		<release>0.1.0</release>
-		<api>0.1.0</api>
+		<release>0.1.1</release>
+		<api>0.1.1</api>
 	</version>
 	<stability>
 		<release>beta</release>
 		<api>beta</api>
 	</stability>
 	<license uri="http://www.gnu.org/copyleft/lesser.html">lgpl</license>
-	<notes>Initial release.</notes>
+	<notes>Fix #18353 and improvements</notes>
 	<contents>
 		<dir name="/">
 			<dir name="Config">
@@ -76,5 +76,38 @@ Currently classes available are:
 		</required>
 	</dependencies>
 	<phprelease />
-	<changelog />
+	<changelog>
+	<release>
+	<version>
+	<release>0.1.1</release>
+	<api>0.1.0</api>
+	</version>
+	<stability>
+	<release>beta</release>
+    <api>beta</api>
+	</stability>
+	<date>2011-03-10</date>
+	<license uri="http://www.php.net/license/3_0.txt">PHP License</license>
+	<notes>
+ * fix Bug #18353 by mfonda 
+ * add option to choose if sections should be processed by mfonda 
+ * improvements by mfonda
+	</notes>
+	</release>
+	<release>
+	<version>
+		<release>0.1.0</release>
+	<api>0.1.0</api>
+	</version>
+	<stability>
+	<release>beta</release>
+	<api>beta</api>
+	</stability>
+	<date>2011-02-25</date>
+	<license uri="http://www.php.net/license/3_0.txt">PHP License</license>
+	<notes>
+	* initial release
+	</notes>
+	</release>
+	</changelog>
 </package>
