@@ -7,8 +7,8 @@
  * @file      Config/Lite.php
  * @category  Configuration
  * @package   Config_Lite
- * @author    Patrick C. Engel <info@pc-e.org>
- * @copyright 2010-2011 info@pc-e.org
+ * @author    Patrick C. Engel <pce@php.net>
+ * @copyright 2010-2011 <pce@php.net>
  * @license   http://www.gnu.org/copyleft/lesser.html  LGPL License 2.1
  * @version   SVN: $Id$
  * @link      https://github.com/pce/config_lite
@@ -33,8 +33,8 @@ require_once 'Config/Lite/Exception/UnexpectedValue.php';
  *
  * @category  Configuration
  * @package   Config_Lite
- * @author    Patrick C. Engel <info@pc-e.org>
- * @copyright 2010 info@pc-e.org
+ * @author    Patrick C. Engel <pce@php.net>
+ * @copyright 2010-2011 <pce@php.net>
  * @license   http://www.gnu.org/copyleft/lesser.html  LGPL License 2.1
  * @link      https://github.com/pce/config_lite
  */
@@ -215,6 +215,7 @@ class Config_Lite implements ArrayAccess, IteratorAggregate, Countable
      * writing back to the ini file.
      * 
      * @param string $sectionsarray array of ini data
+     * 
      * @return string
      */
     protected function buildOutputString($sectionsarray)
@@ -663,7 +664,8 @@ class Config_Lite implements ArrayAccess, IteratorAggregate, Countable
      * a sub-array for the section. If false, all values will
      * be placed in the global scope.
      * 
-     * @param bool $processSections
+     * @param bool $processSections - if true, sections will be processed
+     * 
      * @return $this
      */
     public function setProcessSections($processSections)
