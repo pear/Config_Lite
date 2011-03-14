@@ -59,6 +59,15 @@ function target_beautify()
 	printf("\n");
 }
 
+function target_md()
+{
+	printf("== %s\n", __FUNCTION__);
+	/* uses phpmd from http://phpmd.org/ */
+	system('phpmd Config text codesize,unusedcode,naming,design');
+        printf("\n");
+}
+
+
 function target_package()
 {
 	printf("== %s\n", __FUNCTION__);
