@@ -169,7 +169,7 @@ class Config_Lite implements ArrayAccess, IteratorAggregate, Countable
     protected function normalizeValue($value) 
     {
         if (is_bool($value)) {
-            $value = $this->to('bool', $value);
+            $value = $this->toBool($value);
             return $value;
         } elseif (is_numeric($value)) {
             return $value;
@@ -256,33 +256,21 @@ class Config_Lite implements ArrayAccess, IteratorAggregate, Countable
     }
 
     /**
-     * converts type (format) to string or representable Config Format
+     * converts string to a  representable Config Bool Format
      *
-     * @param string $format "bool", "boolean"
-     * @param string $value  value
+     * @param string $value value
      *
      * @return string
      * @throws Config_Lite_Exception_UnexpectedValue when format is unknown
      */
-    public function to($format, $value) 
+    public function toBool($value) 
     {
-        switch ($format) {
-        case 'bool':
-        case 'boolean':
-            if ($value === true) {
-                return 'yes';
-            }
-            return 'no';
-            break;
-        default:
-            // unknown format
-            throw new Config_Lite_Exception_UnexpectedValue(
-                sprintf('no conversation made, unrecognized format: `%s\'', $format)
-            );
-            break;
+        if ($value === true) {
+            return 'yes';
         }
+        return 'no';
     }
-    
+        
     /**
      * returns a stripslashed string
      *
