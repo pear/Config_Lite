@@ -77,6 +77,13 @@ class Config_Lite implements ArrayAccess, IteratorAggregate, Countable
     protected $processSections = true;
     
     /**
+     * doubleQuoteStrings - if true, strings will be doubleQuoted
+     * 
+     * @var bool
+     */
+    protected $doubleQuoteStrings = true;
+    
+    /**
      * the read method parses the optional given filename 
      * or already setted filename.
      * 
@@ -174,8 +181,9 @@ class Config_Lite implements ArrayAccess, IteratorAggregate, Countable
         } elseif (is_numeric($value)) {
             return $value;
         }
-        // if (is_string($value) && !$this->isBool($value))
-        $value = '"' . $value . '"';
+        if ($this->doubleQuoteStrings) {
+            $value = '"' . $value . '"';
+        }
         return $value;
     }
     
@@ -659,6 +667,22 @@ class Config_Lite implements ArrayAccess, IteratorAggregate, Countable
     public function setProcessSections($processSections)
     {
         $this->processSections = $processSections;
+        return $this;
+    }
+    
+    /**
+     * Sets whether or not to doubleQuote
+     * 
+     * If true, everything but bool and numeric 
+     * values get doublequoted.
+     * 
+     * @param bool $doubleQuoteStrings - if true, Strings get doubleQuoted 
+     * 
+     * @return $this
+     */
+    public function setDoubleQuote($doubleQuoteStrings)
+    {
+        $this->doubleQuoteStrings = $doubleQuoteStrings;
         return $this;
     }
     
