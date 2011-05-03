@@ -359,6 +359,20 @@ class Config_LiteTest extends PHPUnit_Framework_TestCase
         $counter = $this->config->get(null, 'nonexisting_counter_option', 3);
         $this->assertEquals(3, $counter);
     }
+    
+    public function testDoNotDoubleQuoteWrite()
+    {
+        $this->config->setDoubleQuote(false)->read($this->filename);
+        // $this->config->setFilename($this->filename);
+		$this->config->setString('notquoted', 'double', 'String');
+		$this->config->sync();
+		$this->assertEquals('String',
+            $this->config->getString('notquoted', 'double')
+        );
+		// back to default
+		$this->config->setDoubleQuote(true);
+    }
+
 
     public function testGetFilename()
     {
