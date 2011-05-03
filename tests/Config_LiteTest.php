@@ -363,16 +363,15 @@ class Config_LiteTest extends PHPUnit_Framework_TestCase
     public function testDoNotDoubleQuoteWrite()
     {
         $this->config->setDoubleQuote(false)->read($this->filename);
-        // $this->config->setFilename($this->filename);
-		$this->config->setString('notquoted', 'double', 'String');
+        $this->config->setFilename($this->filename);
+		$this->config->setString('notquoted', 'nodouble', 'String');
 		$this->config->sync();
 		$this->assertEquals('String',
-            $this->config->getString('notquoted', 'double')
+            $this->config->getString('notquoted', 'nodouble')
         );
 		// back to default
 		$this->config->setDoubleQuote(true);
     }
-
 
     public function testGetFilename()
     {
