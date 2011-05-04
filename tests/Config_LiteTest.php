@@ -362,7 +362,7 @@ class Config_LiteTest extends PHPUnit_Framework_TestCase
     
     public function testDoNotDoubleQuoteWrite()
     {
-        $this->config->setDoubleQuote(false)->read($this->filename);
+        $this->config->setDoubleQuoteStrings(false)->read($this->filename);
         $this->config->setFilename($this->filename);
 		$this->config->setString('notquoted', 'nodouble', 'String');
 		$this->config->sync();
@@ -370,7 +370,7 @@ class Config_LiteTest extends PHPUnit_Framework_TestCase
             $this->config->getString('notquoted', 'nodouble')
         );
 		// back to default
-		$this->config->setDoubleQuote(true);
+		$this->config->setDoubleQuoteStrings(false);
     }
 
     public function testGetFilename()

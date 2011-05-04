@@ -77,7 +77,8 @@ class Config_Lite implements ArrayAccess, IteratorAggregate, Countable
     protected $processSections = true;
     
     /**
-     * doubleQuoteStrings - if true, strings will be doubleQuoted
+     * doubleQuoteStrings - if true, 
+     * writes ini files with doubleQuoted strings 
      * 
      * @var bool
      */
@@ -88,7 +89,7 @@ class Config_Lite implements ArrayAccess, IteratorAggregate, Countable
      * or already setted filename.
      * 
      * this method uses the native PHP function 
-     * parse_ini_file behind the scenes. 
+     * parse_ini_file behind the scenes.
      *
      * @param string $filename Filename
      *
@@ -680,7 +681,7 @@ class Config_Lite implements ArrayAccess, IteratorAggregate, Countable
      * 
      * @return $this
      */
-    public function setDoubleQuote($doubleQuoteStrings)
+    public function setDoubleQuoteStrings($doubleQuoteStrings)
     {
         $this->doubleQuoteStrings = $doubleQuoteStrings;
         return $this;
