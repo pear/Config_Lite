@@ -77,12 +77,12 @@ class Config_Lite implements ArrayAccess, IteratorAggregate, Countable
     protected $processSections = true;
     
     /**
-     * doubleQuoteStrings - if true, 
-     * writes ini files with doubleQuoted strings 
+     * quote Strings - if true, 
+     * writes ini files with doublequoted strings 
      * 
      * @var bool
      */
-    protected $doubleQuoteStrings = true;
+    protected $quoteStrings = true;
     
     /**
      * the read method parses the optional given filename 
@@ -182,7 +182,7 @@ class Config_Lite implements ArrayAccess, IteratorAggregate, Countable
         } elseif (is_numeric($value)) {
             return $value;
         }
-        if ($this->doubleQuoteStrings) {
+        if ($this->quoteStrings) {
             $value = '"' . $value . '"';
         }
         return $value;
@@ -677,13 +677,13 @@ class Config_Lite implements ArrayAccess, IteratorAggregate, Countable
      * If true, everything but bool and numeric 
      * values get doublequoted.
      * 
-     * @param bool $doubleQuoteStrings - if true, Strings get doubleQuoted 
+     * @param bool $quoteStrings - if true, Strings get doubleQuoted 
      * 
      * @return $this
      */
-    public function setDoubleQuoteStrings($doubleQuoteStrings)
+    public function setQuoteStrings($quoteStrings)
     {
-        $this->doubleQuoteStrings = $doubleQuoteStrings;
+        $this->quoteStrings = $quoteStrings;
         return $this;
     }
     
