@@ -336,7 +336,9 @@ class Config_Lite implements ArrayAccess, IteratorAggregate, Countable
      */
     public function get($sec = null, $key = null, $default = null)
     {
-        if ((null !== $sec) && array_key_exists($key, $this->sections[$sec])) {
+        if ((null !== $sec) && array_key_exists($sec, $this->sections) 
+            && isset($this->sections[$sec][$key])
+        ) {
             return $this->sections[$sec][$key];
         }
         // global value
@@ -348,7 +350,7 @@ class Config_Lite implements ArrayAccess, IteratorAggregate, Countable
             return $this->sections[$sec];
         }
         // all sections
-        if ((null === $sec) && array_key_exists($sec, $this->sections)) {
+        if (null === $sec && array_key_exists($sec, $this->sections)) {
             return $this->sections;
         }
         if (null !== $default) {

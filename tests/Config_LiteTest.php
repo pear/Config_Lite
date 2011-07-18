@@ -99,6 +99,14 @@ class Config_LiteTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals(3, $counter);
 	}
 
+	public function testGetDefaultByNonExistingSection()
+	{
+		$this->config->read(dirname(__FILE__).'/test.cfg');
+		// fallback to default given value 3
+		$counter = $this->config->get('foo', 'nonexisting_counter_option', 3);
+		$this->assertEquals(3, $counter);
+	}
+		
 	public function testGetGlobalOption()
 	{
 		$this->config->read(dirname(__FILE__).'/test.cfg');
