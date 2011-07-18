@@ -38,7 +38,7 @@ require_once 'Config/Lite/Exception/UnexpectedValue.php';
  * @license   http://www.gnu.org/copyleft/lesser.html  LGPL License 2.1
  * @link      https://github.com/pce/config_lite
  */
-class Config_Lite implements ArrayAccess, IteratorAggregate, Countable
+class Config_Lite implements ArrayAccess, IteratorAggregate, Countable, Serializable
 {
     /**
      * sections, holds the config sections
@@ -776,6 +776,30 @@ class Config_Lite implements ArrayAccess, IteratorAggregate, Countable
         return count($this->sections);
     }
     
+    /**
+     * implemented for interface Serializable
+     * 
+     * @see http://php.net/manual/en/class.serializable.php
+     * @return int
+     */
+    public function serialize()
+    {
+        return serialize($this->sections);
+    }
+
+    /**
+     * implemented for interface Serializable
+     * 
+     * @param string $serializedData for instance
+     * 
+     * @return void
+     */
+    public function unserialize($serializedData)
+    {
+        $sections = unserialize($serializedData);
+        $this->sections = $sections;
+    }
+
     /**
      * takes an optional filename, if the file exists, also reads it.
      *
