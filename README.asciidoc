@@ -149,6 +149,23 @@ foreach ($config as $section => $name) {
 ----------
 
 
+=== Options
+
+
+==  setProcessSections(bool)
+
+Sets whether or not sections should be processed
+If true, values for each section will be placed into
+a sub-array for the section. If false, all values will
+be placed in the global scope.
+
+==  setQuoteStrings(bool)
+
+Sets whether or not to doubleQuote
+If true, everything but bool and numeric 
+values get doublequoted.
+
+
 
 === Notes & Limitations
 
