@@ -283,7 +283,7 @@ class Config_LiteTest extends PHPUnit_Framework_TestCase
 		$this->config->setFilename($this->filename);
 		$this->config->set('counter', 'has_counter', TRUE);
 		$this->config->sync();
-		$this->assertEquals(1, $this->config->get('counter', 'has_counter'));
+		$this->assertEquals(TRUE, $this->config->get('counter', 'has_counter'));
 	}
 	
 	public function testHasOption()
@@ -355,14 +355,14 @@ class Config_LiteTest extends PHPUnit_Framework_TestCase
     {
         $this->config->setProcessSections(false)->read(dirname(__FILE__).'/test.cfg');
         $count = count($this->config);
-        $this->assertEquals($count, 9);
+        $this->assertEquals($count, 6);
     }
 
     public function testDoNotProcessSectionsGet()
     {
         $this->config->setProcessSections(false)->read(dirname(__FILE__).'/test.cfg');
-        $counter = $this->config->get(null, 'count');
-        $this->assertEquals(2, $counter);
+        $counter = $this->config->get(null, 'filename');
+        $this->assertEquals('test.cfg', $counter);
         // fallback to default given value 3
         $counter = $this->config->get(null, 'nonexisting_counter_option', 3);
         $this->assertEquals(3, $counter);

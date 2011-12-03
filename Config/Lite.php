@@ -528,7 +528,7 @@ if ($pos !== false) {
      */
     public function get($sec = null, $key = null, $default = null)
     {
-        if ((null !== $sec) && array_key_exists($sec, $this->sections) 
+		 if ((null !== $sec) && array_key_exists($sec, $this->sections) 
             && isset($this->sections[$sec][$key])
         ) {
             return $this->sections[$sec][$key];
