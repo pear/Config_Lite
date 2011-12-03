@@ -41,6 +41,27 @@ require_once 'Config/Lite/Exception/UnexpectedValue.php';
 class Config_Lite implements ArrayAccess, IteratorAggregate, Countable, Serializable
 {
     /**
+     * global section array key
+     *
+     * @var string
+     */
+    const GLOBAL_SECT = '__global__';
+
+    /**
+     * delimiter Regular expressions
+     *
+     * @var string
+     */
+    const RE_DELIM = '/';
+
+    /**
+    * Regular expressions for parsing section headers and options.
+    */
+    const SECT_RE = '^\[(?P<header>[^]]+)\]';
+        
+    const OPT_RE = '(?P<option>[^:=\s][^:=]*)\s*(?P<vi>[:=])\s*(?P<value>.*)$';
+	
+    /**
      * sections, holds the config sections
      *
      * @var array
