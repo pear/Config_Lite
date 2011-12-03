@@ -106,7 +106,7 @@ class Config_Lite implements ArrayAccess, IteratorAggregate, Countable, Serializ
     protected $quoteStrings = true;
     
 	
-	    /**
+	/**
      * parse line test if it is an option
      * 
      * @param string $filename        Filename
