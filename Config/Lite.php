@@ -105,12 +105,143 @@ class Config_Lite implements ArrayAccess, IteratorAggregate, Countable, Serializ
      */
     protected $quoteStrings = true;
     
+	
+	    /**
+     * parse line test if it is an option
+     * 
+     * @param string $filename        Filename
+     * @param bool   $processSections process sections  
+     *
+     * @return mixed - array sections or bool false on failure
+     * @throws Config_Lite_Exception_Runtime when file not found
+     * @throws Config_Lite_Exception_Runtime when file is not readable
+     * @throws Config_Lite_Exception_Runtime when parse ini file failed
+     */
+    protected function parseOptionLine($line, $sectname)
+    {
+        // an option line?
+        $re = self::RE_DELIM.self::OPT_RE.self::RE_DELIM;
+        preg_match($re, $line, $mo);
+        if ($mo) {
+            $optname = $mo['option'];
+            $vi = $mo['vi'];
+            $optval = $mo['value'];
+            if ($vi == '=' || $vi == ':') {
+            // 'comments ?  ;' is a comment delimiter only if it follows
+/*
+$pos = strpos($optval, ';'); 
+if ($pos !== false) {
+    if ($pos != -1 && (trim($optval[$pos-1]))) {
+        $optval = substr($optval, $pos);
+    }
+}
+*/
+            }
+            $optval = trim($optval);
+             // allow empty values
+            if ($optval == '""' 
+                 || $optval == "''") {
+                 $optval = '';
+            }
+			// stringval?
+			if (($optval[0] == '"' 
+				&& $optval[strlen($optval)-1] == '"')
+				||
+				($optval[0] == '\'' 
+				&& $optval[strlen($optval)-1] == '\'')) {
+				$optval = substr($optval, 1, -1);
+			}
+             // echo '0:'.$optval[0]."\n";
+
+		    $optname = trim($optname);
+            $pos = strpos($optname, '['); 
+            if (false !== $pos) {
+                // var_dump($pos);
+                // get index and pop val into array
+                $optarray = substr($optname, 0, $pos);
+                $index = substr($optname, $pos+1, strlen($optname)-$pos);
+                $index = trim(str_replace(']', '', $index));
+                if (!isset($this->_sections[$sectname][$optarray])) {
+                    $this->_sections[$sectname][$optarray] = array();
+                }
+                $this->_sections[$sectname][$optarray][$index] = $optval;
+                return;
+            }
+		    // $cursect[$optname] = $optval;
+            $this->_sections[$sectname][$optname] = $optval;
+        }
+    }
+    
+    /**
+     * the parseIniFile method parses the optional given filename 
+     * or already setted filename
+     * TODO: Comments, ArraySyntax
+     * 
+     * @param string $filename        Filename
+     * @param bool   $processSections process sections  
+     *
+     * @return mixed - array sections or bool f	alse on failure
+     * @throws Config_Lite_Exception_Runtime when file not found
+     * @throws Config_Lite_Exception_Runtime when file is not readable
+     * @throws Config_Lite_Exception_Runtime when parse ini file failed
+     */
+    protected function parseIniFile($filename, $processSections = false) 
+    {
+        // if ($processSections) {}
+        $file = new SplFileObject($filename);
+        
+        $cursect = '';
+        $sectname = self::GLOBAL_SECT;
+        $optname = '';
+        $lineno = 0;
+        while (!$file->eof()) {
+            $line = $file->fgets();
+            $lineno = $lineno + 1;
+            // comment or blank line?
+            if ((trim($line) === '') 
+                || $line[0] === '#' 
+                || $line[0] === ';'
+            ) { 
+                continue;
+            }
+            // continuation line?
+            if (($line[0] == ' ' )
+                && ($cursect !== '')
+                && ($optname !== '')
+                && $value = trim($line)
+            ) {
+                if ($value) {
+                    // $cursect[$optname] .= $value;
+                }
+            } else { // a section header or option header?
+                // is it a section header?
+                $re = self::RE_DELIM.self::SECT_RE.self::RE_DELIM;
+                preg_match($re, ltrim($line), $mo);
+                if ($mo) {
+                    $sectname = trim($mo['header']);
+                    $cursect = array();
+                    $this->_sections[$sectname] = $cursect;
+                    // So sections can't start with a continuation line
+                    $optname = '';
+                // no section header in the file?
+                } else if ($cursect === '') {
+                    $this->parseOptionLine($line, $sectname);
+                } else {
+                    // an option line?
+                    $this->parseOptionLine($line, $sectname);
+                }
+            }
+        }
+        // print_r($this->_sections);	
+        return $this->_sections; 
+        // return false; 
+    }
     /**
      * the read method parses the optional given filename 
      * or already setted filename.
      * 
      * this method uses the native PHP function 
-     * parse_ini_file behind the scenes.
+     * parse_ini_file behind the scenes. 
      *
      * @param string $filename Filename
      *
@@ -127,20 +258,42 @@ class Config_Lite implements ArrayAccess, IteratorAggregate, Countable, Serializ
             $this->filename = $filename;
         }
         if (!file_exists($filename)) {
-            throw new Config_Lite_Exception_Runtime('file not found: ' . $filename);
+            throw new Config_Lite_Exception_Runtime(
+                        'file not found: ' . $filename
+                      );
         }
         if (!is_readable($filename)) {
             throw new Config_Lite_Exception_Runtime('file not readable: '
                 . $filename
             );
         }
-        $this->sections = parse_ini_file($filename, $this->processSections);
+        $this->_sections = $this->parseIniFile(
+                                        $filename, 
+                                        $this->processSections
+                                  );
+        $this->sections = $this->getCleanSections();
         if (false === $this->sections) {
             throw new Config_Lite_Exception_Runtime(
                 'failure, can not parse the file: ' . $filename
             );
         }
     }
+
+    /**
+     * get the sections without the metainfos, 
+     * ie. the arraykey for global values
+     *
+     * @return Array
+     */
+    protected function getCleanSections() 
+    {
+        $sections  = $this->_sections;
+        $sections += $this->_sections[self::GLOBAL_SECT];
+        unset($sections[self::GLOBAL_SECT]);
+        return $sections;
+    }
+    
+	
     /**
      * save the object to the already setted filename 
      * (active record style)
