@@ -305,7 +305,7 @@ if ($pos !== false) {
         return $this->write($this->filename, $this->sections);
     }
     /**
-     * sync the file to the object
+     * synchronize the data on disk with memory
      *
      * like `save',
      * but after written the data, reads the data back into the object.
@@ -393,7 +393,7 @@ if ($pos !== false) {
         return true;
     }
 
-    /**
+   /**
      * Generated the output of the ini file, suitable for echo'ing or
      * writing back to the ini file.
      * 
@@ -412,11 +412,29 @@ if ($pos !== false) {
                 if (!is_array($item)) {
                     $value    = $this->normalizeValue($item);
                     $globals .= $section . ' = ' . $value . $this->linebreak;
-                }
+                } else {
+					if ($section === self::GLOBAL_SECT) {
+						if (is_array($item)) {
+							foreach ($item as $key => $value) {
+								if (is_array($value)) {
+									foreach ($value as $arrkey => $arrvalue) {
+										$arrvalue  = $this->normalizeValue($arrvalue);
+										$arrkey    = $key . '[' . $arrkey . ']';
+										$sections .= $arrkey . ' = ' . $arrvalue 
+													. $this->linebreak;
+									}
+								} else {
+									$value     = $this->normalizeValue($value);
+									$sections .= $key . ' = ' . $value . $this->linebreak;
+								}
+							}
+						}
+                    }
+				}
             }
             $content .= $globals;
             foreach ($sectionsarray as $section => $item) {
-                if (is_array($item)) {
+                if (is_array($item) && $section !== self::GLOBAL_SECT) {
                     $sections .= "\n[" . $section . "]\n";
                     foreach ($item as $key => $value) {
                         if (is_array($value)) {
