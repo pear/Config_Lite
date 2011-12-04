@@ -74,15 +74,18 @@ class Config_Lite implements ArrayAccess, IteratorAggregate, Countable, Serializ
      */
     protected $filename;
     /**
-     * _booleans - alias of bool in a representable Configuration String Format
+     * _true
      *
-     * @var array
-     */
-    private $_booleans = array('1' => true, 'on' => true, 
-                               'true' => true, 'yes' => true, 
-                               '0' => false, 'off' => false, 
-                               'false' => false, 'no' => false);
-                               
+     * @var string
+     */    
+    protected $_true = 'yes';
+    /**
+     * _false
+     *
+     * @var string
+     */    
+    protected $_false = 'no';
+	
     /**
      * line-break chars, default *x: "\n", windows: "\r\n"
      *
@@ -105,7 +108,15 @@ class Config_Lite implements ArrayAccess, IteratorAggregate, Countable, Serializ
      */
     protected $quoteStrings = true;
     
-	
+    /**
+     * _booleans - alias of bool in a representable Configuration String Format
+     *
+     * @var array
+     */
+    private $_booleans = array('1' => true, 'on' => true, 
+                               'true' => true, 'yes' => true, 
+                               '0' => false, 'off' => false, 
+                               'false' => false, 'no' => false);	
 	/**
      * parse line test if it is an option
      * 
@@ -127,15 +138,15 @@ class Config_Lite implements ArrayAccess, IteratorAggregate, Countable, Serializ
             $vi = $mo['vi'];
             $optval = $mo['value'];
             if ($vi == '=' || $vi == ':') {
-            // 'comments ?  ;' is a comment delimiter only if it follows
-/*
-$pos = strpos($optval, ';'); 
-if ($pos !== false) {
-    if ($pos != -1 && (trim($optval[$pos-1]))) {
-        $optval = substr($optval, $pos);
-    }
-}
-*/
+                // <comment_token, ";"> in value?
+                /*
+	            $pos = strpos($optval, ';');
+	            if ($pos !== false) {
+	    	        if ($pos != -1 && (trim($optval[$pos-1]))) {
+	                    $optval = substr($optval, $pos);
+				    }
+	            }
+			    */ 
             }
             $optval = trim($optval);
              // allow empty values
@@ -151,13 +162,10 @@ if ($pos !== false) {
 				&& $optval[strlen($optval)-1] == '\'')) {
 				$optval = substr($optval, 1, -1);
 			}
-             // echo '0:'.$optval[0]."\n";
-
 		    $optname = trim($optname);
             $pos = strpos($optname, '['); 
             if (false !== $pos) {
-                // var_dump($pos);
-                // get index and pop val into array
+                // get index and push val into array
                 $optarray = substr($optname, 0, $pos);
                 $index = substr($optname, $pos+1, strlen($optname)-$pos);
                 $index = trim(str_replace(']', '', $index));
@@ -175,7 +183,7 @@ if ($pos !== false) {
     /**
      * the parseIniFile method parses the optional given filename 
      * or already setted filename
-     * TODO: Comments, ArraySyntax
+     * TODO: Comments, multiline, dotted ArraySyntax?
      * 
      * @param string $filename        Filename
      * @param bool   $processSections process sections  
@@ -211,7 +219,7 @@ if ($pos !== false) {
                 && $value = trim($line)
             ) {
                 if ($value) {
-                    // $cursect[$optname] .= $value;
+                    $cursect[$optname] .= $value;
                 }
             } else { // a section header or option header?
                 // is it a section header?
@@ -232,9 +240,8 @@ if ($pos !== false) {
                 }
             }
         }
-        // print_r($this->_sections);	
-        return $this->_sections; 
-        // return false; 
+        print_r($this->_sections);	
+        return $this->_sections;
     }
     /**
      * the read method parses the optional given filename 
@@ -467,9 +474,9 @@ if ($pos !== false) {
     public function toBool($value) 
     {
         if ($value === true) {
-            return 'yes';
+            return $this->_true;
         }
-        return 'no';
+        return $this->_false;
     }
         
     /**
