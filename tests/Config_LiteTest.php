@@ -322,7 +322,7 @@ class Config_LiteTest extends PHPUnit_Framework_TestCase
 	/**
 	 * to test protected methods
 	 */
-	protected static function getMethod($name)
+	protected function getMethod($name)
 	{
 		$class = new ReflectionClass('Config_Lite');
 		$method = $class->getMethod($name);
