@@ -335,7 +335,7 @@ class Config_LiteTest extends PHPUnit_Framework_TestCase
 
 	public function testNormalizeValue()
 	{
-		$m = self::getMethod('normalizeValue');
+		$m = $this->getMethod('normalizeValue');
 		$obj = new Config_Lite();
 
 		$b = $m->invokeArgs($obj, array(true));
