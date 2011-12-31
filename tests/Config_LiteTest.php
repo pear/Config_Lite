@@ -24,11 +24,11 @@ if (is_file(dirname(__FILE__).'/../Config/Lite.php') === true) {
 
 /**
  * Test class for Config_Lite.
- * 
+ *
  * PHPUnit 3.3.17 by Sebastian Bergmann.
  * The first Tests relies on test.cfg,
  * followd by tests on a temporary file.
- * 
+ *
  * Usage: phpunit AllTests.php
  *
  * @category  Config
@@ -48,7 +48,7 @@ class Config_LiteTest extends PHPUnit_Framework_TestCase
 	protected $object;
 	/**
 	 * temporary filename
-	 * 
+	 *
 	 * @access protected
 	 */
 	protected $filename;
@@ -65,9 +65,9 @@ class Config_LiteTest extends PHPUnit_Framework_TestCase
 		$this->config->read(dirname(__FILE__).'/test.cfg');
 		$this->filename = tempnam(sys_get_temp_dir(), __CLASS__);
 		if (!is_writable($this->filename)) {
-			printf('Warning: temporary file not writeable: %s.'."\n", 
+			printf('Warning: temporary file not writeable: %s.'."\n",
 				$this->filename
-			);	
+			);
 		}
 	}
 
@@ -106,7 +106,7 @@ class Config_LiteTest extends PHPUnit_Framework_TestCase
 		$counter = $this->config->get('foo', 'nonexisting_counter_option', 3);
 		$this->assertEquals(3, $counter);
 	}
-		
+
 	public function testGetGlobalOption()
 	{
 		$this->config->read(dirname(__FILE__).'/test.cfg');
@@ -114,13 +114,13 @@ class Config_LiteTest extends PHPUnit_Framework_TestCase
 		// global values with null
 		$this->assertEquals('test.cfg', $this->config->get(null, 'filename'));
 	}
-	
+
 	public function testGetBoolGlobalOption()
 	{
 		$this->config->read(dirname(__FILE__).'/test.cfg');
 		$this->assertEquals(TRUE, $this->config->getBool(null, 'debug', false));
 	}
-	
+
 	public function testWrite()
 	{
 		$assoc_array = array(
@@ -147,7 +147,7 @@ class Config_LiteTest extends PHPUnit_Framework_TestCase
 		$this->config->read($this->filename);
 		$this->assertEquals(2, $this->config->get('counter', 'count'));
 	}
-	
+
 	public function testSetIndexedArrayWithSet()
 	{
 		$this->config->setFilename($this->filename);
@@ -157,9 +157,9 @@ class Config_LiteTest extends PHPUnit_Framework_TestCase
 		$this->config->sync();
 		$this->assertEquals(array('12/09', '12/10', '11/07'), $this->config->get('test array', 'tries'));
 	}
-	
+
 	public function testArrayAccess()
-	{	
+	{
 		$this->config->setFilename($this->filename);
 		$this->config->read();
 		$this->config['server'] = array('basepath' => '/var/www');
@@ -177,7 +177,7 @@ class Config_LiteTest extends PHPUnit_Framework_TestCase
 		$this->config->set('users', 'name', 'John Doe')
 					 ->set('users', 'email', 'john@doe.com');
 		$this->assertEquals(array('name'=>'John Doe','email'=>'john@doe.com'), $this->config->getSection('users'));
-		// expected to raise an Invalid Argument exception, 
+		// expected to raise an Invalid Argument exception,
 		// if Section is Array
 		try {
 			$this->config->set(array('counter' => 'count'), 1);
@@ -186,7 +186,7 @@ class Config_LiteTest extends PHPUnit_Framework_TestCase
 			return;
 		}
 		$this->fail('An Config_Lite_Exception expected, due to an invalid Argument. Exception has not been raised.');
-		// if Key is Array		
+		// if Key is Array
 		try {
 			$this->config->set('section', array('count' => 1));
 		}
@@ -197,7 +197,7 @@ class Config_LiteTest extends PHPUnit_Framework_TestCase
 	}
 
 	public function testSetSection()
-	{	
+	{
 		$this->config->setSection('users', array('email'=> 'john@doe.com','name'=> 'John Doe'));
 		$this->assertEquals(array('name'=>'John Doe','email'=>'john@doe.com'), $this->config->getSection('users'));
 	}
@@ -208,7 +208,7 @@ class Config_LiteTest extends PHPUnit_Framework_TestCase
 					 ->set('users', 'email', 'john@doe.com');
 		$this->assertEquals(array('name'=>'John Doe','email'=>'john@doe.com'), $this->config->getSection('users'));
 	}
-	
+
 	public function testGetBool()
 	{
 		// test human readable representation
@@ -220,7 +220,7 @@ class Config_LiteTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals(FALSE, $this->config->getBool('general', 'stable'));
 		$this->config->set('general', 'stable', 0);
 		$this->assertEquals(FALSE, $this->config->getBool('general', 'stable'));
-		
+
 		$this->config->set('general', 'stable', 'Yes');
 		$this->assertEquals(TRUE, $this->config->getBool('general', 'stable'));
 		$this->config->set('general', 'stable', 'On');
@@ -243,29 +243,29 @@ class Config_LiteTest extends PHPUnit_Framework_TestCase
 		}
 		$this->fail('An expected exception has not been raised.');
 	}
-	
+
 	public function testSingleQuotedEscapedInput()
 	{
 		$this->config->setFilename($this->filename);
 		$this->config->setString('quoted', 'single', '/(; "-"s[^\\\'"\\\']d//m\\\'"\'');
 		$this->config->sync();
-		$this->assertEquals('/(; "-"s[^\\\'"\\\']d//m\\\'"\'', 
+		$this->assertEquals('/(; "-"s[^\\\'"\\\']d//m\\\'"\'',
 			$this->config->getString('quoted', 'single')
 		);
 	}
-	
+
 	public function testDoubleQuotedEscapedInput()
 	{
 		$this->config->setFilename($this->filename);
 		$this->config->setString('quoted', 'double', "/(; \"-\"s[^\'\"\']d//m\'\"'");
 		$this->config->sync();
-		$this->assertEquals("/(; \"-\"s[^\'\"\']d//m\'\"'", 
+		$this->assertEquals("/(; \"-\"s[^\'\"\']d//m\'\"'",
 			$this->config->getString('quoted', 'double')
 		);
 		$this->config->removeSection('quoted');
 		$this->config->sync();
 	}
-	
+
 	public function testSetNumericOptionWithSet()
 	{
 		$this->config->set('counter', 'count', 1);
@@ -285,7 +285,7 @@ class Config_LiteTest extends PHPUnit_Framework_TestCase
 		$this->config->sync();
 		$this->assertEquals(1, $this->config->get('counter', 'has_counter'));
 	}
-	
+
 	public function testHasOption()
 	{
 		$this->config->set('counter', 'count', 1);
@@ -296,7 +296,7 @@ class Config_LiteTest extends PHPUnit_Framework_TestCase
 	{
 		$this->assertEquals(TRUE, $this->config->hasSection('general'));
 	}
-	
+
 	public function testRemove()
 	{
 		$this->config->set('general', 'stable', 'Yes');
@@ -312,7 +312,7 @@ class Config_LiteTest extends PHPUnit_Framework_TestCase
 		$this->config->remove('general', 'a_section');
 		$this->assertEquals(FALSE, $this->config->has('general', 'a_section'));
 	}
-	
+
 	public function testRemoveSection()
 	{
 		$this->config->removeSection('counter');
@@ -320,21 +320,24 @@ class Config_LiteTest extends PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * to test protected methods 
+	 * to test protected methods
 	 */
-	protected static function getMethod($name) 
+	protected function getMethod($name)
 	{
 		$class = new ReflectionClass('Config_Lite');
 		$method = $class->getMethod($name);
+        if (!method_exists($class, 'setAccessible')) {
+            $this->markTestSkipped("This test requires PHP 5.3.0+");
+        }
 		$method->setAccessible(true);
 		return $method;
 	}
 
 	public function testNormalizeValue()
 	{
-		$m = self::getMethod('normalizeValue');
+		$m = $this->getMethod('normalizeValue');
 		$obj = new Config_Lite();
-		
+
 		$b = $m->invokeArgs($obj, array(true));
 		$this->assertEquals('yes', $b);
 
@@ -367,7 +370,7 @@ class Config_LiteTest extends PHPUnit_Framework_TestCase
         $counter = $this->config->get(null, 'nonexisting_counter_option', 3);
         $this->assertEquals(3, $counter);
     }
-    
+
     public function testDoNotDoubleQuoteWrite()
     {
         $this->config->setQuoteStrings(false)->read($this->filename);
