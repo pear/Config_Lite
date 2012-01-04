@@ -112,6 +112,15 @@ function target_default()
 	target_test();
 }
 
+
+// task to sync fork with remote (update)
+function target_gitup()
+{
+	// git remote add upstream git://github.com/<user>/<repo>.git
+	system('git fetch upstream');
+	system('git merge upstream/master');
+}
+
 // ---------------------------------------------------------------------
 // build script
 // ---------------------------------------------------------------------
