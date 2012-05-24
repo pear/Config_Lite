@@ -1,6 +1,8 @@
-== Config_Lite
+Config_Lite
+===========
 
-=== Description
+Description
+-----------
 
 a simple, lightweight and fast class for ini style configuration files, 
 with the native PHP function `parse_ini_file' under the hood.
@@ -13,10 +15,12 @@ A "Config_Lite" file consists of global key/value pair (KVP) entries and optiona
 
 
 
-=== Examples
+Examples
+--------
 
-.A simple configuration file: `test.ini'
-----------
+__A simple configuration file: `test.ini'__
+
+```
 
 public_key_file =  "~/.ssh/id_rsa.pub"
 debug = yes
@@ -27,11 +31,11 @@ lang = "en"
 [db]
 user = "dionysis"
 password = "c2oiVnY!f8sf"
+```
 
-----------
 
-.Read Configuration file:
-----------
+__Read Configuration file:__
+```php
 <?php
 
 require_once 'Config/Lite.php';
@@ -47,13 +51,13 @@ if (true === $config->getBool(null, 'debug', true)) {
 
 // read with ArrayAccess
 echo $config['db']['password']; // c2oiVnY!f8sf
+```
 
-----------
+__Save Configuration file:__
 
+```php
+<?php
 
-
-.Save Configuration file:
-----------
 $config->set('db', 'user', 'JohnDoe')
 	->set('db', 'password', 'd0g1tcVs$HgIn1');
 
@@ -63,11 +67,11 @@ $config['general'] = array('lang' => 'de');
 
 // save object to file
 $config->save();
-----------
+```
 
+__Create configuration file:__
 
-.Create configuration file:
-----------
+```php
 <?php
 
 require_once 'Config/Lite.php';
@@ -85,11 +89,12 @@ try {
 } catch (Config_Lite_Exception $e) {
     echo "\n", 'Exception Message: ', $e->getMessage();
 }
-----------
+```
 
 
-.Alternative file creation with write:
-----------
+__Alternative file creation with write:__
+
+```php
 <?php
 
 require_once 'Config/Lite.php';
@@ -115,12 +120,14 @@ try {
     printf("Exception Message: %s\n", $exception->getMessage());
     printf("Exception Stracktrace: %s\n", $exception->getTraceAsString());
 }
+```
 
-----------
 
+__global Configuration options (without sections) :__
 
-.global Configuration options (without sections) :
-----------
+```php
+<?php
+
 $config->set(null, 'private_key_file', '~/.ssh/id_rsa');
 // set with arrayaccess
 $config['public_key_file'] = '~/.ssh/id_rsa.pub';
@@ -130,10 +137,12 @@ $config->sync();
 echo $config->get(null, 'public_key_file');
 // get with arrayaccess
 echo $config['private_key_file'];
-----------
+```
 
-.iterate (SPL Iterator) :
-----------
+__iterate (SPL Iterator) :__
+```php
+<?php
+
 $config = new Config_Lite($filename);
 
 foreach ($config as $section => $name) {
@@ -146,20 +155,20 @@ foreach ($config as $section => $name) {
 		$s.= sprintf("%s=%s\n", $section, $name);
 	}
 }
-----------
+```
 
 
-=== Options
+Options
+-------
 
-
-====  setProcessSections(bool)
+====  __setProcessSections(bool)__
 
 Sets whether or not sections should be processed
 If true, values for each section will be placed into
 a sub-array for the section. If false, all values will
 be placed in the global scope.
 
-====  setQuoteStrings(bool)
+====  __setQuoteStrings(bool)__
 
 Sets whether or not to doubleQuote
 If true, everything but bool and numeric 
@@ -167,7 +176,8 @@ values get doublequoted.
 
 
 
-== Notes & Limitations
+Notes & Limitations
+-------------------
 
 * Config_Lite is an OO frontend to `parse_ini_file' and writing ini files, 
 but you can also use the public method `write' if you only want to write an array as ini file 
@@ -182,8 +192,9 @@ doublequotes strings and numeric values without any quotes
 
 If you want to save userinput like images or a regex, i'd recommend to use `get' with base64_decode and `set' with base64_encode. +
 
-.Save regex (as global option) base64 encoded :
-----------
+__Save regex (as global option) base64 encoded :__
+
+```php
 <?php
 
 require_once 'Config/Lite.php';
@@ -201,15 +212,16 @@ if (preg_match($regex, 'Hello "World"!')) {
 } else {
     printf("no match found. regex:%s", $regex);
 }
-----------
+```
 
-=== IDEAS
-
+IDEAS
+------
 * Config_Lite_Parser with extended read and writefunctions (parse with Linereader), 
   to support comments and multiline strings (both supported by Pear::Config)
 
 
-=== Contributing
+Contributing
+------------
 
 Patches are Welcome! +
 Create an Issue with a Link to your forked branch.

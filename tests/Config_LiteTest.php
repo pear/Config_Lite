@@ -92,6 +92,13 @@ class Config_LiteTest extends PHPUnit_Framework_TestCase
 	public function testGet()
 	{
 		$this->config->read(dirname(__FILE__).'/test.cfg');
+		$config = $this->config->get();
+		$this->assertEquals($this->config['counter'], $config['counter']);
+	}
+
+	public function testGetValueOfSection()
+	{
+		$this->config->read(dirname(__FILE__).'/test.cfg');
 		$counter = $this->config->get('counter', 'count');
 		$this->assertEquals(2, $counter);
 		// fallback to default given value 3
