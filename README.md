@@ -6,9 +6,9 @@ Description
 
 a simple, lightweight and fast class for ini style configuration files, 
 with the native PHP function `parse_ini_file' under the hood.
- +
+
 Config_Lite is inspired by Pythons ConfigParser. +
- +
+
 
 A "Config_Lite" file consists of global key/value pair (KVP) entries and optional sections, 
 "[section]", followed by "name = value" (KVP) entries.
@@ -161,14 +161,14 @@ foreach ($config as $section => $name) {
 Options
 -------
 
-====  __setProcessSections(bool)__
+ __setProcessSections(bool)__
 
 Sets whether or not sections should be processed
 If true, values for each section will be placed into
 a sub-array for the section. If false, all values will
 be placed in the global scope.
 
-====  __setQuoteStrings(bool)__
+ __setQuoteStrings(bool)__
 
 Sets whether or not to doubleQuote
 If true, everything but bool and numeric 
@@ -188,9 +188,10 @@ normalize "bool" values to a human readable representation,
 doublequotes strings and numeric values without any quotes 
 * newline chars defaults to "\n", editable with `setLinebreak' 
 * comments get dropped when writing after reading  
-* no support of comments and multiline strings, because reading with `parse_ini_file' does not support it. 
+* no support of comments and multiline strings, because reading with `parse_ini_file` does not support it 
 
-If you want to save userinput like images or a regex, i'd recommend to use `get' with base64_decode and `set' with base64_encode. +
+If you want to save userinput like images or a regex, i'd recommend to use `get` with base64_decode and `set` with base64_encode. 
+
 
 __Save regex (as global option) base64 encoded :__
 
@@ -216,15 +217,19 @@ if (preg_match($regex, 'Hello "World"!')) {
 
 IDEAS
 ------
-* Config_Lite_Parser with extended read and writefunctions (parse with Linereader), 
-  to support comments and multiline strings (both supported by Pear::Config)
+
+* experimental branch, Config_Lite_Parser with extended read and writefunctions (parse with Linereader), to support comments and multiline strings (both supported by Pear::Config),  
 
 
 Contributing
 ------------
 
-Patches are Welcome! +
+*Patches are Welcome!*
+
 Create an Issue with a Link to your forked branch.
 
-https://github.com/pce/config_lite +
+https://github.com/pce/config_lite
+
 http://pear.php.net/pepr/pepr-proposal-show.php?id=645
+
+
