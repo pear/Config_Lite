@@ -336,9 +336,9 @@ class Config_Lite implements ArrayAccess, IteratorAggregate, Countable, Serializ
      */
     public function get($sec = null, $key = null, $default = null)
     {
-	// handle get without parameters, because we can   
-	if ((null === $sec) && (null === $key) && (null === $default))
-		return $this; // or $this->sections;
+        // handle get without parameters, because we can 
+        if ((null === $sec) && (null === $key) && (null === $default))
+            return $this; // arrayaccess or $this->sections;
 
         if ((null !== $sec) && array_key_exists($sec, $this->sections) 
             && isset($this->sections[$sec][$key])

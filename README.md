@@ -7,7 +7,7 @@ Description
 a simple, lightweight and fast class for ini style configuration files, 
 with the native PHP function `parse_ini_file' under the hood.
 
-Config_Lite is inspired by Pythons ConfigParser. +
+Config_Lite is inspired by Pythons ConfigParser.
 
 
 A "Config_Lite" file consists of global key/value pair (KVP) entries and optional sections, 
@@ -230,6 +230,4 @@ Create an Issue with a Link to your forked branch.
 
 https://github.com/pce/config_lite
 
-http://pear.php.net/pepr/pepr-proposal-show.php?id=645
-
-
+http://pear.php.net/package/Config_Lite
