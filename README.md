@@ -218,7 +218,8 @@ if (preg_match($regex, 'Hello "World"!')) {
 IDEAS
 ------
 
-* experimental branch, Config_Lite_Parser with extended read and writefunctions (parse with Linereader), to support comments and multiline strings (both supported by Pear::Config),  
+* Config_Lite_Ini ( https://github.com/pce/Config_Lite_Ini ) with metainfos to supports global sections, 
+* support of comments and multiline strings (both supported by Pear::Config)  
 
 
 Contributing
@@ -230,4 +231,8 @@ Create an Issue with a Link to your forked branch.
 
 https://github.com/pce/config_lite
 
+or report bugs at: 
 http://pear.php.net/package/Config_Lite
+
+
+
