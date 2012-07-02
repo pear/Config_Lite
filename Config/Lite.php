@@ -511,6 +511,17 @@ class Config_Lite implements ArrayAccess, IteratorAggregate, Countable, Serializ
         if ((null === $key)) {
             $this->removeSection($sec);
         }
+        // global value
+        if (null === $sec && $key !== null) {
+            if (!isset($this->sections[$key])) {
+                throw new Config_Lite_Exception_UnexpectedValue(
+                        'No such global Value.'
+                    );
+                return;
+            }
+            unset($this->sections[$key]);
+            return;
+        }
         if (!isset($this->sections[$sec])) {
             throw new Config_Lite_Exception_UnexpectedValue('No such Section.');
         }
