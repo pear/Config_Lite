@@ -508,8 +508,9 @@ class Config_Lite implements ArrayAccess, IteratorAggregate, Countable, Serializ
      */
     public function remove($sec, $key=null) 
     {
-        if ((null === $key)) {
+        if (null === $key) {
             $this->removeSection($sec);
+            return;
         }
         // global value
         if (null === $sec && $key !== null) {
