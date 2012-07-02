@@ -333,7 +333,7 @@ class Config_LiteTest extends PHPUnit_Framework_TestCase
 	{
 		$class = new ReflectionClass('Config_Lite');
 		$method = $class->getMethod($name);
-        if (!method_exists($class, 'setAccessible')) {
+        if (!method_exists($method, 'setAccessible')) {
             $this->markTestSkipped("This test requires PHP 5.3.0+");
         }
 		$method->setAccessible(true);
