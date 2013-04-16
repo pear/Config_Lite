@@ -222,6 +222,14 @@ IDEAS
 * support of comments and multiline strings (both supported by Pear::Config)  
 
 
+Credits
+-------
+
+- [mfonda](https://github.com/mfonda) ensured toString and output are eqaul, added accessors and options  
+- [CloCkWeRX](https://github.com/CloCkWeRX) improvements and Jenkins Integration  
+- [cweiske](https://github.com/cweiske) for various suggestions  
+  
+
 Contributing
 ------------
 
