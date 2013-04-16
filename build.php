@@ -75,8 +75,9 @@ function target_package()
 	# edited /usr/bin/pear
 	# since i compiled env php without zlib:
 	PHP_PEAR_PHP_BIN="/usr/bin/php"
-	*/
 	$pear = "/usr/bin/pear";
+	*/
+	$pear = "pear";
 	system($pear.' package ./package.xml');
 	printf("\n");
 }
