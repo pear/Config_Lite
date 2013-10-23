@@ -85,6 +85,13 @@ class Config_Lite implements ArrayAccess, IteratorAggregate, Countable, Serializ
     protected $quoteStrings = true;
 
     /**
+     * flags for file-put-contents
+     *
+     * @var int
+     */
+    protected $flags = 0;
+
+    /**
      * the read method parses the optional given filename
      * or already setted filename.
      *
@@ -119,6 +126,7 @@ class Config_Lite implements ArrayAccess, IteratorAggregate, Countable, Serializ
                 'failure, can not parse the file: ' . $filename
             );
         }
+        return $this;
     }
     /**
      * save the object to the already setted filename
@@ -128,7 +136,7 @@ class Config_Lite implements ArrayAccess, IteratorAggregate, Countable, Serializ
      */
     public function save()
     {
-        return $this->write($this->filename, $this->sections);
+        return $this->write($this->filename, $this->sections, $this->flags);
     }
     /**
      * sync the file to the object
@@ -153,6 +161,7 @@ class Config_Lite implements ArrayAccess, IteratorAggregate, Countable, Serializ
         if ($this->write($this->filename, $this->sections)) {
             $this->read($this->filename);
         }
+        return $this;
     }
 
     /**
@@ -188,6 +197,21 @@ class Config_Lite implements ArrayAccess, IteratorAggregate, Countable, Serializ
         return $value;
     }
 
+
+    /**
+     * Set Flags ( FILE_USE_INCLUDE_PATH | FILE_APPEND | LOCK_EX )
+     * for file-put-contents
+     *
+     * @param int $flags any or binary combined
+     *
+     * @return Config_Lite
+     */
+    public function setFlags($flags=LOCK_EX)
+    {
+        $this->flags = $flags;
+        return $this;
+    }
+
     /**
      * generic write ini config file, to save use `save'.
      *
@@ -201,15 +225,16 @@ class Config_Lite implements ArrayAccess, IteratorAggregate, Countable, Serializ
      *
      * @param string $filename      filename
      * @param array  $sectionsarray array with sections
+     * @param int    $flags         for file-put-contents
      *
      * @return bool
      * @throws Config_Lite_Exception_Runtime when file is not writeable
      * @throws Config_Lite_Exception_Runtime when write failed
      */
-    public function write($filename, $sectionsarray)
+    public function write($filename, $sectionsarray, $flags=null)
     {
         $content = $this->buildOutputString($sectionsarray);
-        if (false === file_put_contents($filename, $content, LOCK_EX)) {
+        if (false === file_put_contents($filename, $content, $flags)) {
             throw new Config_Lite_Exception_Runtime(
                 sprintf(
                     'failed to write file `%s\' for writing.', $filename
