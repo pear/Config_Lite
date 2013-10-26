@@ -849,8 +849,9 @@ class Config_Lite implements ArrayAccess, IteratorAggregate, Countable, Serializ
      * but you can also use `setFilename' to set the filename.
      *
      * @param string $filename - "INI Style" Text Config File
+     * @param int    $flags    - setFlags
      */
-    public function __construct($filename = null)
+    public function __construct($filename = null, $flags = null)
     {
         $this->sections = array();
         if (null !== $filename) {
@@ -858,6 +859,9 @@ class Config_Lite implements ArrayAccess, IteratorAggregate, Countable, Serializ
             if (file_exists($filename)) {
                 $this->read($filename);
             }
+        }
+        if (null !== $flags) {
+            $this->setFlags($flags);
         }
     }
 }
