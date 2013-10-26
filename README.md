@@ -58,6 +58,11 @@ __Save Configuration file:__
 ```php
 <?php
 
+require_once 'Config/Lite.php';
+
+// write with file locking
+$config = new Config_Lite('test.ini', LOCK_EX);
+
 $config->set('db', 'user', 'JohnDoe')
 	->set('db', 'password', 'd0g1tcVs$HgIn1');
 
@@ -121,6 +126,50 @@ try {
     printf("Exception Stracktrace: %s\n", $exception->getTraceAsString());
 }
 ```
+
+__Config without File - Streams, Filter or stdout:__
+
+```php
+<?php
+
+require_once 'Config/Lite.php';
+
+$config = new Config_Lite();
+
+$filename = sprintf(
+    "php://filter/write=string.rot13/resource=%s", "test.ini"
+);
+
+$config->write($filename, array(
+	    'public_key_file' =>  "~/.ssh/id_rsa.pub",
+	    'general' => array(
+	    'lang' => 'fr'
+	),
+	'db' => array(
+		'user' => 'dionysis',
+		'password' => 'd0g1tcVs$HgIn1'
+		)
+	)
+);
+
+// Writing to stdout
+$config->write("php://stdout", array(
+	    'public_key_file' =>  "~/.ssh/id_rsa.pub",
+	    'general' => array(
+	    'lang' => 'fr'
+	),
+	'db' => array(
+		'user' => 'dionysis',
+		'password' => 'd0g1tcVs$HgIn1'
+		)
+	)
+);
+
+```
+
+
+
+
 
 
 __global Configuration options (without sections) :__
