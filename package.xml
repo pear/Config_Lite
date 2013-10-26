@@ -19,10 +19,10 @@ http://pear.php.net/dtd/package-2.0.xsd">
 		<email>pce@php.net</email>
 		<active>yes</active>
 	</lead>
-	<date>2013-10-23</date>
+	<date>2013-10-26</date>
 	<version>
-		<release>0.2.0</release>
-		<api>0.2.0</api>
+		<release>0.2.1</release>
+		<api>0.2.1</api>
 	</version>
 	<stability>
 		<release>beta</release>
@@ -76,6 +76,19 @@ http://pear.php.net/dtd/package-2.0.xsd">
 	</dependencies>
 	<phprelease />
 	<changelog>
+		<release>
+			<version>
+				<release>0.2.1</release>
+				<api>0.2.1</api>
+			</version>
+			<stability>
+				<release>beta</release>
+				<api>beta</api>
+			</stability>
+			<date>2013-10-26</date>
+			<license uri="http://www.php.net/license/3_0.txt">PHP License</license>
+			<notes>* pear-bug #20104 config set optional file flags in constructor, example to stdout, support of streams, filter</notes>
+		</release>
 		<release>
 			<version>
 				<release>0.2.0</release>
