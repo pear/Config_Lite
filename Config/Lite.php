@@ -90,6 +90,13 @@ class Config_Lite implements ArrayAccess, IteratorAggregate, Countable, Serializ
      * @var int
      */
     protected $flags = 0;
+    
+    /**
+     * string delimiter
+     *
+     * @var string
+     */
+    protected $delim = '"';
 
     /**
      * the read method parses the optional given filename
@@ -192,11 +199,26 @@ class Config_Lite implements ArrayAccess, IteratorAggregate, Countable, Serializ
             return $value;
         }
         if ($this->quoteStrings) {
-            $value = '"' . $value . '"';
+            $value = $this->delim . $value . $this->delim;
         }
         return $value;
     }
 
+    /**
+     * set string delimiter to single tick (')
+     */
+    public function setSingleTickDelimiter()
+    {
+        $this->delim = "'";
+    }
+
+    /**
+     * set string delimiter to double tick (")
+     */
+    public function setDoubleTickDelimiter()
+    {
+        $this->delim = '"';
+    }
 
     /**
      * Set Flags ( FILE_USE_INCLUDE_PATH | FILE_APPEND | LOCK_EX )
