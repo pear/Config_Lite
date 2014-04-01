@@ -14,6 +14,42 @@ A "Config_Lite" file consists of global key/value pair (KVP) entries and optiona
 "[section]", followed by "name = value" (KVP) entries.
 
 
+Installation
+------------
+
+*Pear*
+
+`pear install Config_Lite-beta`
+
+
+*Composer*
+
+__Create a composer.json file and run `composer install`__  
+```
+{
+    "repositories": [
+        {
+            "type": "pear",
+            "url": "pear.php.net"
+        }
+    ],
+    "require": {
+        "pear-pear/Config_Lite": "*"
+    }
+}
+
+```
+
+__Composers autoload example usage__
+```php
+<?php
+require __DIR__ . '/../vendor/autoload.php';
+
+$config = new Config_Lite;
+```
+
+
+
 
 Examples
 --------
