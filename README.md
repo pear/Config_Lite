@@ -264,18 +264,18 @@ values get doublequoted.
 Notes & Limitations
 -------------------
 
-* Config_Lite is an OO frontend to `parse_ini_file' and writing ini files, 
-but you can also use the public method `write' if you only want to write an array as ini file 
+* Config_Lite is an OO frontend to `parse_ini_file` and writing ini files, 
+but you can also use the public method `write` if you only want to write an array as ini file 
 * Use getString and setString to save and read Strings with double _and_ single-quotes 
 * Use getBool if you need a real bool type, eg. for strict equality comparision 
-* The methods `set' and `get' keep values untouched, but the write method 
+* The methods `set` and `get` keep values untouched, but the write method 
 normalize "bool" values to a human readable representation, 
 doublequotes strings and numeric values without any quotes 
 * newline chars defaults to "\n", editable with `setLinebreak' 
 * comments get dropped when writing after reading  
 * no support of comments and multiline strings, because reading with `parse_ini_file` does not support it 
 
-If you want to save userinput like images or a regex, i'd recommend to use `get` with base64_decode and `set` with base64_encode. 
+If you want to save userinput like images or a regex, i'd recommend to use `get` with `base64_decode` and `set` with `base64_encode`. 
 
 
 __Save regex (as global option) base64 encoded :__
@@ -310,7 +310,7 @@ IDEAS
 Credits
 -------
 
-- [mfonda](https://github.com/mfonda) ensured toString and output are eqaul, added accessors and options  
+- [mfonda](https://github.com/mfonda) ensured toString and output are equal, added accessors and options  
 - [CloCkWeRX](https://github.com/CloCkWeRX) improvements and Jenkins Integration  
 - [cweiske](https://github.com/cweiske) for various suggestions  
   
