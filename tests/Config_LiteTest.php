@@ -14,9 +14,9 @@
  * @link      https://github.com/pce/config_lite
  */
 
-if (is_file(dirname(__FILE__).'/../Config/Lite.php') === true) {
+if (is_file(dirname(__FILE__) . '/../Config/Lite.php') === true) {
     // not installed.
-    require_once dirname(__FILE__).'/../Config/Lite.php';
+    require_once dirname(__FILE__) . '/../Config/Lite.php';
 } else {
     require_once 'Config/Lite.php';
 }
@@ -63,10 +63,10 @@ class Config_LiteTest extends PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $this->config = new Config_Lite;
-        $this->config->read(dirname(__FILE__).'/test.cfg');
+        $this->config->read(dirname(__FILE__) . '/test.cfg');
         $this->filename = tempnam(sys_get_temp_dir(), __CLASS__);
         if (!is_writable($this->filename)) {
-            printf('Warning: temporary file not writeable: %s.'."\n",
+            printf('Warning: temporary file not writeable: %s.' . "\n",
                 $this->filename
             );
         }
@@ -85,20 +85,20 @@ class Config_LiteTest extends PHPUnit_Framework_TestCase
 
     public function testRead()
     {
-        $this->config->read(dirname(__FILE__).'/test.cfg');
+        $this->config->read(dirname(__FILE__) . '/test.cfg');
         $this->assertEquals('ConfigTest', $this->config->get('general', 'app.name'));
     }
 
     public function testGet()
     {
-        $this->config->read(dirname(__FILE__).'/test.cfg');
+        $this->config->read(dirname(__FILE__) . '/test.cfg');
         $config = $this->config->get();
         $this->assertEquals($this->config['counter'], $config['counter']);
     }
 
     public function testGetValueOfSection()
     {
-        $this->config->read(dirname(__FILE__).'/test.cfg');
+        $this->config->read(dirname(__FILE__) . '/test.cfg');
         $counter = $this->config->get('counter', 'count');
         $this->assertEquals(2, $counter);
         // fallback to default given value 3
@@ -108,7 +108,7 @@ class Config_LiteTest extends PHPUnit_Framework_TestCase
 
     public function testGetDefaultByNonExistingSection()
     {
-        $this->config->read(dirname(__FILE__).'/test.cfg');
+        $this->config->read(dirname(__FILE__) . '/test.cfg');
         // fallback to default given value 3
         $counter = $this->config->get('foo', 'nonexisting_counter_option', 3);
         $this->assertEquals(3, $counter);
@@ -116,7 +116,7 @@ class Config_LiteTest extends PHPUnit_Framework_TestCase
 
     public function testGetGlobalOption()
     {
-        $this->config->read(dirname(__FILE__).'/test.cfg');
+        $this->config->read(dirname(__FILE__) . '/test.cfg');
         $this->assertEquals('test.cfg', $this->config['filename']);
         // global values with null
         $this->assertEquals('test.cfg', $this->config->get(null, 'filename'));
@@ -124,7 +124,7 @@ class Config_LiteTest extends PHPUnit_Framework_TestCase
 
     public function testGetBoolGlobalOption()
     {
-        $this->config->read(dirname(__FILE__).'/test.cfg');
+        $this->config->read(dirname(__FILE__) . '/test.cfg');
         $this->assertEquals(TRUE, $this->config->getBool(null, 'debug', false));
     }
 
@@ -137,7 +137,7 @@ class Config_LiteTest extends PHPUnit_Framework_TestCase
                 'app.version' => '0.1.0'),
             'counter' => array(
                 'count' => -1)
-            );
+        );
         // write to temporary file
         $this->config->write($this->filename, $assoc_array);
         $this->config->setFilename($this->filename);
@@ -183,21 +183,19 @@ class Config_LiteTest extends PHPUnit_Framework_TestCase
     {
         $this->config->set('users', 'name', 'John Doe')
             ->set('users', 'email', 'john@doe.com');
-        $this->assertEquals(array('name'=>'John Doe','email'=>'john@doe.com'), $this->config->getSection('users'));
+        $this->assertEquals(array('name' => 'John Doe', 'email' => 'john@doe.com'), $this->config->getSection('users'));
         // expected to raise an Invalid Argument exception,
         // if Section is Array
         try {
             $this->config->set(array('counter' => 'count'), 1);
-        }
-        catch (Config_Lite_Exception_InvalidArgument $expected) {
+        } catch (Config_Lite_Exception_InvalidArgument $expected) {
             return;
         }
         $this->fail('An Config_Lite_Exception expected, due to an invalid Argument. Exception has not been raised.');
         // if Key is Array
         try {
             $this->config->set('section', array('count' => 1));
-        }
-        catch (Config_Lite_Exception_InvalidArgument $expected) {
+        } catch (Config_Lite_Exception_InvalidArgument $expected) {
             return;
         }
         $this->fail('An Config_Lite_Exception expected, due to an invalid Argument. Exception has not been raised.');
@@ -205,8 +203,8 @@ class Config_LiteTest extends PHPUnit_Framework_TestCase
 
     public function testSetSection()
     {
-        $this->config->setSection('users', array('email'=> 'john@doe.com','name'=> 'John Doe'));
-        $this->assertEquals(array('name'=>'John Doe','email'=>'john@doe.com'), $this->config->getSection('users'));
+        $this->config->setSection('users', array('email' => 'john@doe.com', 'name' => 'John Doe'));
+        $this->assertEquals(array('name' => 'John Doe', 'email' => 'john@doe.com'), $this->config->getSection('users'));
     }
 
 
@@ -214,7 +212,7 @@ class Config_LiteTest extends PHPUnit_Framework_TestCase
     {
         $this->config->set('users', 'name', 'John Doe')
             ->set('users', 'email', 'john@doe.com');
-        $this->assertEquals(array('name'=>'John Doe','email'=>'john@doe.com'), $this->config->getSection('users'));
+        $this->assertEquals(array('name' => 'John Doe', 'email' => 'john@doe.com'), $this->config->getSection('users'));
     }
 
     public function testGetBool()
@@ -245,8 +243,7 @@ class Config_LiteTest extends PHPUnit_Framework_TestCase
         try {
             // expected to raise an Config_Lite_Exception
             $this->config->set('arraytestsection', array('key1', 'key2'), 'a_option');
-        }
-        catch (Config_Lite_Exception_InvalidArgument $expected) {
+        } catch (Config_Lite_Exception_InvalidArgument $expected) {
             return;
         }
         $this->fail('An expected exception has not been raised.');
@@ -364,14 +361,14 @@ class Config_LiteTest extends PHPUnit_Framework_TestCase
 
     public function testCountGlobal()
     {
-        $this->config->setProcessSections(false)->read(dirname(__FILE__).'/test.cfg');
+        $this->config->setProcessSections(false)->read(dirname(__FILE__) . '/test.cfg');
         $count = count($this->config);
         $this->assertEquals($count, 9);
     }
 
     public function testDoNotProcessSectionsGet()
     {
-        $this->config->setProcessSections(false)->read(dirname(__FILE__).'/test.cfg');
+        $this->config->setProcessSections(false)->read(dirname(__FILE__) . '/test.cfg');
         $counter = $this->config->get(null, 'count');
         $this->assertEquals(2, $counter);
         // fallback to default given value 3
@@ -394,7 +391,7 @@ class Config_LiteTest extends PHPUnit_Framework_TestCase
 
     public function testGetFilename()
     {
-        $filename = dirname(__FILE__).'/test.cfg';
+        $filename = dirname(__FILE__) . '/test.cfg';
         $this->config->setFilename($filename);
         $this->assertEquals($filename, $this->config->getFilename());
     }
@@ -413,7 +410,7 @@ class Config_LiteTest extends PHPUnit_Framework_TestCase
     {
         $this->expectOutputString("\n[Test]\n");
         $this->config->clear();
-        $this->config->setSection('Test',array());
+        $this->config->setSection('Test', array());
         echo $this->config;
     }
 
