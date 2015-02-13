@@ -34,7 +34,7 @@ require_once 'Config/Lite/Exception/UnexpectedValue.php';
  * @category  Configuration
  * @package   Config_Lite
  * @author    Patrick C. Engel <pce@php.net>
- * @copyright 2010-2011 <pce@php.net>
+ * @copyright 2010-2015 <pce@php.net>
  * @license   http://www.gnu.org/copyleft/lesser.html  LGPL License 2.1
  * @link      https://github.com/pce/config_lite
  */
@@ -107,7 +107,7 @@ class Config_Lite implements ArrayAccess, IteratorAggregate, Countable, Serializ
      *
      * @param string $filename Filename
      *
-     * @return void
+     * @return Config_Lite
      * @throws Config_Lite_Exception_Runtime when file not found
      * @throws Config_Lite_Exception_Runtime when file is not readable
      * @throws Config_Lite_Exception_Runtime when parse ini file failed
@@ -135,8 +135,9 @@ class Config_Lite implements ArrayAccess, IteratorAggregate, Countable, Serializ
         }
         return $this;
     }
+
     /**
-     * save the object to the already setted filename
+     * save the object to the filename
      * (active record style)
      *
      * @return bool
@@ -145,15 +146,15 @@ class Config_Lite implements ArrayAccess, IteratorAggregate, Countable, Serializ
     {
         return $this->write($this->filename, $this->sections, $this->flags);
     }
+
     /**
      * sync the file to the object
      *
      * like `save',
      * but after written the data, reads the data back into the object.
-     * The method is inspired by QTSettings.
-     * Ideal for testing.
+     * This method is not for the average use-case, ie. for testing.
      *
-     * @return void
+     * @return Config_Lite
      * @throws Config_Lite_Exception_Runtime when file is not set,
      *         write or readable
      */
@@ -206,18 +207,24 @@ class Config_Lite implements ArrayAccess, IteratorAggregate, Countable, Serializ
 
     /**
      * set string delimiter to single tick (')
+     *
+     * @return Config_Lite
      */
     public function setSingleTickDelimiter()
     {
         $this->delim = "'";
+        return $this;
     }
 
     /**
      * set string delimiter to double tick (")
+     *
+     * @return Config_Lite
      */
     public function setDoubleTickDelimiter()
     {
         $this->delim = '"';
+        return $this;
     }
 
     /**
@@ -270,7 +277,7 @@ class Config_Lite implements ArrayAccess, IteratorAggregate, Countable, Serializ
      * Generated the output of the ini file, suitable for echo'ing or
      * writing back to the ini file.
      *
-     * @param string $sectionsarray array of ini data
+     * @param  array  $sectionsarray array of ini data
      *
      * @return string
      */
@@ -596,11 +603,12 @@ class Config_Lite implements ArrayAccess, IteratorAggregate, Countable, Serializ
     /**
      * removes all sections and global options
      *
-     * @return void
+     * @return Config_Lite
      */
     public function clear()
     {
         $this->sections = array();
+        return $this;
     }
 
     /**
@@ -612,7 +620,7 @@ class Config_Lite implements ArrayAccess, IteratorAggregate, Countable, Serializ
      * @param string $key   Key
      * @param mixed  $value Value
      *
-     * @return $this
+     * @return Config_Lite
      * @throws Config_Lite_Exception_InvalidArgument when given key is an array
      */
     public function setString($sec, $key, $value = null)
@@ -635,7 +643,7 @@ class Config_Lite implements ArrayAccess, IteratorAggregate, Countable, Serializ
      * @param mixed  $value Value
      *
      * @throws Config_Lite_Exception when given key is an array
-     * @return $this
+     * @return Config_Lite
      */
     public function set($sec, $key, $value = null)
     {
@@ -663,7 +671,7 @@ class Config_Lite implements ArrayAccess, IteratorAggregate, Countable, Serializ
      * @param array  $pairs Keys and Values as Array ('key' => 'value')
      *
      * @throws Config_Lite_Exception_InvalidArgument array $pairs expected
-     * @return $this
+     * @return Config_Lite
      */
     public function setSection($sec, $pairs)
     {
@@ -685,7 +693,7 @@ class Config_Lite implements ArrayAccess, IteratorAggregate, Countable, Serializ
      *
      * @param string $filename Filename
      *
-     * @return $this
+     * @return Config_Lite
      */
     public function setFilename($filename)
     {
@@ -712,7 +720,7 @@ class Config_Lite implements ArrayAccess, IteratorAggregate, Countable, Serializ
      *
      * @param string $linebreakchars chars
      *
-     * @return $this
+     * @return Config_Lite
      */
     public function setLinebreak($linebreakchars)
     {
@@ -729,7 +737,7 @@ class Config_Lite implements ArrayAccess, IteratorAggregate, Countable, Serializ
      *
      * @param bool $processSections - if true, sections will be processed
      *
-     * @return $this
+     * @return Config_Lite
      */
     public function setProcessSections($processSections)
     {
@@ -745,7 +753,7 @@ class Config_Lite implements ArrayAccess, IteratorAggregate, Countable, Serializ
      *
      * @param bool $quoteStrings - if true, Strings get doubleQuoted
      *
-     * @return $this
+     * @return Config_Lite
      */
     public function setQuoteStrings($quoteStrings)
     {
@@ -887,3 +895,4 @@ class Config_Lite implements ArrayAccess, IteratorAggregate, Countable, Serializ
         }
     }
 }
+

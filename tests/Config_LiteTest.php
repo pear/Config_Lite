@@ -27,7 +27,8 @@ if (is_file(dirname(__FILE__).'/../Config/Lite.php') === true) {
  *
  * PHPUnit 3.3.17 by Sebastian Bergmann.
  * The first Tests relies on test.cfg,
- * followd by tests on a temporary file.
+ * followed by tests on a temporary file.
+ * TODO: use VFS or no FS and testSetterReturnsThis()
  *
  * Usage: phpunit AllTests.php
  *
@@ -426,5 +427,28 @@ class Config_LiteTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(42, $this->config->read($this->filename)->get(null, "Answer"));
     }
 
+    public function testSetSingleTickDelimiter()
+    {
+        $this->config->setSingleTickDelimiter()->read($this->filename);
+        $this->config->setFilename($this->filename);
+        $this->config->setString('quotes', 'double', '"String"');
+        $this->config->sync();
+        $this->assertEquals('"String"',
+            $this->config->getString('quotes', 'double')
+        );
+        // back to default
+        $this->config->setDoubleTickDelimiter();
+    }
+
+    public function testSetDoubleTickDelimiter()
+    {
+        $this->config->setDoubleTickDelimiter()->read($this->filename);
+        $this->config->setFilename($this->filename);
+        $this->config->setString('quotes', 'single', "'String'");
+        $this->config->sync();
+        $this->assertEquals("'String'",
+            $this->config->getString('quotes', 'single')
+        );
+    }
 
 }

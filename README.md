@@ -5,7 +5,7 @@ Description
 -----------
 
 a simple, lightweight and fast class for ini style configuration files, 
-with the native PHP function `parse_ini_file' under the hood.
+with the native PHP function `parse_ini_file' under the covers.
 
 Config_Lite is inspired by Pythons ConfigParser.
 
@@ -34,7 +34,7 @@ __Create a composer.json file and run `composer install`__
         }
     ],
     "require": {
-        "pear-pear/Config_Lite": "*"
+        "pear-pear.php.net/config_lite": "*"
     }
 }
 
@@ -275,7 +275,8 @@ doublequotes strings and numeric values without any quotes
 * comments get dropped when writing after reading  
 * no support of comments and multiline strings, because reading with `parse_ini_file` does not support it 
 
-If you want to save userinput like images or a regex, i'd recommend to use `get` with `base64_decode` and `set` with `base64_encode`. 
+If you want to save userinput like images, i'd recommend to use `get` with `base64_decode` and `set` with `base64_encode`.
+For a regex one could also use `setSingleTickDelimiter()`.
 
 
 __Save regex (as global option) base64 encoded :__
@@ -310,10 +311,11 @@ IDEAS
 Credits
 -------
 
-- [mfonda](https://github.com/mfonda) ensured toString and output are equal, added accessors and options  
+- @see [contributors](https://github.com/pce/config_lite/graphs/contributors)
+- [mfonda](https://github.com/mfonda) ensured toString and output are equal, added accessors and options
 - [CloCkWeRX](https://github.com/CloCkWeRX) improvements and Jenkins Integration  
-- [cweiske](https://github.com/cweiske) for various suggestions  
-  
+- [cweiske](https://github.com/cweiske) for various suggestions
+
 
 Contributing
 ------------
