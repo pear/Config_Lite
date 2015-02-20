@@ -106,13 +106,14 @@ class Config_Lite implements ArrayAccess, IteratorAggregate, Countable, Serializ
      * parse_ini_file behind the scenes.
      *
      * @param string $filename Filename
+     * @param int    $mode     INI_SCANNER_NORMAL | INI_SCANNER_RAW
      *
      * @return Config_Lite
      * @throws Config_Lite_Exception_Runtime when file not found
      * @throws Config_Lite_Exception_Runtime when file is not readable
      * @throws Config_Lite_Exception_Runtime when parse ini file failed
      */
-    public function read($filename = null)
+    public function read($filename = null, $mode = INI_SCANNER_NORMAL)
     {
         if (null === $filename) {
             $filename = $this->filename;
@@ -127,7 +128,7 @@ class Config_Lite implements ArrayAccess, IteratorAggregate, Countable, Serializ
                 'file not readable: ' . $filename
             );
         }
-        $this->sections = parse_ini_file($filename, $this->processSections);
+        $this->sections = parse_ini_file($filename, $this->processSections, $mode);
         if (false === $this->sections) {
             throw new Config_Lite_Exception_Runtime(
                 'failure, can not parse the file: ' . $filename
@@ -277,9 +278,9 @@ class Config_Lite implements ArrayAccess, IteratorAggregate, Countable, Serializ
      * Generated the output of the ini file, suitable for echo'ing or
      * writing back to the ini file.
      *
-     * @param  array  $sectionsarray array of ini data
+     * @param array $sectionsarray array of ini data
      *
-     * @return string
+     * @return  string
      */
     protected function buildOutputString($sectionsarray)
     {
@@ -573,7 +574,6 @@ class Config_Lite implements ArrayAccess, IteratorAggregate, Countable, Serializ
                 throw new Config_Lite_Exception_UnexpectedValue(
                     'No such global Value.'
                 );
-                return;
             }
             unset($this->sections[$key]);
             return;
@@ -879,15 +879,16 @@ class Config_Lite implements ArrayAccess, IteratorAggregate, Countable, Serializ
      * but you can also use `setFilename' to set the filename.
      *
      * @param string $filename - "INI Style" Text Config File
-     * @param int    $flags    - setFlags
+     * @param int    $flags    - flags for file_put_contents, eg. FILE_APPEND
+     * @param int    $mode     - set scannermode
      */
-    public function __construct($filename = null, $flags = null)
+    public function __construct($filename = null, $flags = null, $mode = 0)
     {
         $this->sections = array();
         if (null !== $filename) {
             $this->setFilename($filename);
             if (file_exists($filename)) {
-                $this->read($filename);
+                $this->read($filename, $mode);
             }
         }
         if (null !== $flags) {

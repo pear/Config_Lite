@@ -19,17 +19,17 @@ http://pear.php.net/dtd/package-2.0.xsd">
 		<email>pce@php.net</email>
 		<active>yes</active>
 	</lead>
-	<date>2015-02-13</date>
+	<date>2015-02-20</date>
 	<version>
-		<release>0.2.2</release>
-		<api>0.2.2</api>
+		<release>0.2.3</release>
+		<api>0.2.3</api>
 	</version>
 	<stability>
 		<release>beta</release>
 		<api>beta</api>
 	</stability>
 	<license uri="http://www.php.net/license/3_0.txt">PHP License</license>
-	<notes>* set optional singelquotes</notes>
+	<notes>* read supports scannermode (normal or raw)</notes>
 	<contents>
 		<dir name="/">
 			<dir name="Config">
@@ -77,6 +77,18 @@ http://pear.php.net/dtd/package-2.0.xsd">
 	<phprelease />
 	<changelog>
         <release>
+            <version>
+                <release>0.2.3</release>
+                <api>0.2.3</api>
+            </version>
+            <stability>
+                <release>beta</release>
+                <api>beta</api>
+            </stability>
+            <date>2015-02-20</date>
+            <license uri="http://www.php.net/license/3_0.txt">PHP License</license>
+            <notes>* read supports scannermode (normal or raw)</notes>
+        </release>        <release>
             <version>
                 <release>0.2.2</release>
                 <api>0.2.2</api>

@@ -273,6 +273,7 @@ normalize "bool" values to a human readable representation,
 doublequotes strings and numeric values without any quotes 
 * newline chars defaults to "\n", editable with `setLinebreak' 
 * comments get dropped when writing after reading  
+* backslashes  in doublequoted values get parsed, to omit this, use `$config->read('/test.cfg', INI_SCANNER_RAW);`
 * no support of comments and multiline strings, because reading with `parse_ini_file` does not support it 
 
 If you want to save userinput like images, i'd recommend to use `get` with `base64_decode` and `set` with `base64_encode`.

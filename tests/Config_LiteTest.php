@@ -363,7 +363,7 @@ class Config_LiteTest extends PHPUnit_Framework_TestCase
     {
         $this->config->setProcessSections(false)->read(dirname(__FILE__) . '/test.cfg');
         $count = count($this->config);
-        $this->assertEquals($count, 9);
+        $this->assertEquals($count, 11);
     }
 
     public function testDoNotProcessSectionsGet()
@@ -447,5 +447,42 @@ class Config_LiteTest extends PHPUnit_Framework_TestCase
             $this->config->getString('quotes', 'single')
         );
     }
+
+
+    public function testReadBackslashesOfAndInDoubleTicks()
+    {
+        // don't parse values
+        $this->config->read(dirname(__FILE__) . '/test.cfg', INI_SCANNER_RAW);
+
+        $this->assertEquals("\\\\\\test.example.com\\",
+            $this->config->get('server', 'dt')
+        );
+    }
+
+    public function testBackslashesOfAndInSingleTicks()
+    {
+        $this->assertEquals('\\\\\\test.example.com\\',
+            $this->config->get('server', 'st')
+        );
+
+    }
+
+    public function testBackslashesInDoubleTicks()
+    {
+        // don't parse values
+        $this->config->read(dirname(__FILE__) . '/test.cfg', INI_SCANNER_RAW);
+
+        $this->assertEquals('\\\\\\test.example.com\\',
+            $this->config->get('server', 'dt')
+        );
+    }
+
+    public function testBackslashesInSingleTicks()
+    {
+        $this->assertEquals("\\\\\\test.example.com\\",
+            $this->config->get('server', 'st')
+        );
+    }
+
 
 }
