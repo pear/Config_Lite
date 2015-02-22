@@ -1,0 +1,29 @@
+{
+    "name": "pear/config_lite",
+    "description": "Lightweight package for ini style configuration/settings text files",
+    "homepage": "http://pear.php.net/package/Config_Lite",
+    "license": "PHP-3.0",
+    "support": {
+        "issues": "http://pear.php.net/bugs/search.php?cmd=display&package_name[]=Config_Lite",
+        "source": "https://github.com/pear/Config_Lite"
+    },
+    "authors": [
+        {
+            "email": "pce@php.net",
+            "name": "Patrick C. Engel",
+            "role": "Lead"
+        }
+    ],
+    "autoload": {
+        "psr-0": {
+            "": "./"
+        }
+    },
+    "include-path": [
+        "./"
+    ],
+    "type": "library",
+    "require-dev": {
+        "phpunit/phpunit": "*"
+    }
+}
