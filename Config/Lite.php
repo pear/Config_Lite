@@ -14,32 +14,35 @@
  * @link      https://github.com/pce/config_lite
  */
 
-require_once 'Config/Lite/Exception.php';
-require_once 'Config/Lite/Exception/InvalidArgument.php';
-require_once 'Config/Lite/Exception/Runtime.php';
-require_once 'Config/Lite/Exception/UnexpectedValue.php';
+require_once __DIR__ . '/Lite/Exception.php';
+require_once __DIR__ . '/Lite/Exception/InvalidArgument.php';
+require_once __DIR__ . '/Lite/Exception/Runtime.php';
+require_once __DIR__ . '/Lite/Exception/UnexpectedValue.php';
+require_once __DIR__ . '/Lite/NativeIniHandler.php';
+require_once __DIR__ . '/Lite/ArrayHandler.php';
+require_once __DIR__ . '/Lite/HandlerInterface.php';
 
 /**
  * Config_Lite Class
  *
- * read and save ini text files.
- * Config_Lite has the native PHP function
- * `parse_ini_file' under the hood.
- * The API is inspired by Python's ConfigParser.
- * A "Config_Lite" file consists of
- * "name = value" entries and sections,
- * "[section]"
- * followed by "name = value" entries
+ * The API is inspired by Pythons ConfigParser.
  *
  * @category  Configuration
  * @package   Config_Lite
  * @author    Patrick C. Engel <pce@php.net>
  * @copyright 2010-2015 <pce@php.net>
- * @license   http://www.gnu.org/copyleft/lesser.html  LGPL License 2.1
- * @link      https://github.com/pce/config_lite
+ * @license   http://php.net/license/  PHP License
+ * @link      https://github.com/pear/Config_Lite
  */
 class Config_Lite implements ArrayAccess, IteratorAggregate, Countable, Serializable
 {
+    /**
+     * handler
+     *
+     * @var Config_Lite_HandlerInterface
+     */
+    protected $handler;
+
     /**
      * sections, holds the config sections
      *
@@ -52,37 +55,8 @@ class Config_Lite implements ArrayAccess, IteratorAggregate, Countable, Serializ
      * @var string
      */
     protected $filename;
-    /**
-     * _booleans - alias of bool in a representable Configuration String Format
-     *
-     * @var array
-     */
-    private $_booleans = array('1' => true, 'on' => true,
-                               'true' => true, 'yes' => true,
-                               '0' => false, 'off' => false,
-                               'false' => false, 'no' => false);
 
-    /**
-     * line-break chars, default *x: "\n", windows: "\r\n"
-     *
-     * @var string
-     */
-    protected $linebreak = "\n";
 
-    /**
-     * parseSections - if true, sections will be processed
-     *
-     * @var bool
-     */
-    protected $processSections = true;
-
-    /**
-     * quote Strings - if true,
-     * writes ini files with doublequoted strings
-     *
-     * @var bool
-     */
-    protected $quoteStrings = true;
 
     /**
      * flags for file-put-contents
@@ -92,15 +66,8 @@ class Config_Lite implements ArrayAccess, IteratorAggregate, Countable, Serializ
     protected $flags = 0;
     
     /**
-     * string delimiter
-     *
-     * @var string
-     */
-    protected $delim = '"';
-
-    /**
      * the read method parses the optional given filename
-     * or already setted filename.
+     * or already setted filename with the handler.
      *
      * this method uses the native PHP function
      * parse_ini_file behind the scenes.
@@ -113,27 +80,10 @@ class Config_Lite implements ArrayAccess, IteratorAggregate, Countable, Serializ
      * @throws Config_Lite_Exception_Runtime when file is not readable
      * @throws Config_Lite_Exception_Runtime when parse ini file failed
      */
-    public function read($filename = null, $mode = INI_SCANNER_NORMAL)
+    public function read($filename = null, $mode = 0)
     {
-        if (null === $filename) {
-            $filename = $this->filename;
-        } else {
-            $this->filename = $filename;
-        }
-        if (!file_exists($filename)) {
-            throw new Config_Lite_Exception_Runtime('file not found: ' . $filename);
-        }
-        if (!is_readable($filename)) {
-            throw new Config_Lite_Exception_Runtime(
-                'file not readable: ' . $filename
-            );
-        }
-        $this->sections = parse_ini_file($filename, $this->processSections, $mode);
-        if (false === $this->sections) {
-            throw new Config_Lite_Exception_Runtime(
-                'failure, can not parse the file: ' . $filename
-            );
-        }
+        $this->filename = $filename;
+        $this->sections = $this->handler->read($filename, $mode);
         return $this;
     }
 
@@ -145,7 +95,7 @@ class Config_Lite implements ArrayAccess, IteratorAggregate, Countable, Serializ
      */
     public function save()
     {
-        return $this->write($this->filename, $this->sections, $this->flags);
+        return $this->handler->write($this->filename, $this->sections, $this->flags);
     }
 
     /**
@@ -173,38 +123,6 @@ class Config_Lite implements ArrayAccess, IteratorAggregate, Countable, Serializ
         return $this;
     }
 
-    /**
-     * detect Type "bool" by String Value to keep those "untouched"
-     *
-     * @param string $value value
-     *
-     * @return bool
-     */
-    protected function isBool($value)
-    {
-        return in_array($value, $this->_booleans);
-    }
-
-    /**
-     * normalize a Value by determining the Type
-     *
-     * @param string $value value
-     *
-     * @return string
-     */
-    protected function normalizeValue($value)
-    {
-        if (is_bool($value)) {
-            $value = $this->toBool($value);
-            return $value;
-        } elseif (is_numeric($value)) {
-            return $value;
-        }
-        if ($this->quoteStrings) {
-            $value = $this->delim . $value . $this->delim;
-        }
-        return $value;
-    }
 
     /**
      * set string delimiter to single tick (')
@@ -213,7 +131,7 @@ class Config_Lite implements ArrayAccess, IteratorAggregate, Countable, Serializ
      */
     public function setSingleTickDelimiter()
     {
-        $this->delim = "'";
+        $this->handler->setSingleTickDelimiter();
         return $this;
     }
 
@@ -263,20 +181,12 @@ class Config_Lite implements ArrayAccess, IteratorAggregate, Countable, Serializ
      */
     public function write($filename, $sectionsarray, $flags=null)
     {
-        $content = $this->buildOutputString($sectionsarray);
-        if (false === file_put_contents($filename, $content, $flags)) {
-            throw new Config_Lite_Exception_Runtime(
-                sprintf(
-                    'failed to write file `%s\' for writing.', $filename
-                )
-            );
-        }
-        return true;
+        return $this->handler->write($filename, $sectionsarray, $flags);
     }
 
     /**
-     * Generated the output of the ini file, suitable for echo'ing or
-     * writing back to the ini file.
+     * Generated the output of the ConfigHandler, suitable for echo'ing or
+     * writing back to a file.
      *
      * @param array $sectionsarray array of ini data
      *
@@ -284,40 +194,7 @@ class Config_Lite implements ArrayAccess, IteratorAggregate, Countable, Serializ
      */
     protected function buildOutputString($sectionsarray)
     {
-        $content = '';
-        $sections = '';
-        $globals  = '';
-        if (!empty($sectionsarray)) {
-            // 2 loops to write `globals' on top, alternative: buffer
-            foreach ($sectionsarray as $section => $item) {
-                if (!is_array($item)) {
-                    $value    = $this->normalizeValue($item);
-                    $globals .= $section . ' = ' . $value . $this->linebreak;
-                }
-            }
-            $content .= $globals;
-            foreach ($sectionsarray as $section => $item) {
-                if (is_array($item)) {
-                    $sections .= $this->linebreak
-                                . "[" . $section . "]" . $this->linebreak;
-                    foreach ($item as $key => $value) {
-                        if (is_array($value)) {
-                            foreach ($value as $arrkey => $arrvalue) {
-                                $arrvalue  = $this->normalizeValue($arrvalue);
-                                $arrkey    = $key . '[' . $arrkey . ']';
-                                $sections .= $arrkey . ' = ' . $arrvalue
-                                            . $this->linebreak;
-                            }
-                        } else {
-                            $value     = $this->normalizeValue($value);
-                            $sections .= $key . ' = ' . $value . $this->linebreak;
-                        }
-                    }
-                }
-            }
-            $content .= $sections;
-        }
-        return $content;
+        return $this->handler->buildOutputString($sectionsarray);
     }
 
     /**
@@ -697,7 +574,7 @@ class Config_Lite implements ArrayAccess, IteratorAggregate, Countable, Serializ
      */
     public function setFilename($filename)
     {
-        $this->filename = $filename;
+        $this->handler->setFilename($filename);
         return $this;
     }
 
@@ -708,7 +585,7 @@ class Config_Lite implements ArrayAccess, IteratorAggregate, Countable, Serializ
      */
     public function getFilename()
     {
-        return $this->filename;
+        return $this->handler->getFilename();
     }
 
     /**
@@ -872,6 +749,11 @@ class Config_Lite implements ArrayAccess, IteratorAggregate, Countable, Serializ
         $this->sections = $sections;
     }
 
+    public function setHandler(Config_Lite_HandlerInterface $handler)
+    {
+        $this->handler = $handler;
+    }
+
     /**
      * takes an optional filename, if the file exists, also reads it.
      *
@@ -885,12 +767,19 @@ class Config_Lite implements ArrayAccess, IteratorAggregate, Countable, Serializ
     public function __construct($filename = null, $flags = null, $mode = 0)
     {
         $this->sections = array();
+
         if (null !== $filename) {
-            $this->setFilename($filename);
-            if (file_exists($filename)) {
-                $this->read($filename, $mode);
+
+            $this->handler = new Config_Lite_NativeIniHandler($filename);
+
+            if (is_readable($filename)) {
+                $this->sections = $this->handler->read($filename, $mode);
             }
+
+        } else {
+            $this->handler = new Config_Lite_NativeIniHandler;
         }
+
         if (null !== $flags) {
             $this->setFlags($flags);
         }

@@ -1,9 +1,6 @@
 Config_Lite
 ===========
 
-[![Build Status](https://secure.travis-ci.org/pear/Config_Lite.png?branch=master)](https://travis-ci.org/pear/Config_Lite)
-
-
 Description
 -----------
 
@@ -116,6 +113,9 @@ $config->save();
 __Create configuration file:__
 
 ```php
+<?php
+
+require_once 'Config/Lite.php';
 
 $config = new Config_Lite('test.ini');
 $config->set('db', 'user', 'JohnDoe')
@@ -211,6 +211,7 @@ $config->write("php://stdout", array(
 __global Configuration options (without sections) :__
 
 ```php
+<?php
 
 $config->set(null, 'private_key_file', '~/.ssh/id_rsa');
 // set with arrayaccess
@@ -223,24 +224,22 @@ echo $config->get(null, 'public_key_file');
 echo $config['private_key_file'];
 ```
 
-__implemented IteratorAggregate, allows iteratation of the object with foreach:__
+__iterate (SPL Iterator) :__
 ```php
+<?php
 
 $config = new Config_Lite($filename);
 
 foreach ($config as $section => $name) {
 	if (is_array($name)) {
-		$s .= sprintf("[%s]\n", $section);
+		$s.= sprintf("[%s]\n", $section);
 		foreach ($name as $key => $val) {
-			$s .= sprintf("\t%s = %s\n", $key, $val);
+			$s.= sprintf("\t%s = %s\n", $key, $val);
 		}
 	} else {
-		$s .= sprintf("%s=%s\n", $section, $name);
+		$s.= sprintf("%s=%s\n", $section, $name);
 	}
 }
-
-echo $s;
-
 ```
 
 
