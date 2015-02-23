@@ -19,17 +19,17 @@ http://pear.php.net/dtd/package-2.0.xsd">
 		<email>pce@php.net</email>
 		<active>yes</active>
 	</lead>
-	<date>2015-02-20</date>
+	<date>2015-02-23</date>
 	<version>
-		<release>0.2.3</release>
-		<api>0.2.3</api>
+		<release>0.2.4</release>
+		<api>0.2.4</api>
 	</version>
 	<stability>
 		<release>beta</release>
 		<api>beta</api>
 	</stability>
-	<license uri="http://www.php.net/license/3_0.txt">PHP License</license>
-	<notes>* read supports scannermode (normal or raw)</notes>
+    <license uri="http://www.gnu.org/copyleft/lesser.html">lgpl</license>
+	<notes>* edit license of package to lgpl as declared in the sourcecode</notes>
 	<contents>
 		<dir name="/">
 			<dir name="Config">
@@ -78,6 +78,19 @@ http://pear.php.net/dtd/package-2.0.xsd">
 	<changelog>
         <release>
             <version>
+                <release>0.2.4</release>
+                <api>0.2.4</api>
+            </version>
+            <stability>
+                <release>beta</release>
+                <api>beta</api>
+            </stability>
+            <date>2015-02-23</date>
+            <license uri="http://www.gnu.org/copyleft/lesser.html">lgpl</license>
+            <notes>* edit license of package to lgpl as declared in the sourcecode</notes>
+        </release>
+        <release>
+            <version>
                 <release>0.2.3</release>
                 <api>0.2.3</api>
             </version>
@@ -86,9 +99,10 @@ http://pear.php.net/dtd/package-2.0.xsd">
                 <api>beta</api>
             </stability>
             <date>2015-02-20</date>
-            <license uri="http://www.php.net/license/3_0.txt">PHP License</license>
+            <license uri="http://www.gnu.org/copyleft/lesser.html">lgpl</license>
             <notes>* read supports scannermode (normal or raw)</notes>
-        </release>        <release>
+        </release>
+        <release>
             <version>
                 <release>0.2.2</release>
                 <api>0.2.2</api>
@@ -98,7 +112,7 @@ http://pear.php.net/dtd/package-2.0.xsd">
                 <api>beta</api>
             </stability>
             <date>2015-02-13</date>
-            <license uri="http://www.php.net/license/3_0.txt">PHP License</license>
+            <license uri="http://www.gnu.org/copyleft/lesser.html">lgpl</license>
             <notes>* set optional singlequotes</notes>
         </release>
         <release>
@@ -111,7 +125,7 @@ http://pear.php.net/dtd/package-2.0.xsd">
 				<api>beta</api>
 			</stability>
 			<date>2013-10-26</date>
-			<license uri="http://www.php.net/license/3_0.txt">PHP License</license>
+			<license uri="http://www.gnu.org/copyleft/lesser.html">lgpl</license>
 			<notes>* pear-bug #20104 config set optional file flags in constructor, example to stdout, support of streams, filter</notes>
 		</release>
 		<release>
@@ -124,7 +138,7 @@ http://pear.php.net/dtd/package-2.0.xsd">
 				<api>beta</api>
 			</stability>
 			<date>2013-10-23</date>
-			<license uri="http://www.php.net/license/3_0.txt">PHP License</license>
+			<license uri="http://www.gnu.org/copyleft/lesser.html">lgpl</license>
 			<notes>* pear-bug #20104 write config to stdout, support of streams, filter</notes>
 		</release>
 		<release>
@@ -137,7 +151,7 @@ http://pear.php.net/dtd/package-2.0.xsd">
 				<api>beta</api>
 			</stability>
 			<date>2013-04-16</date>
-			<license uri="http://www.php.net/license/3_0.txt">PHP License</license>
+			<license uri="http://www.gnu.org/copyleft/lesser.html">lgpl</license>
 			<notes>* pear-bug #19887 Change of Custom NewlineChar fixed, added Credits</notes>
 		</release>
 		<release>
@@ -150,7 +164,7 @@ http://pear.php.net/dtd/package-2.0.xsd">
 				<api>beta</api>
 			</stability>
 			<date>2012-07-02</date>
-			<license uri="http://www.php.net/license/3_0.txt">PHP License</license>
+			<license uri="http://www.gnu.org/copyleft/lesser.html">lgpl</license>
 			<notes>* remove method fixes closes issue #4(github) and pear-bug #19389</notes>
 		</release>
 		<release>
@@ -163,7 +177,7 @@ http://pear.php.net/dtd/package-2.0.xsd">
 				<api>beta</api>
 			</stability>
 			<date>2012-05-24</date>
-			<license uri="http://www.php.net/license/3_0.txt">PHP License</license>
+			<license uri="http://www.gnu.org/copyleft/lesser.html">lgpl</license>
 			<notes>* added &quot;get()&quot; call without parameters
 				* added tests</notes>
 		</release>
@@ -177,7 +191,7 @@ http://pear.php.net/dtd/package-2.0.xsd">
 				<api>beta</api>
 			</stability>
 			<date>2011-07-18</date>
-			<license uri="http://www.php.net/license/3_0.txt">PHP License</license>
+			<license uri="http://www.gnu.org/copyleft/lesser.html">lgpl</license>
 			<notes>* fix and test for Bug #18673 by mfonda
 				* added option to disable doublequoted values</notes>
 		</release>
@@ -191,7 +205,7 @@ http://pear.php.net/dtd/package-2.0.xsd">
 				<api>beta</api>
 			</stability>
 			<date>2011-03-10</date>
-			<license uri="http://www.php.net/license/3_0.txt">PHP License</license>
+			<license uri="http://www.gnu.org/copyleft/lesser.html">lgpl</license>
 			<notes>* fix Bug #18353 by mfonda
 				* add option to choose if sections should be processed by mfonda
 				* improvements by mfonda</notes>
@@ -206,7 +220,7 @@ http://pear.php.net/dtd/package-2.0.xsd">
 				<api>beta</api>
 			</stability>
 			<date>2011-02-25</date>
-			<license uri="http://www.php.net/license/3_0.txt">PHP License</license>
+			<license uri="http://www.gnu.org/copyleft/lesser.html">lgpl</license>
 			<notes>* initial release</notes>
 		</release>
 	</changelog>
