@@ -16,11 +16,11 @@
 
 if (is_file(dirname(__FILE__) . '/../Config/Lite.php') === true) {
     // not installed.
-    require_once dirname(__FILE__) . '/../Config/Lite.php';
-} else {
-    require_once 'Config/Lite.php';
+    // require_once dirname(__FILE__) . '/../Config/Lite.php';
+    set_include_path(get_include_path() . PATH_SEPARATOR . __DIR__.'/../');
 }
 
+require_once 'Config/Lite.php';
 
 /**
  * Test class for Config_Lite.
@@ -322,35 +322,6 @@ class Config_LiteTest extends PHPUnit_Framework_TestCase
     {
         $this->config->removeSection('counter');
         $this->assertEquals(FALSE, $this->config->hasSection('counter'));
-    }
-
-    /**
-     * to test protected methods
-     */
-    protected function getMethod($name)
-    {
-        $class = new ReflectionClass('Config_Lite');
-        $method = $class->getMethod($name);
-        if (!method_exists($method, 'setAccessible')) {
-            $this->markTestSkipped("This test requires PHP 5.3.0+");
-        }
-        $method->setAccessible(true);
-        return $method;
-    }
-
-    public function testNormalizeValue()
-    {
-        $m = $this->getMethod('normalizeValue');
-        $obj = new Config_Lite();
-
-        $b = $m->invokeArgs($obj, array(true));
-        $this->assertEquals('yes', $b);
-
-        $d = $m->invokeArgs($obj, array(1234));
-        $this->assertEquals(1234, $d);
-
-        $s = $m->invokeArgs($obj, array('String'));
-        $this->assertEquals('"String"', $s);
     }
 
     public function testCountSections()
