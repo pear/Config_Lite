@@ -30,7 +30,7 @@ require_once 'Config/Lite.php';
  * followed by tests on a temporary file.
  * TODO: use VFS or no FS and testSetterReturnsThis()
  *
- * Usage: phpunit AllTests.php
+ * Usage: phpunit tests
  *
  * @category  Config
  * @package   Config_Lite

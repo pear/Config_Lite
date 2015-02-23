@@ -109,7 +109,9 @@ class Config_Lite implements ArrayAccess, IteratorAggregate, Countable, Serializ
      */
     public function save()
     {
-        return $this->handler->write($this->getFilename(), $this->sections, $this->flags);
+        return $this->handler->write(
+            $this->getFilename(), $this->sections, $this->flags
+        );
     }
 
     /**
@@ -747,20 +749,32 @@ class Config_Lite implements ArrayAccess, IteratorAggregate, Countable, Serializ
         $this->sections = $sections;
     }
 
+    /**
+     * set a new Handler and keeps the filename
+     *
+     * @param Config_Lite_HandlerInterface $handler default is NativeIniHandler
+     *
+     * @return Config_Lite
+     */
     public function setHandler(Config_Lite_HandlerInterface $handler)
     {
+        $filename = $this->handler->getFilename();
         $this->handler = $handler;
+        $this->handler->setFilename($filename);
+        return $this;
     }
 
     /**
      * takes an optional filename, if the file exists, also reads it.
      *
+     * TODO: BC break: constructor does not read the file anymore!
      * the `save' and `read' methods relies on a setted filename,
+     * of a "INI Style" Text Config File,
      * but you can also use `setFilename' to set the filename.
      *
-     * @param string $filename - "INI Style" Text Config File
-     * @param int    $flags    - flags for file_put_contents, eg. FILE_APPEND
-     * @param int    $mode     - set scannermode
+     * @param mixed $filename Config_Lite_HandlerInterface|string|null
+     * @param int   $flags    flags for file_put_contents, eg. FILE_APPEND
+     * @param int   $mode     set scannermode
      */
     public function __construct($filename = null, $flags = null, $mode = 0)
     {
@@ -768,8 +782,13 @@ class Config_Lite implements ArrayAccess, IteratorAggregate, Countable, Serializ
 
         if (null !== $filename) {
 
-            $this->handler = new Config_Lite_NativeIniHandler($filename);
-            $this->setFilename($filename);
+            if ($filename instanceof Config_Lite_HandlerInterface) {
+                $this->handler = $filename;
+            } else {
+                // Backwards compatible way
+                $this->handler = new Config_Lite_NativeIniHandler($filename);
+                $this->handler->setFilename($filename);
+            }
 
             if (is_readable($filename)) {
                 $this->sections = $this->handler->read($filename, $mode);
@@ -782,10 +801,6 @@ class Config_Lite implements ArrayAccess, IteratorAggregate, Countable, Serializ
         if (null !== $flags) {
             $this->setFlags($flags);
         }
-        /*
-        if (null !== $mode) {
-            $this->setMode($mode);
-        }*/
 
     }
 }
