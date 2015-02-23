@@ -1,6 +1,9 @@
 <?php
 
-// ; ---- not compatible with hack ?
+// PEAR relies on the include path
+set_include_path(get_include_path() . PATH_SEPARATOR . __DIR__.'/../');
+
+// ; ---- Comment not compatible with hack ?
 
 file_put_contents("test.cfg",  "
 [general]

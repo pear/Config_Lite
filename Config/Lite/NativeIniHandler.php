@@ -1,7 +1,7 @@
 <?php
 
-require_once __DIR__ . '/HandlerInterface.php';
-require_once __DIR__ . '/BaseHandler.php';
+require_once 'Config/Lite/HandlerInterface.php';
+require_once 'Config/Lite/BaseHandler.php';
 
 /**
  * Config_Lite_Ini
@@ -24,35 +24,6 @@ require_once __DIR__ . '/BaseHandler.php';
 class Config_Lite_NativeIniHandler extends Config_Lite_BaseHandler
     implements Config_Lite_HandlerInterface
 {
-    /**
-     * filename
-     *
-     * @var string
-     */
-    protected $filename;
-
-    /**
-     * line-break chars, default *x: "\n", windows: "\r\n"
-     *
-     * @var string
-     */
-    protected $linebreak = "\n";
-
-    /**
-     * parseSections - if true, sections will be processed
-     *
-     * @var bool
-     */
-    protected $processSections = true;
-
-    /**
-     * quote Strings - if true,
-     * writes ini files with doublequoted strings
-     *
-     * @var bool
-     */
-    protected $quoteStrings = true;
-
 
 
     /**
@@ -94,51 +65,7 @@ class Config_Lite_NativeIniHandler extends Config_Lite_BaseHandler
         return $sections;
     }
 
-    /**
-     * Generated the output of the ini file, suitable for echo'ing or
-     * writing back to the ini file.
-     *
-     * @param array $sectionsarray array of ini data
-     *
-     * @return  string
-     */
-    public function buildOutputString($sectionsarray)
-    {
-        $content = '';
-        $sections = '';
-        $globals  = '';
-        if (!empty($sectionsarray)) {
-            // 2 loops to write `globals' on top, alternative: buffer
-            foreach ($sectionsarray as $section => $item) {
-                if (!is_array($item)) {
-                    $value    = $this->normalizeValue($item);
-                    $globals .= $section . ' = ' . $value . $this->linebreak;
-                }
-            }
-            $content .= $globals;
-            foreach ($sectionsarray as $section => $item) {
-                if (is_array($item)) {
-                    $sections .= $this->linebreak
-                        . "[" . $section . "]" . $this->linebreak;
-                    foreach ($item as $key => $value) {
-                        if (is_array($value)) {
-                            foreach ($value as $arrkey => $arrvalue) {
-                                $arrvalue  = $this->normalizeValue($arrvalue);
-                                $arrkey    = $key . '[' . $arrkey . ']';
-                                $sections .= $arrkey . ' = ' . $arrvalue
-                                    . $this->linebreak;
-                            }
-                        } else {
-                            $value     = $this->normalizeValue($value);
-                            $sections .= $key . ' = ' . $value . $this->linebreak;
-                        }
-                    }
-                }
-            }
-            $content .= $sections;
-        }
-        return $content;
-    }
+
 
     /**
      * filename to read or save

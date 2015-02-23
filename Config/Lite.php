@@ -14,13 +14,13 @@
  * @link      https://github.com/pce/config_lite
  */
 
-require_once __DIR__ . '/Lite/Exception.php';
-require_once __DIR__ . '/Lite/Exception/InvalidArgument.php';
-require_once __DIR__ . '/Lite/Exception/Runtime.php';
-require_once __DIR__ . '/Lite/Exception/UnexpectedValue.php';
-require_once __DIR__ . '/Lite/NativeIniHandler.php';
-require_once __DIR__ . '/Lite/ArrayHandler.php';
-require_once __DIR__ . '/Lite/HandlerInterface.php';
+require_once 'Config/Lite/Exception.php';
+require_once 'Config/Lite/Exception/InvalidArgument.php';
+require_once 'Config/Lite/Exception/Runtime.php';
+require_once 'Config/Lite/Exception/UnexpectedValue.php';
+require_once 'Config/Lite/NativeIniHandler.php';
+require_once 'Config/Lite/ArrayHandler.php';
+require_once 'Config/Lite/HandlerInterface.php';
 
 /**
  * Config_Lite Class
@@ -49,14 +49,13 @@ class Config_Lite implements ArrayAccess, IteratorAggregate, Countable, Serializ
      * @var array
      */
     protected $sections;
+
     /**
-     * filename
+     * filename to write
      *
      * @var string
      */
     protected $filename;
-
-
 
     /**
      * flags for file-put-contents
@@ -64,7 +63,18 @@ class Config_Lite implements ArrayAccess, IteratorAggregate, Countable, Serializ
      * @var int
      */
     protected $flags = 0;
-    
+
+    /**
+     * booleans - alias of bool in a representable Configuration String Format
+     *
+     * @var array
+     */
+    static $booleans = array('1' => true, 'on' => true,
+        'true' => true, 'yes' => true,
+        '0' => false, 'off' => false,
+        'false' => false, 'no' => false);
+
+
     /**
      * the read method parses the optional given filename
      * or already setted filename with the handler.
@@ -82,7 +92,11 @@ class Config_Lite implements ArrayAccess, IteratorAggregate, Countable, Serializ
      */
     public function read($filename = null, $mode = 0)
     {
-        $this->filename = $filename;
+        if (null === $filename) {
+            $filename = $this->getFilename();
+        } else {
+            $this->setFilename($filename);
+        }
         $this->sections = $this->handler->read($filename, $mode);
         return $this;
     }
@@ -95,7 +109,7 @@ class Config_Lite implements ArrayAccess, IteratorAggregate, Countable, Serializ
      */
     public function save()
     {
-        return $this->handler->write($this->filename, $this->sections, $this->flags);
+        return $this->handler->write($this->getFilename(), $this->sections, $this->flags);
     }
 
     /**
@@ -111,18 +125,18 @@ class Config_Lite implements ArrayAccess, IteratorAggregate, Countable, Serializ
      */
     public function sync()
     {
-        if (!isset($this->filename)) {
+        $filename = $this->getFilename();
+        if (empty($filename)) {
             throw new Config_Lite_Exception_Runtime('no filename set.');
         }
         if (!is_array($this->sections)) {
             $this->sections = array();
         }
-        if ($this->write($this->filename, $this->sections)) {
-            $this->read($this->filename);
+        if ($this->write($filename, $this->sections)) {
+            $this->read($filename);
         }
         return $this;
     }
-
 
     /**
      * set string delimiter to single tick (')
@@ -142,7 +156,7 @@ class Config_Lite implements ArrayAccess, IteratorAggregate, Countable, Serializ
      */
     public function setDoubleTickDelimiter()
     {
-        $this->delim = '"';
+        $this->handler->setDoubleTickDelimiter();
         return $this;
     }
 
@@ -195,22 +209,6 @@ class Config_Lite implements ArrayAccess, IteratorAggregate, Countable, Serializ
     protected function buildOutputString($sectionsarray)
     {
         return $this->handler->buildOutputString($sectionsarray);
-    }
-
-    /**
-     * converts string to a  representable Config Bool Format
-     *
-     * @param string $value value
-     *
-     * @return string
-     * @throws Config_Lite_Exception_UnexpectedValue when format is unknown
-     */
-    public function toBool($value)
-    {
-        if ($value === true) {
-            return 'yes';
-        }
-        return 'no';
     }
 
     /**
@@ -330,7 +328,7 @@ class Config_Lite implements ArrayAccess, IteratorAggregate, Countable, Serializ
                     return false;
                 }
                 $value = strtolower($this->sections[$key]);
-                if (!in_array($value, $this->_booleans) && (null === $default)) {
+                if (!in_array($value, self::$booleans) && (null === $default)) {
                     throw new Config_Lite_Exception_InvalidArgument(
                         sprintf(
                             'Not a boolean: %s, and no default value given.',
@@ -338,7 +336,7 @@ class Config_Lite implements ArrayAccess, IteratorAggregate, Countable, Serializ
                         )
                     );
                 } else {
-                    return $this->_booleans[$value];
+                    return self::$booleans[$value];
                 }
             }
         }
@@ -347,7 +345,7 @@ class Config_Lite implements ArrayAccess, IteratorAggregate, Countable, Serializ
                 return false;
             }
             $value = strtolower($this->sections[$sec][$key]);
-            if (!in_array($value, $this->_booleans) && (null === $default)) {
+            if (!in_array($value, self::$booleans) && (null === $default)) {
                 throw new Config_Lite_Exception_InvalidArgument(
                     sprintf(
                         'Not a boolean: %s, and no default value given.',
@@ -355,7 +353,7 @@ class Config_Lite implements ArrayAccess, IteratorAggregate, Countable, Serializ
                     )
                 );
             } else {
-                return $this->_booleans[$value];
+                return self::$booleans[$value];
             }
         }
         if (null !== $default) {
@@ -601,7 +599,7 @@ class Config_Lite implements ArrayAccess, IteratorAggregate, Countable, Serializ
      */
     public function setLinebreak($linebreakchars)
     {
-        $this->linebreak = $linebreakchars;
+        $this->handler->setLinebreak($linebreakchars);
         return $this;
     }
 
@@ -618,7 +616,7 @@ class Config_Lite implements ArrayAccess, IteratorAggregate, Countable, Serializ
      */
     public function setProcessSections($processSections)
     {
-        $this->processSections = $processSections;
+        $this->handler->setProcessSections($processSections);
         return $this;
     }
 
@@ -771,6 +769,7 @@ class Config_Lite implements ArrayAccess, IteratorAggregate, Countable, Serializ
         if (null !== $filename) {
 
             $this->handler = new Config_Lite_NativeIniHandler($filename);
+            $this->setFilename($filename);
 
             if (is_readable($filename)) {
                 $this->sections = $this->handler->read($filename, $mode);
@@ -783,6 +782,11 @@ class Config_Lite implements ArrayAccess, IteratorAggregate, Countable, Serializ
         if (null !== $flags) {
             $this->setFlags($flags);
         }
+        /*
+        if (null !== $mode) {
+            $this->setMode($mode);
+        }*/
+
     }
 }
 

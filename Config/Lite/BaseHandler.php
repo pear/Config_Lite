@@ -2,15 +2,6 @@
 
 class Config_Lite_BaseHandler
 {
-    /**
-     * _booleans - alias of bool in a representable Configuration String Format
-     *
-     * @var array
-     */
-    private $_booleans = array('1' => true, 'on' => true,
-        'true' => true, 'yes' => true,
-        '0' => false, 'off' => false,
-        'false' => false, 'no' => false);
 
 
     /**
@@ -20,6 +11,37 @@ class Config_Lite_BaseHandler
      */
     protected $delim = '"';
 
+    /**
+     * parseSections - if true, sections will be processed
+     *
+     * @var bool
+     */
+    protected $processSections = true;
+
+
+    /**
+     * filename to read
+     *
+     * @var string
+     */
+    protected $filename;
+
+
+    /**
+     * quote Strings - if true,
+     * writes ini files with doublequoted strings
+     *
+     * @var bool
+     */
+    protected $quoteStrings = true;
+
+
+    /**
+     * line-break chars, default *x: "\n", windows: "\r\n"
+     *
+     * @var string
+     */
+    protected $linebreak = "\n";
 
     /**
      * detect Type "bool" by String Value to keep those "untouched"
@@ -30,7 +52,70 @@ class Config_Lite_BaseHandler
      */
     protected function isBool($value)
     {
-        return in_array($value, $this->_booleans);
+        return in_array($value, Config_Lite::$booleans);
+    }
+
+
+    /**
+     * converts string to a  representable Config Bool Format
+     *
+     * @param string $value value
+     *
+     * @return string
+     * @throws Config_Lite_Exception_UnexpectedValue when format is unknown
+     */
+    public function toBool($value)
+    {
+        if ($value === true) {
+            return 'yes';
+        }
+        return 'no';
+    }
+
+    /**
+     * Generated the output of the ini file, suitable for echo'ing or
+     * writing back to the ini file.
+     *
+     * @param array $sectionsarray array of ini data
+     *
+     * @return  string
+     */
+    public function buildOutputString($sectionsarray)
+    {
+        $content = '';
+        $sections = '';
+        $globals = '';
+        if (!empty($sectionsarray)) {
+            // 2 loops to write `globals' on top, alternative: buffer
+            foreach ($sectionsarray as $section => $item) {
+                if (!is_array($item)) {
+                    $value = $this->normalizeValue($item);
+                    $globals .= $section . ' = ' . $value . $this->linebreak;
+                }
+            }
+            $content .= $globals;
+            foreach ($sectionsarray as $section => $item) {
+                if (is_array($item)) {
+                    $sections .= $this->linebreak
+                        . "[" . $section . "]" . $this->linebreak;
+                    foreach ($item as $key => $value) {
+                        if (is_array($value)) {
+                            foreach ($value as $arrkey => $arrvalue) {
+                                $arrvalue = $this->normalizeValue($arrvalue);
+                                $arrkey = $key . '[' . $arrkey . ']';
+                                $sections .= $arrkey . ' = ' . $arrvalue
+                                    . $this->linebreak;
+                            }
+                        } else {
+                            $value = $this->normalizeValue($value);
+                            $sections .= $key . ' = ' . $value . $this->linebreak;
+                        }
+                    }
+                }
+            }
+            $content .= $sections;
+        }
+        return $content;
     }
 
     /**
@@ -62,6 +147,51 @@ class Config_Lite_BaseHandler
     public function setSingleTickDelimiter()
     {
         $this->delim = "'";
+        return $this;
+    }
+
+    /**
+     * set string delimiter to double tick (")
+     *
+     * @return Config_Lite
+     */
+    public function setDoubleTickDelimiter()
+    {
+        $this->delim = '"';
+        return $this;
+    }
+
+    /**
+     * Sets whether or not sections should be processed
+     *
+     * If true, values for each section will be placed into
+     * a sub-array for the section. If false, all values will
+     * be placed in the global scope.
+     *
+     * @param bool $processSections - if true, sections will be processed
+     *
+     * @return Config_Lite
+     */
+    public function setProcessSections($processSections)
+    {
+        $this->processSections = $processSections;
+        return $this;
+    }
+
+    /**
+     * set the line break (newline) chars
+     *
+     * line-break defaults to Unix Newline "\n",
+     * set to support other linebreaks, eg. windows user
+     * textfiles "\r\n"
+     *
+     * @param string $linebreakchars chars
+     *
+     * @return Config_Lite
+     */
+    public function setLinebreak($linebreakchars)
+    {
+        $this->linebreak = $linebreakchars;
         return $this;
     }
 
