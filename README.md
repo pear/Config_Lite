@@ -268,7 +268,7 @@ Notes & Limitations
 * Config_Lite is an OO frontend to `parse_ini_file` and writing ini files, 
 but you can also use the public method `write` if you only want to write an array as ini file 
 * Use getString and setString to save and read Strings with double _and_ single-quotes 
-* Use getBool if you need a real bool type, eg. for strict equality comparision 
+* Use getBool if you need a real bool type, eg. for strict equality comparison 
 * The methods `set` and `get` keep values untouched, but the write method 
 normalize "bool" values to a human readable representation, 
 doublequotes strings and numeric values without any quotes 
