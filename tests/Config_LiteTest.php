@@ -215,6 +215,14 @@ class Config_LiteTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(array('name' => 'John Doe', 'email' => 'john@doe.com'), $this->config->getSection('users'));
     }
 
+    public function testGetSectionWithGet()
+    {
+        $this->config->set('users', 'name', 'John Doe')
+            ->set('users', 'email', 'john@doe.com');
+        $this->assertEquals(array('name' => 'John Doe', 'email' => 'john@doe.com'), $this->config->get('users'));
+    }
+
+
     public function testGetBool()
     {
         // test human readable representation
@@ -248,6 +256,7 @@ class Config_LiteTest extends PHPUnit_Framework_TestCase
         }
         $this->fail('An expected exception has not been raised.');
     }
+
 
     public function testSingleQuotedEscapedInput()
     {
@@ -483,6 +492,23 @@ class Config_LiteTest extends PHPUnit_Framework_TestCase
             $this->config->get('server', 'st')
         );
     }
+
+    public function testGetAllSectionsWithGet()
+    {
+        $this->config->clear();
+        $this->config->set('users', 'name', 'John Doe')
+            ->set('users', 'email', 'john@doe.com')
+            ->set('servers', 'dev', '127.0.0.1')
+            ->set('servers', 'stage', '140.10.10.1');
+        $this->assertEquals(
+            array(
+                'users' => array('name' => 'John Doe', 'email' => 'john@doe.com'),
+                'servers' => array('dev' => '127.0.0.1', 'stage' => '140.10.10.1')
+            ),
+            $this->config->get());
+    }
+
+
 
 
 }

@@ -394,7 +394,7 @@ class Config_Lite implements ArrayAccess, IteratorAggregate, Countable, Serializ
     {
         // handle get without parameters, because we can
         if ((null === $sec) && (null === $key) && (null === $default)) {
-            return $this; // arrayaccess or $this->sections;
+            return $this->sections;
         }
         if ((null !== $sec) && array_key_exists($sec, $this->sections)
             && isset($this->sections[$sec][$key])
@@ -409,10 +409,7 @@ class Config_Lite implements ArrayAccess, IteratorAggregate, Countable, Serializ
         if ((null === $key) && array_key_exists($sec, $this->sections)) {
             return $this->sections[$sec];
         }
-        // all sections
-        if (null === $sec && array_key_exists($sec, $this->sections)) {
-            return $this->sections;
-        }
+
         if (null !== $default) {
             return $default;
         }
