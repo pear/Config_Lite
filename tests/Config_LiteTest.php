@@ -504,11 +504,59 @@ class Config_LiteTest extends PHPUnit_Framework_TestCase
             array(
                 'users' => array('name' => 'John Doe', 'email' => 'john@doe.com'),
                 'servers' => array('dev' => '127.0.0.1', 'stage' => '140.10.10.1')
-            ),
+            ), 
             $this->config->get());
     }
 
 
+    public function testUpdateSectionByIndex()
+    {
+        $this->config->set('git', 'hidden', ['/home/git/repo1.git', '/home/git/repo2.git']);
+
+        $this->config->setFilename($this->filename);
+        $this->config->save();
+        $this->config->read();
+
+        $hidden = ($this->config->get('git', 'hidden'));
+        // update entry by index
+        $hidden[1] = "/home/git/repo2a.git";
+        // add entry
+        $hidden[] = "/home/git/repo3.git";
+        $this->config->setSection("git", ['hidden' => $hidden]);
+
+        $this->config->sync();
+
+        $this->assertEquals(
+            array(
+                'hidden' => ['/home/git/repo1.git', '/home/git/repo2a.git', '/home/git/repo3.git']
+            ),
+            $this->config->get('git'));
+    }
+
+    public function testUpdateSection()
+    {
+        $this->config->set('git', 'repos', [
+            'foo' => '/home/git/foo.git', 'bar' => '/home/git/bar.git', 'baz' => '/home/git/baz.git'
+        ]);
+
+        $this->config->setFilename($this->filename);
+        $this->config->save();
+        $this->config->read();
+
+        $repos = ($this->config->get('git', 'repos'));
+        $repos["foo"] = "/home/git/fizz.git";
+        $repos["bar"] = "/home/git/buzz.git";
+        unset($repos["baz"]);
+        $this->config->setSection("git", ['repos' => $repos]);
+
+        $this->config->sync();
+
+        $this->assertEquals(
+            array(
+                'repos' => ['foo' => '/home/git/fizz.git', 'bar' => '/home/git/buzz.git']
+            ),
+            $this->config->get('git'));
+    }
 
 
 }
