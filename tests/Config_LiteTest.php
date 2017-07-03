@@ -22,6 +22,14 @@ if (is_file(dirname(__FILE__) . '/../Config/Lite.php') === true) {
 }
 
 
+/*
+ * Allow for PHPUnit 4.* while XML_Util is still usable on PHP 5.4
+ * @see https://stackoverflow.com/questions/40045163/phpunit-cant-found-the-testcase-class/42030041#42030041
+ */
+if (!class_exists('PHPUnit_Framework_TestCase')) {
+    class PHPUnit_Framework_TestCase extends \PHPUnit\Framework\TestCase {}
+}
+
 /**
  * Test class for Config_Lite.
  *
